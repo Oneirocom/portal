@@ -1,16 +1,12 @@
-import { MagickLayout, MainLayout } from "@magickml/portal-layout";
-import { GetStaticProps, InferGetStaticPropsType } from "next";
-import Head from "next/head";
-import { CarouselHero } from "@magickml/portal-ui";
+import { PortalLayout, MainLayout } from '@magickml/portal-layout'
+import Head from 'next/head'
+import { CarouselHero } from '@magickml/portal-ui'
 
-export function Root({
-  data,
-}: InferGetStaticPropsType<typeof getStaticProps>) {
-
-  const metaTitle = "Home | MagickML";
-  const metaDescription = "Cutting-edge tools for AI creators";
-  const metaUrl = "https://magickml.com";
-  const metaImage = `${process.env.NEXT_PUBLIC_APP_URL}/images/banner.png`;
+export function Root() {
+  const metaTitle = 'Home | MagickML'
+  const metaDescription = 'Cutting-edge tools for AI creators'
+  const metaUrl = 'https://magickml.com'
+  const metaImage = `${process.env.NEXT_PUBLIC_APP_URL}/images/banner.png`
 
   return (
     <>
@@ -29,20 +25,13 @@ export function Root({
         <CarouselHero />
       </div>
     </>
-  );
+  )
 }
 
 Root.getLayout = function getLayout(page: any) {
   return (
-    <MagickLayout isPublic={true}>
+    <PortalLayout>
       <MainLayout classNames="">{page}</MainLayout>
-    </MagickLayout>
-  );
-};
-
-export const getStaticProps: GetStaticProps = async (ctx) => {
-  return {
-    props: {},
-    revalidate: 60 * 10,
-  };
-};
+    </PortalLayout>
+  )
+}
