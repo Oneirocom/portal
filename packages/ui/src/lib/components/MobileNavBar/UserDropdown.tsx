@@ -1,0 +1,165 @@
+import { CgProfile } from 'react-icons/cg'
+import {
+  Cog6ToothIcon,
+  UserCircleIcon,
+  ArrowRightOnRectangleIcon,
+} from '@heroicons/react/24/outline'
+import {
+  LoginIcon,
+  Switch,
+  DarkIcon,
+  LightIcon,
+  DashboardIcon,
+} from '@magickml/portal-ui'
+import { useTheme } from 'next-themes'
+import { useEffect } from 'react'
+import clsx from 'clsx'
+import { signOut, useSession } from 'next-auth/react'
+import { useRouter } from 'next/router'
+import Cookies from 'js-cookie'
+import DropDown from './DropDown'
+import { dropDownMenuItemsType, navProps } from './types'
+
+export const DropDownUserMenu = () => {
+  const { theme, setTheme } = useTheme()
+  const session = useSession()
+
+  const router = useRouter()
+  useEffect(() => {
+    const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)')
+    if (prefersDarkMode?.matches && theme !== 'light') setTheme('dark')
+    if (!prefersDarkMode?.matches && theme !== 'dark') setTheme('light')
+  }, [theme, setTheme])
+
+  const handleThemeSwitch = () => {
+    setTheme(theme === 'dark' ? 'light' : 'dark')
+  }
+
+  const handleLogin = async () => {
+    router.push('/auth/sign-in')
+  }
+
+  const handleLogout = async () => {
+    await signOut({
+      redirect: false,
+    })
+    if (router.pathname !== '/') {
+      router.push('/')
+    }
+
+    Cookies.remove('workspace')
+  }
+
+  const handleNavigation = async (args: navProps) => {
+    router.push(args.target)
+  }
+
+  const dropDownUserMenuItems: dropDownMenuItemsType[] = [
+    {
+      id: 'logIn',
+      children: (
+        <div
+          className="flex w-full"
+          onClick={session?.data ? handleLogout : handleLogin}
+        >
+          {session.data ? (
+            <>
+              <ArrowRightOnRectangleIcon className="w-6 h-6 mr-2" />
+              <span>Log out</span>
+            </>
+          ) : (
+            <>
+              <LoginIcon className="w-6 h-6 mr-2" />
+              <span>Log In</span>
+            </>
+          )}
+        </div>
+      ),
+      enabled: true,
+      type: 'button',
+      separator: true,
+    },
+    {
+      id: 'profile',
+      enabled: session.data ? true : false,
+      children: (
+        <>
+          <UserCircleIcon className="w-6 h-6 mr-2" />
+          <span>Profile</span>
+        </>
+      ),
+      type: 'link',
+      href: '/profile',
+      navigate: handleNavigation,
+      separator: true,
+    },
+    {
+      id: 'dashboard',
+      enabled: false,
+      children: (
+        <>
+          <DashboardIcon className="w-6 h-6 mr-2" />
+          <span>My Dashboard</span>
+        </>
+      ),
+      type: 'link',
+      href: '/dashboard',
+      navigate: handleNavigation,
+      separator: true,
+    },
+    {
+      id: 'theme',
+      children: (
+        <>
+          <DarkIcon
+            className={clsx(
+              'w-6 h-6 mr-2',
+              theme === 'dark' ? '' : 'text-[#aeaeae]'
+            )}
+            onClick={handleThemeSwitch}
+          />
+          <Switch
+            checked={theme === 'dark' ? false : true}
+            className="mr-2"
+            size={'small'}
+            secondary={'bg-secondary'}
+            secondaryThumb={'bg-secondary'}
+            translateX={'small'}
+            onClick={handleThemeSwitch}
+          />
+          <LightIcon
+            className={clsx(
+              'w-6 h-6 mr-2',
+              theme === 'dark' ? 'text-[#3D454A]' : ''
+            )}
+            onClick={handleThemeSwitch}
+          />
+          <span>{theme === 'dark' ? 'Dark Mode' : 'Light Mode'}</span>
+        </>
+      ),
+      enabled: true,
+      type: 'button',
+      separator: session.data ? true : false,
+    },
+    {
+      id: 'settings',
+      enabled: session.data ? true : false,
+      children: (
+        <>
+          <Cog6ToothIcon className="w-6 h-6 mr-2" />
+          <span>Settings</span>
+        </>
+      ),
+      type: 'link',
+      href: '/settings',
+      navigate: handleNavigation,
+    },
+  ]
+
+  return (
+    <DropDown
+      dropDownMenuItems={dropDownUserMenuItems}
+      trigger={<CgProfile className="text-[30px] text-black dark:text-white" />}
+    />
+  )
+}
