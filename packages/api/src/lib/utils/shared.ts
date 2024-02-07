@@ -1,4 +1,4 @@
-import { getAuthOptions } from '@magickml/portal-auth'
+import { authOptions } from '@magickml/portal-auth'
 import { decode, encode } from 'next-auth/jwt'
 import { createClient } from '@supabase/supabase-js'
 import { OpenMeter } from '@openmeter/sdk'
@@ -9,7 +9,7 @@ export const prepareToken = async (ctx: any, input: { projectId: string }) => {
   // decode the token
   const decodedToken = await decode({
     token: ctx.token as string,
-    secret: (await getAuthOptions()).secret as string,
+    secret: authOptions.secret as string,
   })
   if (!decodedToken) {
     throw new Error('Invalid token')
@@ -32,7 +32,7 @@ export const prepareToken = async (ctx: any, input: { projectId: string }) => {
       },
       project: input.projectId,
     },
-    secret: (await getAuthOptions()).secret as string,
+    secret: authOptions.secret as string,
 
     maxAge: 24 * 60 * 60, // 24 hours
   })

@@ -241,6 +241,25 @@ export const agentsRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input, ctx }) => {
+      const a = await prisma.agents.findUnique({
+        where: {
+          id: input.agentId,
+        },
+        select: {
+          workspace_id: true,
+        },
+      })
+
+      const access = await checkIfUserIsMember(
+        a?.workspace_id ?? '',
+        ctx.session.user.id,
+        false
+      )
+
+      if (!access) {
+        throw new Error('No access to the specified workspace')
+      }
+
       const image = input.image
       const agentId = input.agentId
 
@@ -513,7 +532,6 @@ export const agentsRouter = createTRPCRouter({
     }),
 
   getPublicAgents: protectedProcedure.query(async () => {
-    // get all public agents
     const publicAgents = await prisma.publicAgent.findMany({
       where: {
         deletedAt: null,
