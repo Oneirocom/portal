@@ -1,7 +1,6 @@
 import Stripe from 'stripe'
 import { prisma } from '@magickml/portal-db'
 import { NextApiRequest } from 'next'
-import { StripeEventHandler } from './stripeEventHandler'
 import { buffer } from 'micro'
 import { makeTrialPromotion } from './promotions'
 import { PriceKeys, ProductKeys } from '@magickml/portal-utils-shared'
@@ -16,7 +15,6 @@ export interface CreateCheckoutInput {
 }
 export class StripeService {
   private stripe: Stripe
-  private eventHandler: StripeEventHandler
 
   constructor() {
     const stripeSigningSecret = this.getSigningSecret()
@@ -28,8 +26,6 @@ export class StripeService {
         version: '0.1.0',
       },
     })
-
-    this.eventHandler = new StripeEventHandler()
   }
 
   private getEnv(env: string): string {
@@ -187,23 +183,7 @@ export class StripeService {
       throw error
     }
   }
-
-  async handleStripeEvent(req: NextApiRequest) {
-    const sig = this.extractSignature(req)
-    const webhookSecret = this.getWebhookSecret()
-    try {
-      const event = await this.constructWebhookEvent(
-        await this.getRawBody(req),
-        sig,
-        webhookSecret
-      )
-      await this.eventHandler.handleEvent(event)
-    } catch (error) {
-      console.error('Error handling Stripe event:', error)
-      throw error
-    }
-  }
-
+  
   async createCheckout(
     input: CreateCheckoutInput
   ): Promise<Stripe.Checkout.Session> {
