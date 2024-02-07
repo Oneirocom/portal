@@ -1,26 +1,19 @@
-// @ts-nocheck
 import Stripe from 'stripe'
 import { prisma } from '@magickml/portal-db'
 import { NextApiRequest } from 'next'
 import { StripeEventHandler } from './stripeEventHandler'
 import { buffer } from 'micro'
+import { makeTrialPromotion } from './promotions'
+import { PriceKeys, ProductKeys } from '@magickml/portal-utils-shared'
 
-export enum PriceKeys {
-  Balance = 'price_1OV9nVAppV38CWoMzmNyU9v0',
-  Mage = 'price_1OV9dbAppV38CWoMPowixa58',
-  Wizard = 'price_1OV9ezAppV38CWoMWtT8KDpL',
-  Archmage = 'price_1OV9flAppV38CWoM9n19fRm1',
+export interface CreateCheckoutInput {
+  price: keyof typeof PriceKeys
+  amount: number | undefined
+  customerId: string
+  priceType: 'recurring' | 'one_time'
+  successUrl: string
+  cancelUrl?: string
 }
-
-export enum ProductKeys {
-  Balance = 'prod_PJnOSnUwv1GSFB',
-  Mage = 'prod_J5JzRjZ6Kj8K1e',
-  Wizard = 'prod_J5JzPf0zGd5QXe',
-  Archmage = 'prod_J5JzN5Z5Xs6J2y',
-}
-
-export type PriceKey = keyof typeof PriceKeys
-
 export class StripeService {
   private stripe: Stripe
   private eventHandler: StripeEventHandler
@@ -74,12 +67,26 @@ export class StripeService {
     return PriceKeys[input]
   }
 
-  private async createCustomPrice(price: number): Promise<Stripe.Price> {
+  private async createCustomPrice(amount: number): Promise<Stripe.Price> {
     return await this.stripe.prices.create({
-      unit_amount: price,
+      // Convert the amount from dollars to cents
+      unit_amount: amount * 100, // Correct conversion to cents
       currency: 'usd',
       product: ProductKeys.Balance,
     })
+  }
+
+  private async getUser(userId: string) {
+    try {
+      const user = await prisma.user.findFirst({
+        where: { id: userId },
+        select: { email: true, id: true },
+      })
+      return user
+    } catch (error) {
+      console.error('Error getting user:', error)
+      throw error
+    }
   }
 
   async createStripeCustomer(email: string): Promise<string> {
@@ -96,17 +103,23 @@ export class StripeService {
     userId: string,
     email: string
   ): Promise<string | undefined> {
+    const user = await this.getUser(userId)
     try {
-      let customer = await prisma.customer.findFirst({ where: { userId } })
+      const customer = await prisma.customers.findFirst({
+        where: { email: user?.email },
+      })
+
+      let id: string | undefined
 
       if (!customer && email) {
-        const stripeCustomerId = await this.createStripeCustomer(email)
-        customer = await prisma.customer.create({
-          data: { stripeCustomerId, email, userId },
-        })
+        id = await this.createStripeCustomer(email)
+      } else if (customer) {
+        id = customer.id
+      } else {
+        throw new Error('No email provided')
       }
 
-      return customer?.stripeCustomerId
+      return id
     } catch (error) {
       console.error('Error in createOrRetrieveStripeCustomerId:', error)
       throw error
@@ -114,8 +127,11 @@ export class StripeService {
   }
 
   async checkIfUserIsCustomer(userId: string): Promise<boolean> {
+    const user = await this.getUser(userId)
     try {
-      const customer = await prisma.customer.findFirst({ where: { userId } })
+      const customer = await prisma.customers.findFirst({
+        where: { email: user?.email },
+      })
       return Boolean(customer)
     } catch (error) {
       console.error('Error checking if user is a customer:', error)
@@ -124,16 +140,19 @@ export class StripeService {
   }
 
   async getUserSubscription(userId: string): Promise<string | false> {
+    const user = await this.getUser(userId)
     try {
       // Retrieve the customer record from your database
-      const customer = await prisma.customer.findFirst({ where: { userId } })
+      const customer = await prisma.customers.findFirst({
+        where: { email: user?.email },
+      })
       if (!customer) {
         return false
       }
 
       // Retrieve the Stripe customer's subscriptions
       const subscriptions = await this.stripe.subscriptions.list({
-        customer: customer.stripeCustomerId,
+        customer: customer.id,
         status: 'active',
       })
 
@@ -186,13 +205,11 @@ export class StripeService {
   }
 
   async createCheckout(
-    price: keyof typeof PriceKeys,
-    amount: number | undefined,
-    customerId: string,
-    priceType: 'recurring' | 'one_time',
-    successUrl: string,
-    cancelUrl?: string
+    input: CreateCheckoutInput
   ): Promise<Stripe.Checkout.Session> {
+    const { price, amount, customerId, priceType, successUrl, cancelUrl } =
+      input
+
     console.log(`price: ${price}, amount: ${amount}`)
     let priceId
     if (price === 'Balance') {
@@ -217,7 +234,7 @@ export class StripeService {
         },
       ],
       success_url: successUrl,
-      cancel_url: cancelUrl ?? `${this.getAppURL()}/billing`,
+      cancel_url: cancelUrl ?? `${this.getAppURL()}/account`,
     }
 
     sessionParams.mode = priceType === 'recurring' ? 'subscription' : 'payment'
@@ -231,6 +248,83 @@ export class StripeService {
       return_url: this.getAppURL() + '/billing',
     })
     return portalSession.url
+  }
+
+  async createDefaultBudget(userId: string): Promise<void> {
+    try {
+      await prisma.budget.create({
+        data: {
+          User: {
+            connect: {
+              id: userId,
+            },
+          },
+          balance: 0,
+        },
+      })
+
+      await makeTrialPromotion(userId)
+    } catch (error) {
+      console.error('Error creating default wallet:', error)
+      throw error
+    }
+  }
+
+  async checkBudgetExists(userId: string): Promise<boolean> {
+    try {
+      const budget = await prisma.budget.findFirst({ where: { userId } })
+      return Boolean(budget)
+    } catch (error) {
+      console.error('Error checking if wallet exists:', error)
+      throw error
+    }
+  }
+
+  async handleNewCustomer(userId: string, email: string): Promise<void> {
+    if (!(await this.checkBudgetExists(userId))) {
+      this.createDefaultBudget(userId)
+    }
+    await this.createOrRetrieveStripeCustomerId(userId, email)
+  }
+
+  async getClientSubscription(
+    userId: string
+  ): Promise<{ subscriptionId: string; productName: string } | false> {
+    const user = await this.getUser(userId)
+    try {
+      const customer = await prisma.customers.findFirst({
+        where: { email: user?.email },
+      })
+      if (!customer) {
+        return false
+      }
+
+      const subscriptions = await this.stripe.subscriptions.list({
+        customer: customer.id,
+        status: 'active',
+      })
+
+      if (subscriptions.data.length === 0) return false
+
+      const subscriptionId = subscriptions.data[0].id
+      const subscription = await this.stripe.subscriptions.retrieve(
+        subscriptionId
+      )
+
+      // Assuming there's always at least one item in the subscription
+      const productId = subscription.items.data[0].price.product
+
+      // Retrieve the product to get its name
+      const product = await this.stripe.products.retrieve(productId as string)
+
+      return {
+        subscriptionId: subscription.id,
+        productName: product.name,
+      }
+    } catch (error) {
+      console.error('Error getting client subscription:', error)
+      throw error
+    }
   }
 }
 
