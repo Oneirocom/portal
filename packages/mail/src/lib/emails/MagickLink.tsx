@@ -16,7 +16,7 @@ import { Tailwind } from '@react-email/components'
 
 import * as React from 'react'
 
-const baseUrl = process.env.APP_URL ? `${process.env.APP_URL}` : ''
+const baseUrl = process.env.NEXT_PUBLIC_APP_URL ? `${process.env.NEXT_PUBLIC_APP_URL}` : "http://localhost:4000"
 
 type EmailProps = {
   url: string
