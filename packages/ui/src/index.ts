@@ -1,5 +1,7 @@
 export * from './lib/utils/shadcn'
 export * from './lib/components/ui'
+
+// plan is to move all these below to a separate package: @magickml/portal-components
 export * from './lib/components/Icons'
 export * from './lib/components/motion'
 export * from './lib/components/CreateProject'
@@ -7,3 +9,7 @@ export * from './lib/components/MobileNavBar'
 export * from './lib/components/Dialog'
 export * from './lib/components/Inputs'
 export * from './lib/components/Onboarding'
+export * from './lib/components/Carousel/Hero'
+export * from './lib/components/CookieBanner'
+export * from './lib/components/Toaster'
+export * from './lib/components/Maintenance'
