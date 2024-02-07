@@ -14,27 +14,18 @@ import { FrigadeTour } from '@frigade/react'
 import { StepData } from '@frigade/react'
 
 /**
- * Props for the `MagickLayout` component.
+ * Props for the `PortalLayout` component.
  */
 interface AccountLayoutProps {
   /** Content to be rendered within the layout. */
   children: React.ReactNode
-  /** Optional title to be displayed at the top of the layout. */
-  title?: string
-  /** If set to `true`, it removes certain margins and padding within the layout. */
-  nospace?: boolean
-  /** Flag for whether the layout is public or not. */
-  isPublic?: boolean
 }
 
 /**
- * `MagickLayout` serves as a wrapper component that sets up the general layout for an account page.
+ * `PortalLayout` serves as a wrapper component that sets up the general layout for an account page.
  */
-export const MagickLayout: React.FC<AccountLayoutProps> = ({
+export const PortalLayout: React.FC<AccountLayoutProps> = ({
   children,
-  title,
-  nospace,
-  isPublic = false,
 }) => {
   const session = useSession()
   const [, setRole] = useState<Role>(ANONYMOUS)
