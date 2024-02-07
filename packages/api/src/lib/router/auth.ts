@@ -3,11 +3,11 @@ import { prisma } from '@magickml/portal-db'
 import { z } from 'zod'
 import bcrypt from 'bcrypt'
 import { v4 as uuidv4 } from 'uuid'
+import { sendMail } from '@magickml/portal-mail'
 import { encode } from 'next-auth/jwt'
-import { getAuthOptions } from '@magickml/portal-auth'
+import { authOptions } from '@magickml/portal-auth'
 import { hasAccess } from '../utils/shared'
-
-import { sendMail, sendResetPasswordEmail } from '@magickml/portal-mail'
+import { sendResetPasswordEmail } from '@magickml/portal-mail'
 
 const makeLink = (token: string) => {
   return `${process.env.APP_URL}/auth/verify-email?token=${token}`
@@ -67,7 +67,6 @@ export const authRouter = createTRPCRouter({
         from: process.env.EMAIL_FROM ?? '',
         to: email,
         subject: 'Email Confirmation',
-        // text: `Please confirm your email by clicking on the following link: ${verificationLink}`,
         html: `<p>Please confirm your email by clicking on the following link: <a href="${verificationLink}">Verify Email</a></p>`,
       })
 
@@ -110,6 +109,11 @@ export const authRouter = createTRPCRouter({
         throw new Error('Invalid token')
       }
 
+      // pre-emptively delete the token to prevent replay attacks
+      await prisma.passwordResetToken.delete({
+        where: { id: passwordResetToken.id },
+      })
+
       const hashedPassword = await bcrypt.hash(password, 10)
 
       const credential = await prisma.credential.findUnique({
@@ -129,12 +133,9 @@ export const authRouter = createTRPCRouter({
         })
       }
 
-      await prisma.passwordResetToken.delete({
-        where: { id: passwordResetToken.id },
-      })
-
       return { success: true }
     }),
+
   forgotPassword: publicProcedure
     .input(z.object({ email: z.string().email() }))
     .mutation(async ({ input }) => {
@@ -233,7 +234,6 @@ export const authRouter = createTRPCRouter({
         from: process.env.EMAIL_FROM ?? '',
         to: email,
         subject: 'Email Confirmation Resend',
-        // text: `Please confirm your email using this link: ${verificationLink}`,
         html: `<p>Please confirm your email using this link <a href="${verificationLink}">here</a></p>`,
       })
 
@@ -294,9 +294,9 @@ export const authRouter = createTRPCRouter({
           return await encode({
             token: {
               user: ctx.session?.user,
-              permissions: ['agent:run'],
+              permissions: ['public', 'agent:run', 'agent:message'],
             },
-            secret: (await getAuthOptions()).secret as string,
+            secret: authOptions.secret as string,
             maxAge: 10 * 60,
           })
         }
@@ -304,19 +304,19 @@ export const authRouter = createTRPCRouter({
         return await encode({
           token: {
             user: ctx.session?.user,
-            permissions: ['agent:run'],
+            permissions: ['public', 'agent:run', 'agent:message'],
             project: agent?.projectId,
           },
-          secret: (await getAuthOptions()).secret as string,
+          secret: authOptions.secret as string,
           maxAge: 10 * 60,
         })
       } else {
         return await encode({
           token: {
             user: 'anonymous',
-            permissions: ['agent:run'],
+            permissions: ['public', 'agent:run', 'agent:message'],
           },
-          secret: (await getAuthOptions()).secret as string,
+          secret: authOptions.secret as string,
           maxAge: 10 * 60,
         })
       }
