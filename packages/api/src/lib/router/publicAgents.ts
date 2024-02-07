@@ -1,15 +1,14 @@
 import { z } from 'zod'
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc'
 import { prepareToken } from '../utils/shared'
+import { prisma } from '@magickml/portal-db'
+import { createAgent, createSpell } from '@magickml/portal-utils-server'
+import { trackServerEvent } from '@magickml/portal-utils-server'
+import { PublicEventTypes } from '@magickml/portal-utils-shared'
 import {
-  trackServerEvent,
   getInfinitePublicAgents,
   paginateItems,
-  createAgent,
-  createSpell,
 } from '@magickml/portal-utils-server'
-import { PublicEventTypes } from '@magickml/portal-utils-shared'
-import { prisma } from '@magickml/portal-db'
 
 function sanitizeAgentData(agentData: string): object {
   try {
@@ -334,83 +333,153 @@ export const publicAgentsRouter = createTRPCRouter({
           publicAgentId: input.publicAgentId,
         },
         select: {
-          rootSpellId: true,
           data: true,
           name: true,
+          version: true,
+          rootSpellId: true,
+          projectId: true,
         },
       })
+
+      const isV2 = agent?.version === '2.0'
 
       if (!agent) {
         throw new Error('Agent not found')
       }
-      if (!agent.rootSpellId) {
-        throw new Error('Agent has no root spell')
-      }
 
-      const spell = await prisma.spells.findFirst({
-        where: {
-          id: agent.rootSpellId,
-        },
-      })
+      if (isV2) {
+        const spells = await prisma.spells.findMany({
+          where: {
+            projectId: agent.projectId,
+          },
+        })
 
-      if (!spell) {
-        throw new Error('Spell not found')
-      }
+        const project = await prisma.project.create({
+          data: {
+            name: input.name,
+            creatorId: ctx.session.user.id,
+            slug: '',
+            description: '',
+            completed: true,
+            workspace_id: input.workspaceId,
+          },
+        })
 
-      // create project for the agent
-      const project = await prisma.project.create({
-        data: {
+        if (!project) {
+          throw new Error('Project creation failed')
+        }
+
+        // prepare token for AIDE
+        const newToken = await prepareToken(ctx, { projectId: project.id })
+
+        // HOTFIX: prevents api_keys in agent data from being copied
+        // Ideally all these keys should be kept in agent.secrets,
+        // but that will need a change on the aide, so this is a hotfix
+        const sanitizedAgentData =
+          typeof agent.data === 'string' ? sanitizeAgentData(agent.data) : {}
+
+        await Promise.all(
+          spells.map(async spell => {
+            const spellInput = {
+              projectId: project.id,
+              name: spell.name,
+              type: spell.type,
+              spellData: spell,
+              publicVariables: [],
+              agentData: sanitizedAgentData,
+            }
+
+            // @ts-ignore
+            const createdSpell = await createSpell(newToken, spellInput)
+
+            return createdSpell
+          })
+        )
+
+        const agentInput = {
+          projectId: project.id,
           name: input.name,
-          creatorId: ctx.session.user.id,
-          slug: '',
-          description: '',
-          completed: true,
-          workspace_id: input.workspaceId,
-        },
-      })
+          publicVariables: [],
+          data: sanitizedAgentData,
+        }
 
-      if (!project) {
-        throw new Error('Project creation failed')
-      }
-
-      // prepare token for AIDE
-      const newToken = await prepareToken(ctx, { projectId: project.id })
-
-      // HOTFIX: prevents api_keys in agent data from being copied
-      // Ideally all these keys should be kept in agent.secrets,
-      // but that will need a change on the aide, so this is a hotfix
-      const sanitizedAgentData =
-        typeof agent.data === 'string' ? sanitizeAgentData(agent.data) : {}
-
-      const spellInput = {
-        projectId: project.id,
-        name: spell.name,
         // @ts-ignore
-        spellData: spell,
-        publicVariables: [],
-        agentData: sanitizedAgentData,
+        const createdAgent = await createAgent(newToken, agentInput)
+
+        trackServerEvent(
+          PublicEventTypes.AGENT_PUBLIC_REMIX,
+          ctx.session?.user.email ?? '',
+          input.publicAgentId
+        )
+        return createdAgent
+      } else {
+        if (!agent.rootSpellId) {
+          throw new Error('Agent has no root spell')
+        }
+
+        const spell = await prisma.spells.findFirst({
+          where: {
+            id: agent.rootSpellId,
+          },
+        })
+
+        if (!spell) {
+          throw new Error('Spell not found')
+        }
+
+        // create project for the agent
+        const project = await prisma.project.create({
+          data: {
+            name: input.name,
+            creatorId: ctx.session.user.id,
+            slug: '',
+            description: '',
+            completed: true,
+            workspace_id: input.workspaceId,
+          },
+        })
+
+        if (!project) {
+          throw new Error('Project creation failed')
+        }
+
+        // prepare token for AIDE
+        const newToken = await prepareToken(ctx, { projectId: project.id })
+
+        // HOTFIX: prevents api_keys in agent data from being copied
+        // Ideally all these keys should be kept in agent.secrets,
+        // but that will need a change on the aide, so this is a hotfix
+        const sanitizedAgentData =
+          typeof agent.data === 'string' ? sanitizeAgentData(agent.data) : {}
+
+        const spellInput = {
+          projectId: project.id,
+          name: spell.name,
+          spellData: spell,
+          publicVariables: [],
+          agentData: sanitizedAgentData,
+        }
+        // @ts-ignore
+        const createdSpell = await createSpell(newToken, spellInput)
+
+        const agentInput = {
+          projectId: project.id,
+          name: input.name,
+          rootSpellId: createdSpell.id,
+          publicVariables: [],
+          data: sanitizedAgentData,
+        }
+
+        // @ts-ignore
+        const createdAgent = await createAgent(newToken, agentInput)
+
+        trackServerEvent(
+          PublicEventTypes.AGENT_PUBLIC_REMIX,
+          ctx.session?.user.email ?? '',
+          input.publicAgentId
+        )
+        return createdAgent
       }
-
-      // @ts-ignore
-      const createdSpell = await createSpell(newToken, spellInput)
-
-      const agentInput = {
-        projectId: project.id,
-        name: input.name,
-        rootSpellId: createdSpell.id,
-        publicVariables: [],
-        data: sanitizedAgentData,
-      }
-
-      // @ts-ignore
-      const createdAgent = await createAgent(newToken, agentInput)
-
-      trackServerEvent(
-        PublicEventTypes.AGENT_PUBLIC_REMIX,
-        ctx.session?.user.email ?? '',
-        input.publicAgentId
-      )
-      return createdAgent
     }),
 
   getInfinite: publicProcedure
