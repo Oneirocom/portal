@@ -8,10 +8,10 @@ import {
   allRoutes,
   getNavigationForRole,
   rolesConfig,
-} from '../SideDrawer/navigation'
+} from '../navigation'
 import { ANONYMOUS, Role } from '@magickml/portal-config'
 import { InfoMenu, UserMenu } from './menus'
-import { buttonVariants } from '@magickml/portal-ui'
+import { Button } from '@magickml/portal-ui'
 
 const MagickHeader = () => {
   const session = useSession()
@@ -35,7 +35,10 @@ const MagickHeader = () => {
   }
 
   useEffect(() => {
-    const intervalId = setInterval(simulateProgress, isRouting ? 100 : 20)
+    const intervalId: NodeJS.Timeout = setInterval(
+      simulateProgress,
+      isRouting ? 100 : 20
+    )
 
     return () => clearInterval(intervalId)
   }, [isRouting, progress])
@@ -86,7 +89,7 @@ const MagickHeader = () => {
   }, [session.data?.user?.role])
 
   return (
-    <div className="bg-[#fafdfe] shrink-0 dark:bg-[#0B0D0E] h-12 lg:h-20 relative w-full inline-flex justify-start items-center text-left text-black dark:text-white lg:px-10">
+    <div className="bg-ds-header shrink-0 h-12 lg:h-20 relative w-full inline-flex justify-start items-center text-left text-black dark:text-white lg:px-10">
       {/* LOGO */}
       <Link
         href="/"
@@ -196,22 +199,21 @@ const MagickHeader = () => {
 
       <div className="grow" />
 
-      {/* Menus */}
+      {/* STUFF */}
       <div className="relative flex items-center justify-end pr-4 gap-x-2 lg:gap-x-3">
+        <Button
+          variant="portal-primary"
+          size="sm"
+          onClick={() => {
+            router.push(session.data ? '/agents/create' : '/auth/sign-in')
+          }}
+          className="hidden lg:flex"
+        >
+          {session.data ? 'Create Agent' : 'Sign in'}
+        </Button>
+
         <InfoMenu />
         <UserMenu />
-        {session.status !== 'authenticated' && (
-          <Link
-            className={buttonVariants({
-              variant: 'default',
-              size: 'sm',
-              className: '!text-black !hidden lg:!flex',
-            })}
-            href="/auth/sign-in"
-          >
-            Sign in
-          </Link>
-        )}
       </div>
 
       {/* PROGRESS BAR */}
