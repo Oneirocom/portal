@@ -14,6 +14,16 @@
       "options": {
         "jestConfig": "portal/cloud/packages/config/jest.config.ts"
       }
+    },
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/portal/cloud/packages/config",
+        "main": "portal/cloud/packages/config/src/index.ts",
+        "tsConfig": "portal/cloud/packages/config/tsconfig.lib.json",
+        "assets": []
+      }
     }
   },
   "tags": []
