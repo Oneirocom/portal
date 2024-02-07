@@ -1,3 +1,4 @@
 export * from './AgentLayout'
 export * from './MainLayout'
 export * from './AuthLayout'
+export * from './AuthFormLayout'
