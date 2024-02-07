@@ -6,9 +6,11 @@ import { SessionProvider } from 'next-auth/react'
 
 // styles
 import '../styles/globals.css'
+import 'node_modules/latex.js/dist/css/katex.css'
+
 // import "styles/sheetOverrides.css";
 // import "driver.js/dist/driver.css";
-import { ThemeProvider as NextThemeProvider } from 'next-themes'
+import { ThemeProvider as NextThemeProvider, useTheme } from 'next-themes'
 import { Montserrat, Montserrat_Alternates } from 'next/font/google'
 
 // state
