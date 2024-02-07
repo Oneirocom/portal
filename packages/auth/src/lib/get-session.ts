@@ -1,7 +1,7 @@
 import { type GetServerSidePropsContext } from 'next'
 import { getServerSession } from 'next-auth'
 import { getToken } from 'next-auth/jwt'
-import { getAuthOptions } from './auth-options'
+import { authOptions } from './auth-options'
 
 /**
  * Wrapper for `getServerSession` so that you don't need to import the `authOptions` in every file.
@@ -12,7 +12,7 @@ export const getServerAuthSession = async (ctx: {
   req: GetServerSidePropsContext['req']
   res: GetServerSidePropsContext['res']
 }) => {
-  return getServerSession(ctx.req, ctx.res, await getAuthOptions())
+  return getServerSession(ctx.req, ctx.res, authOptions)
 }
 
 export const getServerAuthToken = async (ctx: {
@@ -20,7 +20,7 @@ export const getServerAuthToken = async (ctx: {
 }) => {
   return getToken({
     req: ctx.req,
-    secret: (await getAuthOptions()).secret as string,
+    secret: authOptions.secret,
     raw: true,
   })
 }
