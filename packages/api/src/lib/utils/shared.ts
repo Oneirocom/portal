@@ -1,6 +1,5 @@
 import { authOptions } from '@magickml/portal-auth'
 import { decode, encode } from 'next-auth/jwt'
-import { createClient } from '@supabase/supabase-js'
 import { OpenMeter } from '@openmeter/sdk'
 import { prisma } from '@magickml/portal-db'
 import { TRPCError } from '@trpc/server'
@@ -38,38 +37,6 @@ export const prepareToken = async (ctx: any, input: { projectId: string }) => {
   })
 
   return newToken
-}
-
-export const supabase = createClient(
-  process.env.SUPABASE_URL || '',
-  process.env.SUPABASE_KEY || ''
-)
-
-export const uploadImage = async (
-  base64Image: string,
-  id: string,
-  bucketName: string,
-  pathPrefix: string
-): Promise<string | null> => {
-  const imageExt = '.png' // Set the default extension or extract from base64 string
-  const mimeType = 'image/png' // Set the default mime type or extract from base64 string
-
-  const base64Data = base64Image.replace(/^data:image\/\w+;base64,/, '')
-  const bufferData = Buffer.from(base64Data, 'base64')
-
-  // Upload the base64 image data to the storage service
-  const { data, error } = await supabase.storage
-    .from(bucketName)
-    .upload(`${pathPrefix}/${id}${imageExt}`, bufferData, {
-      contentType: mimeType,
-      upsert: true,
-    })
-
-  if (error) {
-    throw error
-  }
-
-  return data.path
 }
 
 export const openmeter = new OpenMeter({
