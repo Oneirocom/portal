@@ -1,0 +1,31 @@
+{
+  "name": "portal-api",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "portal/cloud/packages/api/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/portal/cloud/packages/api",
+        "tsConfig": "portal/cloud/packages/api/tsconfig.lib.json",
+        "packageJson": "portal/cloud/packages/api/package.json",
+        "main": "portal/cloud/packages/api/src/index.ts",
+        "assets": ["portal/cloud/packages/api/*.md"]
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "portal/cloud/packages/api/jest.config.ts"
+      }
+    }
+  },
+  "tags": []
+}
