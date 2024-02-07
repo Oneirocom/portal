@@ -1,14 +1,14 @@
 generator client {
-    provider        = "prisma-client-js"
-    previewFeatures = ["fullTextSearch", "views", "multiSchema"]
-    name            = "prisma"
-    output          = "../../../../../../../node_modules/.prisma/client"
+  provider        = "prisma-client-js"
+  output          = "../../../../../../../node_modules/.prisma/client"
+  previewFeatures = ["fullTextSearch", "multiSchema", "views"]
+  name            = "prisma"
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
-    schemas  = ["portal", "stripe"]
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  schemas  = ["portal", "stripe"]
 }
 
 model Account {
@@ -1321,9 +1321,23 @@ model subscriptions {
   @@schema("stripe")
 }
 
+view spells {
+  id             String  @unique @db.Uuid
+  name           String?
+  projectId      String?
+  hash           String?
+  graph          Json?
+  createdAt      String?
+  updatedAt      String?
+  type           String? @db.VarChar(255)
+  spellReleaseId String? @db.Uuid
+
+  @@schema("portal")
+}
+
 view agents {
-  id                    String   @unique @db.Uuid
-  rootSpell             Json?    @db.Json
+  id                    String    @unique @db.Uuid
+  rootSpell             Json?
   publicVariables       String?
   secrets               String?
   name                  String?
@@ -1331,12 +1345,17 @@ view agents {
   updatedAt             String?
   pingedAt              String?
   projectId             String?
-  version               String?
-  data                  Json?    @db.Json
+  data                  Json?
   runState              String?
   image                 String?
-  rootSpellId           String?  @db.Uuid
-  currentSpellReleaseId String?  @db.Uuid
+  rootSpellId           String?   @db.Uuid
+  default               Boolean?
+  createdAt             DateTime? @db.Timestamptz(6)
+  currentSpellReleaseId String?   @db.Uuid
+  embedModel            String?   @db.VarChar(255)
+  version               String?   @db.VarChar(255)
+  embeddingProvider     String?   @db.VarChar(255)
+  embeddingModel        String?   @db.VarChar(255)
   publicAgentId         String?
   description           String?
   remixable             Boolean?
@@ -1346,9 +1365,19 @@ view agents {
   creatorId             String?
   creatorName           String?
   creatorImage          String?
-  workspace_id          String?  @db.Uuid
+  workspace_id          String?   @db.Uuid
   likesCount            Int?
   commentsCount         BigInt?
+
+  @@schema("portal")
+}
+
+view embeddings {
+  id         Int                    @id
+  documentId String?                @db.Uuid
+  content    String?
+  embedding  Unsupported("vector")?
+  index      Int?
 
   @@schema("portal")
 }
@@ -1357,33 +1386,9 @@ view documents {
   id           String  @unique @db.Uuid
   type         String?
   projectId    String?
-  metadata     Json?   @db.Json
   date         String?
+  metadata     Json?
   workspace_id String? @db.Uuid
-
-  @@schema("portal")
-}
-
-view spells {
-  id           String  @unique @db.Uuid
-  name         String?
-  projectId    String?
-  hash         String?
-  graph        Json?   @db.Json
-  type         String?
-  createdAt    String?
-  updatedAt    String?
-  workspace_id String? @db.Uuid
-
-  @@schema("portal")
-}
-
-view embeddings {
-  id         String  @unique @db.Uuid
-  documentId String?
-  content    String?
-  index      Int?
-  updatedAt  String?
 
   @@schema("portal")
 }
