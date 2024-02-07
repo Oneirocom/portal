@@ -17,8 +17,8 @@ const configureCustomServices = (
   socketClient: TransportConnection<any>
 ): void => {
   app.use('agents', socketClient.service('agents'), {
-    methods: ['run'],
-    events: ['result', 'spell'],
+    methods: ['run', 'message'],
+    events: ['result', 'spell', 'event'],
   })
 }
 
