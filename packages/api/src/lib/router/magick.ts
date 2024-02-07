@@ -13,7 +13,11 @@ const budgetDataSchema = z.object({
   model_cost: z.record(z.number()).optional(),
 })
 
-const statusSchema = z.union([z.literal('success'), z.literal('error')])
+const statusSchema = z.union([
+  z.literal('success'),
+  z.literal('error'),
+  z.string(),
+])
 
 const getBudgetResponseSchema = z.object({
   status: statusSchema,
@@ -36,7 +40,7 @@ const userSchema = z
     email: z.string().email().nullable(),
     name: z.string().nullable(),
     balance: z.number().nullable(),
-    hasSubscription: z.boolean().nullable(),
+    hasSubscription: z.boolean(),
     subscriptionName: z.string().nullable(),
   })
   .nullable()
@@ -83,9 +87,24 @@ export const budgetRouter = createTRPCRouter({
         }
       }
 
+      const promotions = await prisma.promotion.findMany({
+        where: {
+          userId: project.creatorId,
+          validUntil: {
+            gte: new Date(),
+          },
+          isUsed: false,
+        },
+      })
+
+      const promoCredit = promotions.reduce(
+        (acc, promo) => acc + promo.amount.toNumber(),
+        0
+      )
+
       const data = {
         [project.id]: {
-          total_budget: budget.balance.toNumber(),
+          total_budget: budget.balance.toNumber() + promoCredit,
           duration: 0,
           created_at: budget.createdAt.getTime(),
           last_updated_at: budget?.updatedAt ? budget.updatedAt.getTime() : 0,
@@ -132,12 +151,49 @@ export const budgetRouter = createTRPCRouter({
         throw new Error('Wallet not found')
       }
 
+      const promotions = await prisma.promotion.findMany({
+        where: {
+          userId: project.creatorId,
+          validUntil: {
+            gte: new Date(),
+          },
+          isUsed: false,
+        },
+      })
+
       const currentCost = input.user_dict[project.id].current_cost || 0
       const modelCost = input.user_dict[project.id].model_cost || {}
       const markUp = 1.2
       const newCharge = currentCost * markUp
-      const newUserBalance = wallet.balance.toNumber() - newCharge
 
+      // Apply promotions and update their remaining amounts
+      let remainingCharge = newCharge
+      for (const promo of promotions) {
+        if (remainingCharge <= 0) break
+        let promoAmount = promo.amount.toNumber()
+
+        if (promoAmount <= remainingCharge) {
+          // Full promotion amount is used
+          remainingCharge -= promoAmount
+          await prisma.promotion.update({
+            where: { id: promo.id },
+            data: { isUsed: true },
+          })
+        } else {
+          // Only part of the promotion is used
+          promoAmount -= remainingCharge
+          remainingCharge = 0
+          await prisma.promotion.update({
+            where: { id: promo.id },
+            data: { amount: promoAmount },
+          })
+        }
+      }
+
+      const effectiveCharge = Math.max(0, remainingCharge)
+      const newUserBalance = wallet.balance.toNumber() - effectiveCharge
+
+      // Update the budget
       await prisma.budget.update({
         where: {
           userId: project.creatorId,
@@ -167,7 +223,6 @@ export const budgetRouter = createTRPCRouter({
     .input(z.object({ project_id: z.string() }))
     .output(getUserResponseSchema)
     .query(async ({ input }) => {
-      console.log('GET USER', input)
       const project = await prisma.project.findFirst({
         where: {
           id: input.project_id,
@@ -205,6 +260,26 @@ export const budgetRouter = createTRPCRouter({
         })
       }
 
+      // Retrieve promotions and calculate total promotional credit
+      const promotions = await prisma.promotion.findMany({
+        where: {
+          userId: project.creator.id,
+          validUntil: {
+            gte: new Date(),
+          },
+          isUsed: false,
+        },
+      })
+
+      const promoCredit = promotions.reduce(
+        (acc, promo) => acc + promo.amount.toNumber(),
+        0
+      )
+
+      // Add promotional credit to the user's balance
+      const userBalance = wallet?.balance.toNumber() || 0
+      const totalBalance = userBalance + promoCredit
+
       const stripeService = new StripeService()
       const isCustomer = await stripeService.checkIfUserIsCustomer(
         project.creator.id
@@ -220,9 +295,9 @@ export const budgetRouter = createTRPCRouter({
           id: project.creator.id,
           email: project.creator.email,
           name: project.creator.name,
-          balance: wallet?.balance.toNumber() || 0,
+          balance: totalBalance, // Updated to include promotional credit
           hasSubscription: !!subscriptionName,
-          subscriptionName: subscriptionName as string,
+          subscriptionName: subscriptionName || null,
         },
       }
     }),
