@@ -1,1 +1,1 @@
-export * from './lib/portal-api-client'
+export * from './lib'
