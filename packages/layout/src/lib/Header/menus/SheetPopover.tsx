@@ -35,7 +35,7 @@ const SheetPopover = ({
             {triggerIcon}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="mr-2 rounded-t-md flex px-0 flex-col gap-y-5 text-black dark:text-[#e9edf1] pb-2 bg-white dark:bg-[#262b2e]">
+        <PopoverContent className="mr-2 rounded-t-md flex px-0 flex-col gap-y-5 pb-2 bg-ds-card">
           {children}
         </PopoverContent>
       </Popover>
@@ -48,7 +48,7 @@ const SheetPopover = ({
           </Button>
         </SheetTrigger>
         <SheetContent
-          className="flex px-0 flex-col !duration-300 rounded-t-md pt-10 pb-2 gap-y-5 text-black dark:text-[#e9edf1] bg-white dark:bg-[#262b2e]"
+          className="flex px-0 flex-col !duration-300 rounded-t-md pt-10 pb-2 gap-y-5  bg-ds-card"
           side="bottom"
         >
           {children}

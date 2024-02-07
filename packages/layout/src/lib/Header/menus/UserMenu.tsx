@@ -1,18 +1,5 @@
-import { CgProfile } from 'react-icons/cg'
-import { useRouter } from 'next/router'
-import {
-  Cog6ToothIcon,
-  UserCircleIcon,
-  ArrowRightOnRectangleIcon,
-} from '@heroicons/react/24/outline'
 import { api } from '@magickml/portal-api-client'
-import { useTheme } from 'next-themes'
-import { useEffect, useState } from 'react'
-import toast from 'react-hot-toast'
-import clsx from 'clsx'
-import { signOut, useSession } from 'next-auth/react'
 import Cookies from 'js-cookie'
-import SideDrawerMP from '../../SideDrawer/SideDrawerMP'
 import SheetPopover from './SheetPopover'
 import Link from 'next/link'
 import {
@@ -25,6 +12,19 @@ import {
   AvatarFallback,
   AvatarImage,
 } from '@magickml/portal-ui'
+import { CgProfile } from 'react-icons/cg'
+import { useRouter } from 'next/router'
+import {
+  Cog6ToothIcon,
+  UserCircleIcon,
+  ArrowRightOnRectangleIcon,
+} from '@heroicons/react/24/outline'
+import { useTheme } from 'next-themes'
+import { useEffect, useState } from 'react'
+import toast from 'react-hot-toast'
+import clsx from 'clsx'
+import { signOut, useSession } from 'next-auth/react'
+import SideDrawerMP from '../../SideDrawer/SideDrawerMP'
 
 export const UserMenu = () => {
   const [popoverOpen, setPopoverOpen] = useState(false)
@@ -135,14 +135,14 @@ export const UserMenu = () => {
       enabled: isAuthed,
       children: (
         <Link
-          href="/settings"
+          href="/account"
           id="usermenu-settings"
           key="usermenu-settings"
           className={dropDownStyles}
           onClick={handleClose}
         >
           <Cog6ToothIcon className="w-6 h-6 mr-2" />
-          <span className="link-hover">Settings</span>
+          <span className="link-hover">Account</span>
         </Link>
       ),
     },
@@ -194,17 +194,29 @@ export const UserMenu = () => {
         popoverOpen={popoverOpen}
         setPopoverOpen={setPopoverOpen}
         triggerIcon={
-          <CgProfile
-            className="text-black dark:text-[#e9edf1]  h-6 w-6 lg:w-8 lg:h-8 color-transition"
-            width={32}
-            height={32}
-            color="currentColor"
-          />
+          user ? (
+            <UserAvatar
+              className="border-ds-secondary h-6 w-6 lg:w-8 lg:h-8 color-transition"
+              imagePath={user.image}
+              username={user.name}
+            />
+          ) : (
+            <CgProfile
+              className="text-black dark:text-[#e9edf1]  h-6 w-6 lg:w-8 lg:h-8 color-transition"
+              width={32}
+              height={32}
+              color="currentColor"
+            />
+          )
         }
       >
         {user && (
           <div className="flex flex-col items-center justify-center w-full">
-            <UserAvatar imagePath={user.image} username={user.name} />
+            <UserAvatar
+              className="w-48 h-48"
+              imagePath={user.image}
+              username={user.name}
+            />
             <h2 className="pt-4 text-base font-bold text-center">
               {user.name}
             </h2>
@@ -221,12 +233,14 @@ export const UserMenu = () => {
 const UserAvatar = ({
   imagePath,
   username,
+  className,
 }: {
   imagePath: string | null
   username: string | null
+  className?: string
 }) => {
   return (
-    <Avatar className="self-center w-48 h-48 border border-secondary-main">
+    <Avatar className={clsx('self-center border border-ds-primary', className)}>
       <AvatarImage
         className="object-cover w-full h-full rounded-full"
         src={
