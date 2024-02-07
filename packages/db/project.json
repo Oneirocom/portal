@@ -39,6 +39,24 @@
       "options": {
         "cwd": "portal/cloud/packages/db"
       }
+    },
+    "push": {
+      "command": "npx prisma db push --schema ./src/lib/prisma/schema.prisma",
+      "options": {
+        "cwd": "portal/cloud/packages/db"
+      }
+    },
+    "pull": {
+      "command": "npx prisma db pull --schema ./src/lib/prisma/schema.prisma",
+      "options": {
+        "cwd": "portal/cloud/packages/db"
+      }
+    },
+    "studio": {
+      "command": "npx prisma studio --schema ./src/lib/prisma/schema.prisma",
+      "options": {
+        "cwd": "portal/cloud/packages/db"
+      }
     }
   },
   "tags": []
