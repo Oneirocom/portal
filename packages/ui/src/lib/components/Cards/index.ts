@@ -1,4 +1,5 @@
 export * from './agent'
+export * from './agent/agent-card-template'
 export * from './project'
 export * from './project/project-grid'
 export * from './project/project-grid-pagination'
