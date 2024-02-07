@@ -53,7 +53,7 @@
       }
     },
     "studio": {
-      "command": "npx prisma studio --schema ./src/lib/prisma/schema.prisma",
+      "executor": "npx prisma studio --schema ./src/lib/prisma/schema.prisma",
       "options": {
         "cwd": "portal/cloud/packages/db"
       }

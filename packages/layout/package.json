@@ -1,5 +1,5 @@
 {
-  "name": "portal-layout",
+  "name": "@magickml/portal-layout",
   "version": "0.0.1",
   "main": "./index.js",
   "types": "./index.d.ts",
