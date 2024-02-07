@@ -24,7 +24,7 @@ import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import clsx from 'clsx'
 import { signOut, useSession } from 'next-auth/react'
-import SideDrawerMP from '../../SideDrawer/SideDrawerMP'
+import { MP } from '../MP'
 
 export const UserMenu = () => {
   const [popoverOpen, setPopoverOpen] = useState(false)
@@ -220,7 +220,7 @@ export const UserMenu = () => {
             <h2 className="pt-4 text-base font-bold text-center">
               {user.name}
             </h2>
-            <SideDrawerMP />
+            <MP />
           </div>
         )}
 
