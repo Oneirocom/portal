@@ -29,32 +29,32 @@ export const BG: Record<string, MainLayoutBG> = {
   [BackgroundKey.SIGN_IN]: {
     type: BackgroundType.Video,
     path: '/videos/sign-in.webm',
-    fallbackImagePath: '/images/hero.png',
+    fallbackImagePath: '/images/banners/default.png',
   },
   [BackgroundKey.SIGN_UP]: {
     type: BackgroundType.Video,
     path: '/videos/sign-up.webm',
-    fallbackImagePath: '/images/hero.png',
+    fallbackImagePath: '/images/banners/default.png',
   },
   [BackgroundKey.VERIFY_EMAIL]: {
     type: BackgroundType.Video,
     path: '/videos/verify-email.webm',
-    fallbackImagePath: '/images/hero.png',
+    fallbackImagePath: '/images/banners/default.png',
   },
   [BackgroundKey.FORGOT_PASSWORD]: {
     type: BackgroundType.Video,
     path: '/videos/forgot-password.webm',
-    fallbackImagePath: '/images/hero.png',
+    fallbackImagePath: '/images/banners/default.png',
   },
   [BackgroundKey.RESET_PASSWORD]: {
     type: BackgroundType.Video,
     path: '/videos/reset-password.webm',
-    fallbackImagePath: '/images/hero.png',
+    fallbackImagePath: '/images/banners/default.png',
   },
   [BackgroundKey.MAGICK_LINK]: {
     type: BackgroundType.Video,
     path: '/videos/magick-link.webm',
-    fallbackImagePath: '/images/hero.png',
+    fallbackImagePath: '/images/banners/default.png',
   },
 }
 
