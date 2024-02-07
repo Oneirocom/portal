@@ -58,6 +58,7 @@ export const getAgentData = async (
       creatorId: true,
       isPublic: true,
       id: true,
+      version: true,
       publicVariables: true,
       name: true,
       enabled: true,
@@ -140,6 +141,11 @@ export const getAgentData = async (
   }
 }
 
+type PromiseType<T extends Promise<any>> = T extends Promise<infer U>
+  ? U
+  : never
+export type AgentData = PromiseType<ReturnType<typeof getAgentData>>
+
 type InfiniteAgentsOptions = {
   limit: number
   cursor?: string
@@ -161,6 +167,9 @@ export async function getInfiniteAgents({
     orderBy: { updatedAt: 'desc' },
     where: {
       creatorId: userId,
+      currentSpellReleaseId: {
+        not: null,
+      },
     },
     select: {
       name: true,
