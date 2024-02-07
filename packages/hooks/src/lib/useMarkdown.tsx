@@ -20,7 +20,6 @@ import remarkRehype from 'remark-rehype'
 import { Plugin, unified } from 'unified'
 import { visit } from 'unist-util-visit'
 import { HtmlGenerator, parse } from 'latex.js'
-import 'node_modules/latex.js/dist/css/katex.css'
 import { useTheme } from 'next-themes'
 import {
   ClipboardDocumentIcon,
@@ -55,13 +54,13 @@ export const useMarkdownProcessor = (content: string) => {
     })
   }, [theme])
 
-  useEffect(() => {
-    if (theme === 'dark') {
-      require('highlight.js/styles/github-dark.css')
-    } else {
-      require('highlight.js/styles/github.css')
-    }
-  }, [theme])
+  // useEffect(() => {
+  //   if (theme === 'dark') {
+  //     require('highlight.js/styles/github-dark.css')
+  //   } else {
+  //     require('highlight.js/styles/github.css')
+  //   }
+  // }, [theme])
 
   return useMemo(() => {
     return unified()
