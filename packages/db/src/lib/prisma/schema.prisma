@@ -1331,9 +1331,8 @@ view spells {
   @@schema("portal")
 }
 
-/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 view agents {
-  id                    String?   @db.Uuid
+  id                    String   @db.Uuid @unique
   rootSpell             Json?
   publicVariables       String?
   secrets               String?
@@ -1366,20 +1365,17 @@ view agents {
   likesCount            Int?
   commentsCount         BigInt?
 
-  @@ignore
   @@schema("portal")
 }
 
-/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 view documents {
-  id           String? @db.Uuid
+  id           String   @db.Uuid @unique
   type         String?
   projectId    String?
   date         String?
   metadata     Json?
   workspace_id String? @db.Uuid
 
-  @@ignore
   @@schema("portal")
 }
 
