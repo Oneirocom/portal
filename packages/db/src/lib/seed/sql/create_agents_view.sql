@@ -1,4 +1,4 @@
-CREATE VIEW portal.agents AS
+CREATE OR REPLACE VIEW portal.agents AS
 SELECT
   aa.*,
   pa."id" AS "publicAgentId",

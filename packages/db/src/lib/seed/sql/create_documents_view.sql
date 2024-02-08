@@ -1,3 +1,4 @@
+CREATE OR REPLACE VIEW portal.documents AS
 SELECT
   ad.*,
   p.workspace_id
