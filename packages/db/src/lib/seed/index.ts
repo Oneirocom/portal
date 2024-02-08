@@ -8,7 +8,6 @@ const prisma = new PrismaClient()
 const sqlFiles = [
   './sql/create_spells_view.sql',
   './sql/create_agents_view.sql',
-  './sql/create_embeddings_view.sql',
   './sql/create_documents_view.sql',
 ]
 async function runSqlFile(filePath: string) {

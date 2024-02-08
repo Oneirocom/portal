@@ -1,11 +1,9 @@
-DROP VIEW IF EXISTS spells CASCADE;
 CREATE OR REPLACE VIEW portal.spells AS
 SELECT
   *
 FROM
   public.spells;
 
-DROP VIEW IF EXISTS agents CASCADE;
 CREATE VIEW portal.agents AS
 SELECT
   aa.*,
@@ -51,14 +49,12 @@ FROM
       "publicAgentId"
   ) c ON pa.id = c."publicAgentId";
 
-DROP VIEW IF EXISTS embeddings CASCADE;
 CREATE OR REPLACE VIEW portal.embeddings AS
 SELECT
   *
 FROM
   public.embeddings;
 
-DROP VIEW IF EXISTS documents CASCADE;
 CREATE OR REPLACE VIEW portal.documents AS
 SELECT
   ad.*,
