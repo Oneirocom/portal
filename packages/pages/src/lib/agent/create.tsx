@@ -21,10 +21,7 @@ import {
 import React from 'react'
 import Head from 'next/head'
 
-export const CreateAgentPage = ({
-  initialTemplateAgents,
-  initialRemixableAgents,
-}) => {
+export const CreateAgentPage = () => {
   const [open, setOpen] = useState<boolean>(false)
   const workspaceId = useAtomValue(workspaceAtom)?.id
   const [name, setName] = useState<string>('')
@@ -32,11 +29,8 @@ export const CreateAgentPage = ({
 
   const router = useRouter()
 
-  const { data: templateAgents, isLoading: templateAgentsLoading } =
-    api.publicAgents.getTemplateAgents.useQuery(undefined, {
-      initialData: initialTemplateAgents,
-      refetchInterval: 1000 * 60 * 1,
-    })
+  const { data: templates, isLoading: templatesLoading } =
+    api.agents.getTemplates.useQuery()
 
   const { mutateAsync: remixAgent, isLoading: isMakingAgentRemix } =
     api.publicAgents.remix.useMutation({
@@ -81,16 +75,16 @@ export const CreateAgentPage = ({
         Select an Official Magick Starter Agents to start from:
       </h3>
       <div className="relative flex flex-wrap justify-center pb-10 gap-x-4 gap-y-4 lg:justify-start">
-        {!templateAgentsLoading &&
-          templateAgents &&
-          templateAgents.map((agent, i: number) => (
+        {!templatesLoading &&
+          templates &&
+          templates.map((t, i: number) => (
             <AgentCardTemplate
-              key={agent.id}
-              id={agent.id}
-              name={agent.name ?? 'Untitled'}
-              image={agent.image}
-              description={agent?.description ?? ''}
-              handleClick={() => onAgentClick(agent.publicAgentId)}
+              key={t.id}
+              id={t.id}
+              name={t.name ?? 'Untitled'}
+              image={t.image}
+              description={t?.description ?? ''}
+              handleClick={() => onAgentClick(t.id)}
             />
           ))}
       </div>

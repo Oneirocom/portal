@@ -563,6 +563,24 @@ export const agentsRouter = createTRPCRouter({
 
       return result
     }),
+
+  getTemplates: publicProcedure.query(async () => {
+    return await prisma.template.findMany({
+      where: {
+        deletedAt: null,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        image: true,
+        updatedAt: true,
+      },
+    })
+  }),
 })
 
 const fetchAgentAnalytics = async (
