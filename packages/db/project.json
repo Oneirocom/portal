@@ -57,6 +57,12 @@
       "options": {
         "cwd": "portal/cloud/packages/db"
       }
+    },
+    "seed": {
+      "command": "ts-node ./src/lib/seed/index.ts",
+      "options": {
+        "cwd": "portal/cloud/packages/db"
+      }
     }
   },
   "tags": []
