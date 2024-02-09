@@ -152,7 +152,7 @@ export const SignIn = () => {
         >
           <Image
             src="/images/logos/google-white.png"
-            fill
+            layout="fill"
             alt="Sign in with Google"
             className="object-contain py-2"
           />
