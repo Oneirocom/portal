@@ -2,7 +2,7 @@ import { MagickDialog, Button, Input, agentInputStyles } from '@magickml/portal-
 import { useState } from 'react'
 import toast from 'react-hot-toast'
 import { FiShare } from 'react-icons/fi'
-import Image from 'next/image'
+import Image from "next/legacy/image"
 import { DocumentDuplicateIcon } from '@heroicons/react/20/solid'
 
 type Props = {

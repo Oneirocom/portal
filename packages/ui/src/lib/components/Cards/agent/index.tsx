@@ -1,5 +1,5 @@
 import { Card, CardDescription, CardHeader, CardTitle } from '../../ui/card'
-import Image from 'next/image'
+import Image from "next/legacy/image"
 import { ImageType, getImage } from '@magickml/portal-utils-shared'
 import { AgentCardMenu } from './agent-card-menu'
 import { useRouter } from 'next/router'
@@ -62,7 +62,7 @@ export const AgentCard: React.FC<AgentCardProps> = agent => {
             type: ImageType.IMAGE,
           })}
           alt={agent?.name ? agent.name : 'Placeholder'}
-          fill
+          layout="fill"
           className="object-cover"
         />
       </div>

@@ -1,6 +1,6 @@
 import { useAtom } from 'jotai'
 import { toggleAgentSettingsAtom } from '@magickml/portal-state'
-import Image from 'next/image'
+import Image from "next/legacy/image"
 import { defaultImage } from '@magickml/portal-utils-shared'
 import AgentChatRemixButton from '../Buttons/AgentChatRemixButton'
 import AgentChatLikeButton from '../Buttons/AgentChatLikeButton'

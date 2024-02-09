@@ -1,5 +1,5 @@
 import { Card, CardDescription, CardHeader, CardTitle } from '../../ui/card'
-import Image from 'next/image'
+import Image from "next/legacy/image"
 import { ImageType, getImage } from '@magickml/portal-utils-shared'
 
 type AgentCardTemplateProps = {
@@ -25,7 +25,7 @@ export const AgentCardTemplate: React.FC<AgentCardTemplateProps> = agent => {
             type: ImageType.IMAGE,
           })}
           alt={agent?.name ? agent.name : 'Placeholder'}
-          fill
+          layout="fill"
           className="object-cover"
         />
       </div>

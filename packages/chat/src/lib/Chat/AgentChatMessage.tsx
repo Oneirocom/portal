@@ -1,7 +1,7 @@
 import { type AgentMessages } from '@magickml/portal-types'
 import clsx from 'clsx'
 import { useMarkdownProcessor } from '@magickml/portal-hooks'
-import Image from 'next/image'
+import Image from "next/legacy/image"
 import { defaultImage } from '@magickml/portal-utils-shared'
 
 interface Props {

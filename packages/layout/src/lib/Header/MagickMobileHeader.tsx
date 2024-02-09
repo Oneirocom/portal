@@ -1,6 +1,6 @@
 import { FunctionComponent } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
+import Image from "next/legacy/image"
 import { api } from '@magickml/portal-api-client'
 import { Bars3Icon } from '@heroicons/react/20/solid'
 import { useSession } from 'next-auth/react'

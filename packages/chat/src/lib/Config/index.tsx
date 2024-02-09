@@ -1,6 +1,6 @@
 import { MagickTextInput } from '@magickml/portal-ui'
 import { api } from '@magickml/portal-api-client'
-import Image from 'next/image'
+import Image from "next/legacy/image"
 import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import { useAtom, useAtomValue } from 'jotai'

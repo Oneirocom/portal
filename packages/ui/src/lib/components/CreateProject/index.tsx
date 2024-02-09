@@ -5,7 +5,7 @@ import { useAtom } from 'jotai'
 import { createProjectOpenAtom, workspaceAtom } from '@magickml/portal-state'
 import { api } from '@magickml/portal-api-client'
 import { toast } from 'react-hot-toast'
-import Image from 'next/image'
+import Image from "next/legacy/image"
 
 type Template = {
   id: number

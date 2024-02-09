@@ -5,7 +5,7 @@ import {
     CarouselItem,
     CarouselOptions,
 } from "../ui/carousel";
-import Image from "next/image";
+import Image from "next/legacy/image";
 import { useEffect, useState } from "react";
 import Autoplay, { AutoplayOptionsType } from "embla-carousel-autoplay";
 import { Button } from "../ui/button";
@@ -134,7 +134,7 @@ export function CarouselHero() {
                                 <Image
                                     alt="magick-banner"
                                     src={slide.imageUrl}
-                                    fill
+                                    layout="fill"
                                     objectFit="cover"
                                     className="z-0"
                                 />

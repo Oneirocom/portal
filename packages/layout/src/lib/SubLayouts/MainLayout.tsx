@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import Image from 'next/image'
+import Image from "next/legacy/image"
 import MagickHeader from '../Header/MagickHeader'
 import MagickMobileNav from '../MobileNav/MagickMobileNav'
 import clsx from 'clsx'

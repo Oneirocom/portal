@@ -44,7 +44,7 @@ function AgentChatHistory({
 
   // Utility function to format category labels
   const formatCategoryLabel = (category: string) => {
-    return category.replace(/_/g, ' ')
+    return category.replace(/_/g, ' ');
   }
 
   const locations = ['MagickML.com', 'Discord']
