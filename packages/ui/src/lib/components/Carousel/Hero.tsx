@@ -274,8 +274,8 @@ const Line: React.FC<LineProps> = ({ className }) => {
         >
             <path
                 id="Line 41 (Stroke)"
-                fill-rule="evenodd"
-                clip-rule="evenodd"
+                fillRule="evenodd"
+                clipRule="evenodd"
                 d="M0.597656 1.61914C0.597656 0.790713 1.26923 0.119141 2.09766 0.119141L39.5488 0.119141C40.3773 0.119141 41.0488 0.790713 41.0488 1.61914C41.0488 2.44757 40.3773 3.11914 39.5488 3.11914L2.09766 3.11914C1.26923 3.11914 0.597656 2.44757 0.597656 1.61914Z"
                 fill="currentColor"
             />
