@@ -122,7 +122,6 @@ function AgentChatHistory({
               </div>
             </div>
             <div
-              role="chats-contatiner"
               style={{ maxHeight: 'calc(95vh - 80px)', overflowY: 'auto' }}
               className="flex flex-col gap-4"
             >
