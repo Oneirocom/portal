@@ -88,8 +88,9 @@ const MagickHeader = () => {
     }
   }, [session.data?.user?.role])
 
+
   return (
-    <div className="bg-ds-header shrink-0 h-12 lg:h-20 relative w-full inline-flex justify-start items-center text-left text-black dark:text-white lg:px-10">
+    <div className="bg-ds-header shrink-0 h-12 lg:h-20 relative w-full inline-flex justify-start items-center text-left text-ds-black dark:text-ds-white lg:px-10">
       {/* LOGO */}
       <Link
         href="/"
@@ -102,7 +103,7 @@ const MagickHeader = () => {
             viewBox="0 0 188 33"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            className="dark:text-white text-black relative w-[126px] h-[23px] lg:w-[187px] lg:h-[33px] overflow-hidden flex-shrink-0 object-cover"
+            className="relative w-[126px] h-[23px] lg:w-[187px] lg:h-[33px] overflow-hidden flex-shrink-0 object-cover"
           >
             <g id="Wordmark - group">
               <path
@@ -152,7 +153,7 @@ const MagickHeader = () => {
             </g>
           </svg>
         </div>
-        <span className="mt-3 text-sm font-semibold lg:mt-5 lg:text-xl font-montAlt text-secondary-highlight">
+        <span className="mt-3 text-sm font-semibold lg:mt-5 lg:text-xl font-montAlt text-ds-primary">
           BETA
         </span>
       </Link>
