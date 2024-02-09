@@ -12,13 +12,19 @@ const nextConfig = {
     svgr: false,
   },
   images: {
-    domains: [
-      'replicate.delivery',
-      'emawtpjmqvwygksvurku.supabase.co',
-      'lglrzlrsfxchbqsslvur.supabase.co',
-      'i.ytimg.com',
-      'pub-58d22deb43dc48e792b7b7468610b5f9.r2.dev',
-      'directus-production-1d52.up.railway.app',
+    remotePatterns: [
+      { protocol: 'https', hostname: 'replicate.delivery' },
+      { protocol: 'https', hostname: 'emawtpjmqvwygksvurku.supabase.co' },
+      { protocol: 'https', hostname: 'lglrzlrsfxchbqsslvur.supabase.co' },
+      { protocol: 'https', hostname: 'i.ytimg.com' },
+      {
+        protocol: 'https',
+        hostname: 'pub-58d22deb43dc48e792b7b7468610b5f9.r2.dev',
+      },
+      {
+        protocol: 'https',
+        hostname: 'directus-production-1d52.up.railway.app',
+      },
     ],
   },
   reactStrictMode: false,
