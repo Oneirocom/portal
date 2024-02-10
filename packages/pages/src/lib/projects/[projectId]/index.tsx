@@ -3,12 +3,12 @@ import posthog from 'posthog-js'
 import { Maintenance } from '@magickml/portal-ui'
 import dynamic from 'next/dynamic'
 import { MainLayout } from '@magickml/portal-layout'
+import { type AppConfig } from '@magickml/providers'
 // import { MagickIDE } from 'client/editor'
 const MagickIDE = dynamic(
   () => import('client/editor').then(mod => mod.MagickIDE),
   { ssr: false }
 )
-import { type AppConfig } from '@magickml/providers'
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL
 if (!apiUrl) {

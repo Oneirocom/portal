@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import posthog from 'posthog-js'
 import { Maintenance } from '@magickml/portal-ui'
-import { PortalLayout } from '@magickml/portal-layout'
 import { AppConfig } from '@magickml/providers'
 import dynamic from 'next/dynamic'
 const MagickIDE = dynamic(
