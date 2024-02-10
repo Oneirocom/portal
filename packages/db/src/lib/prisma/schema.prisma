@@ -8,9 +8,9 @@ generator client {
 datasource db {
   provider          = "postgresql"
   url               = env("PORTAL_DATABASE_URL")
-  schemas           = ["portal"]
   shadowDatabaseUrl = env("PORTAL_SHADOW_DATABASE_URL")
   extensions        = [uuid_ossp(map: "uuid-ossp"), vector]
+  schemas           = ["portal"]
 }
 
 model Account {
@@ -206,31 +206,30 @@ model VerificationToken {
 }
 
 model Project {
-  id           String   @id @default(cuid())
-  projectCode  String   @unique @default(cuid())
-  inviteCode   String   @unique @default(cuid())
+  id           String      @id @default(cuid())
+  projectCode  String      @unique @default(cuid())
+  inviteCode   String      @unique @default(cuid())
   creatorId    String
   name         String
   description  String?
   templateId   String?
   slug         String
-  createdAt    DateTime? @default(now())
+  createdAt    DateTime?   @default(now())
   deletedAt    DateTime?
-  updatedAt    DateTime? @updatedAt
-  completed    Boolean  @default(true)
+  updatedAt    DateTime?   @updatedAt
+  completed    Boolean     @default(true)
   image        String?
-  workspace_id String? @db.Uuid
+  workspace_id String?     @db.Uuid
   lastActive   DateTime?
   domains      Domain[]
   members      Member[]
-  creator      User     @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  creator      User        @relation(fields: [creatorId], references: [id], onDelete: Cascade)
   workspaces   workspaces? @relation(fields: [workspace_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@unique([projectCode, inviteCode])
   @@map("projects")
   @@schema("portal")
 }
-
 
 model Template {
   id          String    @id @default(cuid())
@@ -816,6 +815,73 @@ model home_carousel {
   link           String?        @db.VarChar(255)
   directus_files directus_files @relation(fields: [image], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "home_carousel_image_foreign")
 
+  @@schema("portal")
+}
+
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view agents {
+  id                    String?   @db.Uuid
+  rootSpell             Json?
+  publicVariables       String?
+  secrets               String?
+  name                  String?
+  enabled               Boolean?
+  updatedAt             String?
+  pingedAt              String?
+  projectId             String?
+  data                  Json?
+  runState              String?
+  image                 String?
+  rootSpellId           String?   @db.Uuid
+  default               Boolean?
+  createdAt             DateTime? @db.Timestamptz(6)
+  currentSpellReleaseId String?   @db.Uuid
+  embedModel            String?   @db.VarChar(255)
+  version               String?   @db.VarChar(255)
+  embeddingProvider     String?   @db.VarChar(255)
+  embeddingModel        String?   @db.VarChar(255)
+  publicAgentId         String?
+  description           String?
+  remixable             Boolean?
+  featured              Boolean?
+  isTemplate            Boolean?
+  isPublic              Boolean?
+  creatorId             String?
+  creatorName           String?
+  creatorImage          String?
+  workspace_id          String?   @db.Uuid
+  likesCount            Int?
+  commentsCount         BigInt?
+
+  @@ignore
+  @@schema("portal")
+}
+
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view spells {
+  id             String? @db.Uuid
+  name           String?
+  projectId      String?
+  graph          Json?
+  createdAt      String?
+  updatedAt      String?
+  type           String? @db.VarChar(255)
+  spellReleaseId String? @db.Uuid
+
+  @@ignore
+  @@schema("portal")
+}
+
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view documents {
+  id           String? @db.Uuid
+  type         String?
+  projectId    String?
+  date         String?
+  metadata     Json?
+  workspace_id String? @db.Uuid
+
+  @@ignore
   @@schema("portal")
 }
 
