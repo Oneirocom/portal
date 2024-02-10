@@ -273,27 +273,32 @@ const createProjectData = async (
   }
 ) => {
   let data: any
-  switch (input.templateId) {
-    case 1:
-      data = starterTemplate
-      break
-    case 2:
-      data = discordTemplate
-      break
-    case 3:
-      data = restTemplate
-      break
-    case 4:
-      data = documentSearchTemplate
-      break
-    case 5:
-      data = elizaTemplate
-      break
-    default:
-      data = { id: '0' }
+
+  data = {
+    id: 0,
   }
 
-  delete data.id
+  // switch (input.templateId) {
+  //   case 1:
+  //     data = starterTemplate
+  //     break
+  //   case 2:
+  //     data = discordTemplate
+  //     break
+  //   case 3:
+  //     data = restTemplate
+  //     break
+  //   case 4:
+  //     data = documentSearchTemplate
+  //     break
+  //   case 5:
+  //     data = elizaTemplate
+  //     break
+  //   default:
+  //     data = { id: '0' }
+  // }
+
+  // delete data.id
 
   await fetch(`${process.env.NEXT_PUBLIC_API_URL}/projects`, {
     method: 'POST',
