@@ -1,4 +1,7 @@
 -- CreateExtension
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+-- CreateExtension
 CREATE EXTENSION IF NOT EXISTS "vector";
 
 -- CreateEnum
@@ -196,7 +199,7 @@ CREATE TABLE "portal"."projects" (
     "updatedAt" TIMESTAMP(3),
     "completed" BOOLEAN NOT NULL DEFAULT true,
     "image" TEXT,
-    "workspace_id" UUID,
+    "workspace_id" TEXT,
     "lastActive" TIMESTAMP(3),
 
     CONSTRAINT "projects_pkey" PRIMARY KEY ("id")
@@ -316,7 +319,7 @@ CREATE TABLE "portal"."roles" (
 
 -- CreateTable
 CREATE TABLE "portal"."workspaces" (
-    "id" UUID NOT NULL,
+    "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "is_default" BOOLEAN DEFAULT false,
     "creator_id" TEXT NOT NULL,
@@ -329,8 +332,8 @@ CREATE TABLE "portal"."workspaces" (
 
 -- CreateTable
 CREATE TABLE "portal"."workspace_members" (
-    "id" UUID NOT NULL,
-    "workspace_id" UUID NOT NULL,
+    "id" TEXT NOT NULL,
+    "workspace_id" TEXT NOT NULL,
     "user_id" TEXT NOT NULL,
     "role" "portal"."workspace_member_role" NOT NULL,
     "created_at" TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
