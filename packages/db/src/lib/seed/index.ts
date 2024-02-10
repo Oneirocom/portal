@@ -1,4 +1,4 @@
-import { PrismaClient } from '../db'
+import { PrismaClient } from '@prisma/client-portal'
 import { readFileSync } from 'fs'
 import path from 'path'
 import blankSpell from './templates/blank.spell.json'
