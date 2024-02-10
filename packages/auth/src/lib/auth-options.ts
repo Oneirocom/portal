@@ -8,7 +8,6 @@ import {
 } from './authProviders'
 import { stripeService } from '@magickml/portal-billing'
 import { Provider } from 'next-auth/providers'
-import { v4 } from 'uuid'
 
 const providers: Provider[] = [
   magickLinkProvider,

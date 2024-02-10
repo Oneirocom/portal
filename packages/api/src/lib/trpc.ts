@@ -16,11 +16,11 @@ import { getServerAuthSession, getServerAuthToken } from '@magickml/portal-auth'
 import { prisma } from '@magickml/portal-db'
 import { authorizeAdmin } from '@magickml/portal-utils-shared'
 import { NextApiRequest } from 'next'
-import {
-  getAuth,
-  SignedInAuthObject,
-  SignedOutAuthObject,
-} from '@clerk/nextjs/server'
+// import {
+//   getAuth,
+//   SignedInAuthObject,
+//   SignedOutAuthObject,
+// } from '@clerk/nextjs/server'
 
 /**
  * 1. CONTEXT
