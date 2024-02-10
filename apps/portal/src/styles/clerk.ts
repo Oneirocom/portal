@@ -33,6 +33,7 @@ const authTheme: Theme = {
     selectButton: formInputStyles,
     selectOptionsContainer: 'bg-ds-card rounded text-white',
     selectOptionsContainer__role: 'text-red-500 bg-red-500',
+    logoBox: 'hidden',
   },
 }
 
