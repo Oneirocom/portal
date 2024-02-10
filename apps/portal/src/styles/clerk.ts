@@ -1,4 +1,4 @@
-import { ClerkOptions, Theme, Variables } from '@clerk/types'
+import { type ClerkOptions, type Theme } from '@clerk/types'
 import { buttonVariants, formInputStyles } from '@magickml/portal-core-ui'
 
 const commonText = 'text-ds-black dark:text-ds-white font-montserrat '
@@ -32,7 +32,7 @@ const authTheme: Theme = {
     footerActionLink: commmonAltText,
     selectButton: formInputStyles,
     selectOptionsContainer: 'bg-ds-card rounded text-white',
-    selectOptionsContainer__role: "text-red-500 bg-red-500"
+    selectOptionsContainer__role: 'text-red-500 bg-red-500',
   },
 }
 

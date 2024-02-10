@@ -1,7 +1,6 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import posthog from 'posthog-js'
 import { Maintenance } from '@magickml/portal-ui'
-import { useRouter } from 'next/router'
 import { type AppConfig } from '@magickml/providers'
 import { MagickIDE } from 'client/editor'
 
@@ -24,7 +23,7 @@ if (!apiUrl) {
 export const Editor = ({
   token,
   projectId,
-  // email,
+  email,
 }: Props): React.ReactElement | null => {
   const [cookie, setCookie] = useState<boolean | null>(null)
 
@@ -37,7 +36,7 @@ export const Editor = ({
     projectId,
     token,
     userId: '',
-    email: undefined,
+    email,
   }
 
   return (
