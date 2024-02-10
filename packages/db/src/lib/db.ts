@@ -1,7 +1,5 @@
 import { PrismaClient } from '@prisma/client-portal'
 
-console.log('PrismaClient', PrismaClient)
-
 export * from '@prisma/client-portal'
 
 const globalForPrisma = globalThis as { prisma?: PrismaClient }
