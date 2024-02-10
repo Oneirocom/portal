@@ -3,7 +3,12 @@ import posthog from 'posthog-js'
 import { Maintenance } from '@magickml/portal-ui'
 import { useRouter } from 'next/router'
 import { type AppConfig } from '@magickml/providers'
-import { MagickIDE } from 'client/editor'
+import dynamic from 'next/dynamic'
+
+const MagickIDE = dynamic(
+  () => import('client/editor').then(mod => mod.MagickIDE),
+  { ssr: false }
+)
 
 type Props = {
   token: string
