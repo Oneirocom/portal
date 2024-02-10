@@ -1,6 +1,5 @@
 import { SignIn } from '@clerk/nextjs'
 import { MainLayout, PortalLayout } from '@magickml/portal-layout'
-import { clerkAppearance } from '../../styles/clerk'
 
 export default function Page() {
   return <SignIn signUpUrl='/sign-up' />

@@ -1,25 +1,5 @@
 import { ClerkOptions, Theme, Variables } from '@clerk/types'
 import { buttonVariants, formInputStyles } from '@magickml/portal-core-ui'
-const variablesDark: Variables = {
-  colorBackground: '#0b0d0e',
-  colorPrimary: '#1bc5eb',
-  colorTextOnPrimaryBackground: '#0b0d0e',
-  fontFamily: 'Montserrat, sans-serif',
-  fontWeight: {
-    normal: 400,
-    medium: 500,
-    bold: 700,
-  },
-  colorText: '#fafdfe',
-  colorDanger: '#f32121',
-  colorInputBackground: '#0b0d0e',
-  borderRadius: '0.5rem',
-  fontFamilyButtons: 'Montserrat, sans-serif',
-  colorInputText: '#fafdfe',
-  colorSuccess: '#21f343',
-  colorWarning: '#ffd600',
-  colorTextSecondary: '#565c62',
-}
 
 const commonText = 'text-ds-black dark:text-ds-white font-montserrat '
 

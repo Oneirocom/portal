@@ -24,11 +24,9 @@ if (!apiUrl) {
 export const Editor = ({
   token,
   projectId,
-  email,
+  // email,
 }: Props): React.ReactElement | null => {
-  const iframeRef = useRef<HTMLIFrameElement>(null)
   const [cookie, setCookie] = useState<boolean | null>(null)
-  const router = useRouter()
 
   useEffect(() => {
     setCookie(!posthog.has_opted_out_capturing())
