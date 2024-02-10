@@ -1321,7 +1321,6 @@ view spells {
   id             String  @unique @db.Uuid
   name           String?
   projectId      String?
-  hash           String?
   graph          Json?
   createdAt      String?
   updatedAt      String?
@@ -1332,7 +1331,7 @@ view spells {
 }
 
 view agents {
-  id                    String   @db.Uuid @unique
+  id                    String    @unique @db.Uuid
   rootSpell             Json?
   publicVariables       String?
   secrets               String?
@@ -1369,7 +1368,7 @@ view agents {
 }
 
 view documents {
-  id           String   @db.Uuid @unique
+  id           String  @unique @db.Uuid
   type         String?
   projectId    String?
   date         String?

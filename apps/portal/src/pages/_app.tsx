@@ -5,8 +5,15 @@ import { NextPage } from 'next'
 import { SessionProvider } from 'next-auth/react'
 
 // styles
+import '../../../../../../packages/client/stylesheets/src/App.css'
+import '../../../../../../packages/client/stylesheets/src/design-globals/design-globals.css'
+import 'dockview/dist/styles/dockview.css'
+import '../../../../../../packages/client/stylesheets/src/themes.scss'
+import 'reactflow/dist/style.css'
 import '../styles/globals.css'
 import 'node_modules/latex.js/dist/css/katex.css'
+import '../../../../../../packages/client/stylesheets/src/behaveFlow.css'
+import '../../../../../../packages/client/stylesheets/src/dockview.css'
 
 // import "styles/sheetOverrides.css";
 // import "driver.js/dist/driver.css";
