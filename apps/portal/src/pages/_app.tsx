@@ -31,6 +31,9 @@ import clsx from 'clsx'
 import { Maintenance } from '@magickml/portal-ui'
 import { useEffect } from 'react'
 
+import { ClerkProvider } from '@clerk/nextjs'
+import { clerkAppearance } from '../styles/clerk'
+
 // import dynamic from 'next/dynamic'
 // const AnonymousUserProvider = dynamic(
 //   () => import("@magickml/portal-providers"),
@@ -99,38 +102,40 @@ const App = ({
 
   return (
     <SessionProvider session={pageProps.session}>
-      {/* <AnonymousUserProvider>
+      <ClerkProvider appearance={clerkAppearance} {...pageProps}>
+        {/* <AnonymousUserProvider>
         <FrigadeProvider>
           <CustomPosthogProvider> */}
-      <main
-        className={clsx(
-          montserrat.className,
-          `${monteserratAlternates.variable} font-sans h-screen`
-        )}
-      >
-        <Head>
-          <meta
-            title="Maintenance | MagickML"
-            name="viewport"
-            content="initial-scale=1, width=device-width"
-          />
-        </Head>
-        <NextThemeProvider attribute="class">
-          {process.env.NEXT_PUBLIC_MAINTENANCE_MODE === 'true' ? (
-            <Maintenance mode="cloud" />
-          ) : (
-            getLayout(<Component {...pageProps} />)
+        <main
+          className={clsx(
+            montserrat.className,
+            `${monteserratAlternates.variable} font-sans h-screen`
           )}
+        >
+          <Head>
+            <meta
+              title="Maintenance | MagickML"
+              name="viewport"
+              content="initial-scale=1, width=device-width"
+            />
+          </Head>
+          <NextThemeProvider attribute="class">
+            {process.env.NEXT_PUBLIC_MAINTENANCE_MODE === 'true' ? (
+              <Maintenance mode="cloud" />
+            ) : (
+              getLayout(<Component {...pageProps} />)
+            )}
 
-          <StyledToaster />
-        </NextThemeProvider>
-      </main>
-      {process.env.NEXT_PUBLIC_DEV_TOOLS === 'true' && (
-        <ReactQueryDevtools initialIsOpen={false} />
-      )}
-      {/* </CustomPosthogProvider>
+            <StyledToaster />
+          </NextThemeProvider>
+        </main>
+        {process.env.NEXT_PUBLIC_DEV_TOOLS === 'true' && (
+          <ReactQueryDevtools initialIsOpen={false} />
+        )}
+        {/* </CustomPosthogProvider>
         </FrigadeProvider>
       </AnonymousUserProvider> */}
+      </ClerkProvider>
     </SessionProvider>
   )
 }
