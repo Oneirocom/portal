@@ -2,7 +2,10 @@
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { composePlugins, withNx } = require('@nx/next')
-const withTM = require('next-transpile-modules')(['pdfjs-dist'])
+const withTM = require('next-transpile-modules')([
+  '@magickml/behave-graph',
+  'pdfjs-dist',
+])
 
 /**
  * @type {import('@nx/next/plugins/with-nx').WithNxOptions}
