@@ -611,3 +611,10 @@ h6 {
       0 0 50px #1bc5eb, 0 0 60px #1bc5eb, 0 0 70px #1bc5eb, 0 0 80px #1bc5eb;
   }
 }
+
+.cl-selectOption div, .cl-selectOption p {
+  @apply text-ds-black dark:text-ds-white font-montserrat;
+}
+.cl-selectOptionsContainer div div input {
+  @apply bg-ds-card font-montserrat text-ds-black focus:ring-0 dark:text-ds-white placeholder:text-ds-black dark:placeholder:text-ds-white;
+}

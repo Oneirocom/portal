@@ -1,7 +1,6 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import posthog from 'posthog-js'
 import { Maintenance } from '@magickml/portal-ui'
-import { useRouter } from 'next/router'
 import { type AppConfig } from '@magickml/providers'
 import dynamic from 'next/dynamic'
 
@@ -31,9 +30,7 @@ export const Editor = ({
   projectId,
   email,
 }: Props): React.ReactElement | null => {
-  const iframeRef = useRef<HTMLIFrameElement>(null)
   const [cookie, setCookie] = useState<boolean | null>(null)
-  const router = useRouter()
 
   useEffect(() => {
     setCookie(!posthog.has_opted_out_capturing())
@@ -44,7 +41,7 @@ export const Editor = ({
     projectId,
     token,
     userId: '',
-    email: undefined,
+    email,
   }
 
   return (
