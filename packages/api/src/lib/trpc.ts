@@ -34,7 +34,7 @@ type CreateContextOptions = {
   req?: NextApiRequest
   session: Session | null
   token: string | null
-  auth: SignedInAuthObject | SignedOutAuthObject
+  // auth: SignedInAuthObject | SignedOutAuthObject
 }
 
 /**
@@ -53,7 +53,7 @@ const createInnerTRPCContext = (opts: CreateContextOptions) => {
     session: opts.session,
     token: opts.token,
     prisma,
-    auth: opts.auth,
+    // auth: opts.auth,
   }
 }
 
@@ -72,7 +72,7 @@ export const createTRPCContext = async (opts: CreateNextContextOptions) => {
     req,
     session,
     token,
-    auth: getAuth(opts.req),
+    // auth: getAuth(opts.req),
   })
 }
 
@@ -202,19 +202,19 @@ export const openAPIProcedure = t.procedure.use(
   enforceHeaderKey('x-api-key', process.env.CLOUD_AGENT_KEY || '')
 )
 
-const isAuthed = t.middleware(({ next, ctx }) => {
-  if (!ctx.auth.userId) {
-    throw new TRPCError({ code: 'UNAUTHORIZED' })
-  }
-  return next({
-    ctx: {
-      auth: ctx.auth,
-    },
-  })
-})
+// const isAuthed = t.middleware(({ next, ctx }) => {
+//   if (!ctx.auth.userId) {
+//     throw new TRPCError({ code: 'UNAUTHORIZED' })
+//   }
+//   return next({
+//     ctx: {
+//       auth: ctx.auth,
+//     },
+//   })
+// })
 
 /**
  * Clerk procedure
  * This is the new protectedProcedure
  */
-export const clerkProcedure = t.procedure.use(isAuthed)
+// export const clerkProcedure = t.procedure.use(isAuthed)

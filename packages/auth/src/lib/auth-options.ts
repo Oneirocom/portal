@@ -8,6 +8,7 @@ import {
 } from './authProviders'
 import { stripeService } from '@magickml/portal-billing'
 import { Provider } from 'next-auth/providers'
+import { v4 } from 'uuid'
 
 const providers: Provider[] = [
   magickLinkProvider,
@@ -61,6 +62,7 @@ export const authOptions: AuthOptions = {
         if (!defaultWorkspace) {
           await prisma.workspaces.create({
             data: {
+              id: v4(),
               name: `${user.email}'s Workspace`,
               creator_id: user.id,
               is_default: true,
