@@ -1,6 +1,6 @@
 import { toggleAgentSettingsAtom } from '@magickml/portal-state'
 import clsx from 'clsx'
-import { Button } from '@magickml/portal-core-ui'
+import { Button } from '@magickml/client-ui'
 import { useAtom } from 'jotai'
 
 type AgentFooterProps = {}

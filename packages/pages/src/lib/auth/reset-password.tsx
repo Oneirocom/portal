@@ -9,7 +9,7 @@ import {
   Button,
   formInputStyles,
   Label,
-} from '@magickml/portal-core-ui'
+} from '@magickml/client-ui'
 import * as z from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'

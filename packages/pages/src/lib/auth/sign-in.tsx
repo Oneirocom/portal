@@ -13,7 +13,7 @@ import {
   formInputStyles,
   Button,
   Input,
-} from '@magickml/portal-core-ui'
+} from '@magickml/client-ui'
 import { useForm } from 'react-hook-form'
 import { signIn, useSession } from 'next-auth/react'
 import toast from 'react-hot-toast'

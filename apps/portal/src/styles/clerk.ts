@@ -1,5 +1,5 @@
 import { type ClerkOptions, type Theme } from '@clerk/types'
-import { buttonVariants, formInputStyles } from '@magickml/portal-core-ui'
+import { buttonVariants, formInputStyles } from '@magickml/client-ui'
 
 const commonText = 'text-ds-black dark:text-ds-white font-montserrat '
 
@@ -14,19 +14,18 @@ const authTheme: Theme = {
     headerTitle: headerTitle,
     headerSubtitle: 'text-ds-neutral font-montserrat',
     card: 'bg-ds-card rounded',
-    formButtonPrimary:
-      buttonVariants({
-        variant: 'portal-primary',
-        size: 'sm',
-        className: 'font-bold hover:bg-ds-primary font-montserrat',
-      }),
+    formButtonPrimary: buttonVariants({
+      variant: 'portal-primary',
+      size: 'sm',
+      className: 'font-bold hover:bg-ds-primary font-montserrat',
+    }),
     socialButtonsBlockButton: buttonVariants({
       variant: 'basic',
       size: 'sm',
       className: 'font-bold',
     }),
-    socialButtonsBlockButtonText: "text-ds-white font-montserrat font-semibold",
-    socialButtonsBlockButtonArrow: "text-ds-primary",
+    socialButtonsBlockButtonText: 'text-ds-white font-montserrat font-semibold',
+    socialButtonsBlockButtonArrow: 'text-ds-primary',
     formHeaderSubtitle: 'text-ds-neutral font-montserrat',
     formHeader__error: 'text-ds-error font-montserrat',
     formFieldInput: formInputStyles,
@@ -83,5 +82,4 @@ export const clerkAppearance: ClerkOptions['appearance'] = {
       // accordionTriggerButton: "focus:outline-none focus:ring-0 focus:border-0",
     },
   },
-  
 }

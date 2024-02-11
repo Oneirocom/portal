@@ -1,5 +1,5 @@
-import { Card, CardDescription, CardHeader, CardTitle } from '@magickml/portal-core-ui'
-import Image from "next/legacy/image"
+import { Card, CardDescription, CardHeader, CardTitle } from '@magickml/client-ui'
+import Image from 'next/legacy/image'
 import { ImageType, getImage } from '@magickml/portal-utils-shared'
 import { AgentCardMenu } from './agent-card-menu'
 import { useRouter } from 'next/router'

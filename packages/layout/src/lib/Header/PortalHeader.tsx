@@ -5,7 +5,7 @@ import clsx from 'clsx'
 import { Route, getNavigationForRole } from '../navigation'
 import { ANONYMOUS, Roles } from '@magickml/portal-config'
 import { InfoMenu, UserMenu } from './menus'
-import { Button } from '@magickml/portal-core-ui'
+import { Button } from '@magickml/client-ui'
 import { PageProgress } from './PageProgress'
 import { useRouter } from 'next/router'
 

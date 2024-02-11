@@ -11,7 +11,7 @@ import {
   formInputStyles,
   Input,
   Button,
-} from '@magickml/portal-core-ui'
+} from '@magickml/client-ui'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { useForm } from 'react-hook-form'

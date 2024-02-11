@@ -1,8 +1,8 @@
-import { Button, Input, agentInputStyles } from '@magickml/portal-core-ui'
+import { Button, Input, agentInputStyles } from '@magickml/client-ui'
 import { useState } from 'react'
 import toast from 'react-hot-toast'
 import { FiShare } from 'react-icons/fi'
-import Image from "next/legacy/image"
+import Image from 'next/legacy/image'
 import { DocumentDuplicateIcon } from '@heroicons/react/20/solid'
 import { MagickDialog } from '@magickml/portal-ui'
 

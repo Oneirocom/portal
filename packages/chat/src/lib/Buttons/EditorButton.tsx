@@ -1,4 +1,4 @@
-import { Button } from '@magickml/portal-core-ui'
+import { Button } from '@magickml/client-ui'
 import { trackEvent, PrivateEventTypes } from '@magickml/portal-utils-shared'
 
 type Props = {

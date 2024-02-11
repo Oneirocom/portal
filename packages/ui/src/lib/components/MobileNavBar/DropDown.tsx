@@ -5,7 +5,7 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
-} from '@magickml/portal-core-ui'
+} from '@magickml/client-ui'
 import { dropDownMenuItemsType } from './types'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useState } from 'react'

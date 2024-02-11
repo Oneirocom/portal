@@ -23,7 +23,7 @@ import {
   Button,
   buttonVariants,
   Label,
-} from '@magickml/portal-core-ui'
+} from '@magickml/client-ui'
 import { MagickDialog } from '@magickml/portal-ui'
 import ConfigSwitches from './Settings/Config/ConfigSwitches'
 import clsx from 'clsx'

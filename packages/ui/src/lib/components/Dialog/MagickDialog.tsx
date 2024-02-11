@@ -7,7 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@magickml/portal-core-ui'
+} from '@magickml/client-ui'
 import clsx from 'clsx'
 import { MagickIcon } from '../Icons'
 import { FunctionComponent } from 'react'

@@ -6,7 +6,7 @@ import Head from 'next/head'
 import { useInView } from 'react-intersection-observer'
 import clsx from 'clsx'
 import { AgentCard } from '@magickml/portal-ui'
-import { Card, Button } from '@magickml/portal-core-ui'
+import { Card, Button } from '@magickml/client-ui'
 
 export const AgentsPage = ({ initialData }) => {
   const router = useRouter()

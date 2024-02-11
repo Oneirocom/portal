@@ -1,10 +1,6 @@
 import { workspaceAtom } from '@magickml/portal-state'
-import {
-  MagickDialog,
-  MagickUnauthorizedDialog,
-
-} from '@magickml/portal-ui'
-import { Button, Input, Label } from '@magickml/portal-core-ui'
+import { MagickDialog, MagickUnauthorizedDialog } from '@magickml/portal-ui'
+import { Button, Input, Label } from '@magickml/client-ui'
 import { useAtomValue } from 'jotai'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'

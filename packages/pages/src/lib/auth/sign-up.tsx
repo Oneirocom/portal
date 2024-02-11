@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import Image from "next/legacy/image"
+import Image from 'next/legacy/image'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { useForm } from 'react-hook-form'
@@ -24,7 +24,7 @@ import {
   FormField,
   FormItem,
   FormMessage,
-} from '@magickml/portal-core-ui'
+} from '@magickml/client-ui'
 import { signIn } from 'next-auth/react'
 
 const formSchema = z.object({

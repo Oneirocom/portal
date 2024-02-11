@@ -13,7 +13,7 @@ import {
   FormMessage,
   Progress,
   Button,
-} from '@magickml/portal-core-ui'
+} from '@magickml/client-ui'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import axios from 'axios'

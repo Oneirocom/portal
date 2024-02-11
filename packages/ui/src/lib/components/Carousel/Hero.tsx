@@ -5,7 +5,7 @@ import {
   CarouselItem,
   CarouselOptions,
   Button,
-} from '@magickml/portal-core-ui'
+} from '@magickml/client-ui'
 import Image from 'next/legacy/image'
 import { useEffect, useState } from 'react'
 import Autoplay, { AutoplayOptionsType } from 'embla-carousel-autoplay'

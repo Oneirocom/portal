@@ -2,18 +2,8 @@ import { api } from '@magickml/portal-api-client'
 import Cookies from 'js-cookie'
 import SheetPopover from './SheetPopover'
 import Link from 'next/link'
-import {
-  AgentIcon,
-  LightIcon,
-  DarkIcon,
-  LoginIcon,
-} from '@magickml/portal-ui'
-import {
-  Switch,
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from '@magickml/portal-core-ui'
+import { AgentIcon, LightIcon, DarkIcon, LoginIcon } from '@magickml/portal-ui'
+import { Switch, Avatar, AvatarFallback, AvatarImage } from '@magickml/client-ui'
 import { CgProfile } from 'react-icons/cg'
 import { useRouter } from 'next/router'
 import {
@@ -37,7 +27,7 @@ export const UserMenu = () => {
   }
   const { theme, setTheme } = useTheme()
   const { signOut } = useClerk()
-  const {isSignedIn, user} = useUser()
+  const { isSignedIn, user } = useUser()
   const utils = api.useUtils()
 
   const router = useRouter()

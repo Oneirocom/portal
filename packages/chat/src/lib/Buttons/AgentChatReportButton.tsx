@@ -2,7 +2,7 @@ import toast from 'react-hot-toast'
 import { AiOutlineWarning } from 'react-icons/ai'
 import { api } from '@magickml/portal-api-client'
 import { useState } from 'react'
-import { Checkbox, Textarea, Button } from '@magickml/portal-core-ui'
+import { Checkbox, Textarea, Button } from '@magickml/client-ui'
 import { MagickDialog } from '@magickml/portal-ui'
 
 const AgentChatReportButton = ({

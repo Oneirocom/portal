@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
 import { SlRefresh } from 'react-icons/sl'
 import { MagickDialog, AgentCardTemplate } from '@magickml/portal-ui'
-import { Label, Button, Input } from '@magickml/portal-core-ui'
+import { Label, Button, Input } from '@magickml/client-ui'
 import React from 'react'
 import Head from 'next/head'
 

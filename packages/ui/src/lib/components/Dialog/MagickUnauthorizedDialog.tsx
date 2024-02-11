@@ -7,7 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@magickml/portal-core-ui'
+} from '@magickml/client-ui'
 import { FunctionComponent } from 'react'
 
 type MagickUnauthorizedDialogProps = {

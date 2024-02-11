@@ -16,7 +16,7 @@ import {
   Label,
   Checkbox,
   Textarea,
-} from '@magickml/portal-core-ui'
+} from '@magickml/client-ui'
 
 import { convertFileToBase64 } from '@magickml/portal-utils-shared'
 
