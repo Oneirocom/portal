@@ -28,7 +28,6 @@ if (!apiUrl) {
 export const Editor = ({
   token,
   projectId,
-  email,
 }: Props): React.ReactElement | null => {
   const [cookie, setCookie] = useState<boolean | null>(null)
 
@@ -41,7 +40,7 @@ export const Editor = ({
     projectId,
     token,
     userId: '',
-    email,
+    email: undefined,
   }
 
   return (
