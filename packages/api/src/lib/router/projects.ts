@@ -4,7 +4,6 @@ import { prisma } from '@magickml/portal-db'
 import { hasAccess, prepareToken } from '../utils/shared'
 import { uploadImage } from '../utils/upload'
 import { v4 } from 'uuid'
-import { auth } from '@clerk/nextjs'
 
 export const projectsRouter = createTRPCRouter({
   // Create a project

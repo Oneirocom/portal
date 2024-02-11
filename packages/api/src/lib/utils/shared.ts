@@ -1,7 +1,7 @@
 import { authOptions } from '@magickml/portal-auth'
-import { decode, encode } from 'next-auth/jwt'
+import { encode } from 'next-auth/jwt'
 import { prisma } from '@magickml/portal-db'
-import { SignedInAuthObject, emails } from '@clerk/clerk-sdk-node'
+import { SignedInAuthObject } from '@clerk/clerk-sdk-node'
 
 interface PrepareTokenParams {
   user: SignedInAuthObject
