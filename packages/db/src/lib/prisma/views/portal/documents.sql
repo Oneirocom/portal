@@ -3,10 +3,6 @@ SELECT
   ad.type,
   ad."projectId",
   ad.date,
-  ad.metadata,
-  p.workspace_id
+  ad.metadata
 FROM
-  (
-    public.documents ad
-    JOIN projects p ON ((ad."projectId" = p.id))
-  );
+  public.documents ad;

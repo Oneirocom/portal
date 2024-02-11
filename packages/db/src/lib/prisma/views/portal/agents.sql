@@ -31,10 +31,9 @@ SELECT
     ) THEN TRUE
     ELSE false
   END AS "isPublic",
-  u.id AS "creatorId",
-  u.name AS "creatorName",
-  u.image AS "creatorImage",
-  p.workspace_id,
+  p.owner AS "creatorId",
+  p.name AS "creatorName",
+  p.image AS "creatorImage",
   (COALESCE(l."likesCount", (0) :: bigint)) :: integer AS "likesCount",
   COALESCE(c."commentsCount", (0) :: bigint) AS "commentsCount"
 FROM
@@ -42,13 +41,10 @@ FROM
     (
       (
         (
-          (
-            public.agents aa
-            LEFT JOIN "publicAgents" pa ON (((aa.id) :: text = pa."agentId"))
-          )
-          JOIN projects p ON ((aa."projectId" = p.id))
+          public.agents aa
+          LEFT JOIN "publicAgents" pa ON (((aa.id) :: text = pa."agentId"))
         )
-        JOIN users u ON ((p."creatorId" = u.id))
+        JOIN projects p ON ((aa."projectId" = p.id))
       )
       LEFT JOIN (
         SELECT

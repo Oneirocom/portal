@@ -10,16 +10,14 @@ SELECT aa.*,
         AND pa."deletedAt" IS NULL THEN TRUE
         ELSE FALSE
     END AS "isPublic",
-    u.id AS "creatorId",
-    u.name AS "creatorName",
-    u.image AS "creatorImage",
-    p.workspace_id,
+    p.owner AS "creatorId",
+    p.name AS "creatorName",
+    p.image AS "creatorImage",
     CAST(COALESCE(l."likesCount", 0) AS integer) AS "likesCount",
     COALESCE(c."commentsCount", 0) AS "commentsCount"
 FROM public.agents aa
     LEFT JOIN portal."publicAgents" pa ON aa.id::TEXT = pa."agentId"
     JOIN portal.projects p ON aa."projectId" = p.id
-    JOIN portal.users u ON p."creatorId" = u.id
     LEFT JOIN (
         SELECT "publicAgentId",
             COUNT(id) AS "likesCount"
@@ -33,23 +31,28 @@ FROM public.agents aa
         WHERE "deletedAt" IS NULL
         GROUP BY "publicAgentId"
     ) c ON pa.id = c."publicAgentId";
+
+
 CREATE OR REPLACE VIEW portal.spells AS
 SELECT *
 FROM public.spells;
+
 CREATE OR REPLACE VIEW portal.documents AS
-SELECT ad.*,
-    p.workspace_id
-FROM public.documents ad
-    JOIN portal.projects p ON ad."projectId" = p.id;
+SELECT ad.*
+FROM public.documents ad;
+
 CREATE OR REPLACE VIEW portal.customers AS
 SELECT *
 FROM stripe.customers;
+
 CREATE OR REPLACE VIEW portal.subscriptions AS
 SELECT *
 FROM stripe.subscriptions;
+
 CREATE OR REPLACE VIEW portal.products AS
 SELECT *
 FROM stripe.products;
+
 CREATE OR REPLACE VIEW portal.prices AS
 SELECT *
 FROM stripe.prices;
