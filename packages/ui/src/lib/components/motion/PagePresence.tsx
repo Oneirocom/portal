@@ -9,7 +9,6 @@ export const PagePresence = ({ children }: Props) => {
   return (
     <AnimatePresence
       initial={true}
-      // mode="wait"
       onExitComplete={() => window.scrollTo(0, 0)}
       custom={router.route}
     >
