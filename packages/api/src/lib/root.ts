@@ -1,7 +1,6 @@
 import { createTRPCRouter } from './trpc'
 import { projectsRouter } from './router/projects'
 import { documentsRouter } from './router/documents'
-import { spellsRouter } from './router/spells'
 import { agentsRouter } from './router/agents'
 import { publicAgentsRouter } from './router/publicAgents'
 import { chatRouter } from './router/chat'
@@ -17,7 +16,6 @@ import { budgetRouter } from './router/magick'
 export const portalRouter = createTRPCRouter({
   projects: projectsRouter,
   documents: documentsRouter,
-  spells: spellsRouter,
   agents: agentsRouter,
   publicAgents: publicAgentsRouter,
   chat: chatRouter,
