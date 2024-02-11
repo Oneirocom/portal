@@ -1,9 +1,6 @@
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
 import { NextPage } from 'next'
-
-import { SessionProvider } from 'next-auth/react'
-
 // styles
 import '../../../../../../packages/client/stylesheets/src/App.css'
 import '../../../../../../packages/client/stylesheets/src/design-globals/design-globals.css'
@@ -101,42 +98,40 @@ const App = ({
   }, [])
 
   return (
-    <SessionProvider session={pageProps.session}>
-      <ClerkProvider appearance={clerkAppearance} {...pageProps}>
-        {/* <AnonymousUserProvider>
+    <ClerkProvider appearance={clerkAppearance} {...pageProps}>
+      {/* <AnonymousUserProvider>
         <FrigadeProvider>
           <CustomPosthogProvider> */}
-        <main
-          className={clsx(
-            montserrat.className,
-            `${monteserratAlternates.variable} font-sans h-screen`
-          )}
-        >
-          <Head>
-            <meta
-              title="Maintenance | MagickML"
-              name="viewport"
-              content="initial-scale=1, width=device-width"
-            />
-          </Head>
-          <NextThemeProvider attribute="class">
-            {process.env.NEXT_PUBLIC_MAINTENANCE_MODE === 'true' ? (
-              <Maintenance mode="cloud" />
-            ) : (
-              getLayout(<Component {...pageProps} />)
-            )}
-
-            <StyledToaster />
-          </NextThemeProvider>
-        </main>
-        {process.env.NEXT_PUBLIC_DEV_TOOLS === 'true' && (
-          <ReactQueryDevtools initialIsOpen={false} />
+      <main
+        className={clsx(
+          montserrat.className,
+          `${monteserratAlternates.variable} font-sans h-screen`
         )}
-        {/* </CustomPosthogProvider>
+      >
+        <Head>
+          <meta
+            title="Maintenance | MagickML"
+            name="viewport"
+            content="initial-scale=1, width=device-width"
+          />
+        </Head>
+        <NextThemeProvider attribute="class">
+          {process.env.NEXT_PUBLIC_MAINTENANCE_MODE === 'true' ? (
+            <Maintenance mode="cloud" />
+          ) : (
+            getLayout(<Component {...pageProps} />)
+          )}
+
+          <StyledToaster />
+        </NextThemeProvider>
+      </main>
+      {process.env.NEXT_PUBLIC_DEV_TOOLS === 'true' && (
+        <ReactQueryDevtools initialIsOpen={false} />
+      )}
+      {/* </CustomPosthogProvider>
         </FrigadeProvider>
       </AnonymousUserProvider> */}
-      </ClerkProvider>
-    </SessionProvider>
+    </ClerkProvider>
   )
 }
 
