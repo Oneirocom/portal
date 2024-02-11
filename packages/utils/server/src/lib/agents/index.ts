@@ -2,6 +2,7 @@ import { prisma } from '@magickml/portal-db'
 import { Session } from 'next-auth'
 import { Graph, PublicVariable, AgentDataOld } from '@magickml/portal-types'
 import { extractPublicVariablesV2 } from '@magickml/portal-utils-shared'
+import { SignedInAuthObject, SignedOutAuthObject } from '@clerk/clerk-sdk-node'
 
 export const getAgentDataSSR = async (
   session: Session | null,
@@ -46,13 +47,15 @@ export const getAgentDataSSR = async (
   }
 }
 
-export const getAgentData = async (
-  session: Session | null,
+interface GetAgentDataParams {
+  auth: SignedInAuthObject | SignedOutAuthObject
   agentId: string
-) => {
+}
+
+export const getAgentData = async (params: GetAgentDataParams) => {
   const data = await prisma.agents.findUnique({
     where: {
-      id: agentId,
+      id: params.agentId,
     },
     select: {
       creatorId: true,
@@ -69,12 +72,10 @@ export const getAgentData = async (
       remixable: true,
       creatorName: true,
       creatorImage: true,
-      workspace_id: true,
       image: true,
       data: true,
       rootSpellId: true,
       isTemplate: true,
-      //   likesCount: true,
     },
   })
 
@@ -122,7 +123,7 @@ export const getAgentData = async (
 
   const status = {
     isPublic: data?.isPublic ?? false,
-    isCreator: data?.creatorId === session?.user.id,
+    isCreator: data?.creatorId === params.auth?.user.id,
     isEnabled: data?.enabled ?? false,
   }
 
