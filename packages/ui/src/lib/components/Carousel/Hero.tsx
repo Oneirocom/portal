@@ -81,7 +81,7 @@ export function CarouselHero() {
     if (session.data) {
       router.push('/agents/create')
     } else {
-      router.push('/auth/sign-in')
+      router.push('/sign-in')
     }
   }
 
