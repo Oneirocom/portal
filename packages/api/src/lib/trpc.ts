@@ -9,12 +9,9 @@
 
 import { initTRPC, TRPCError } from '@trpc/server'
 import { type CreateNextContextOptions } from '@trpc/server/adapters/next'
-import { type Session } from 'next-auth'
 import superjson from 'superjson'
 import { ZodError } from 'zod'
-import { getServerAuthSession, getServerAuthToken } from '@magickml/portal-auth'
 import { prisma } from '@magickml/portal-db'
-import { authorizeAdmin } from '@magickml/portal-utils-shared'
 import { NextApiRequest } from 'next'
 import {
   getAuth,
@@ -32,8 +29,6 @@ import {
 
 type CreateContextOptions = {
   req?: NextApiRequest
-  session: Session | null
-  token: string | null
   auth: SignedInAuthObject | SignedOutAuthObject
 }
 
@@ -50,9 +45,7 @@ type CreateContextOptions = {
 const createInnerTRPCContext = (opts: CreateContextOptions) => {
   return {
     req: opts.req,
-    session: opts.session,
-    token: opts.token,
-    prisma,
+    db: prisma,
     auth: opts.auth,
   }
 }
@@ -65,13 +58,9 @@ const createInnerTRPCContext = (opts: CreateContextOptions) => {
  */
 export const createTRPCContext = async (opts: CreateNextContextOptions) => {
   const { req, res } = opts
-  const session = await getServerAuthSession({ req, res })
-  const token = await getServerAuthToken({ req })
 
   return createInnerTRPCContext({
     req,
-    session,
-    token,
     auth: getAuth(opts.req),
   })
 }
@@ -112,38 +101,20 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
  */
 export const createTRPCRouter = t.router
 
-/** Reusable middleware that enforces users are logged in before running the procedure. */
-const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
-  if (!ctx.session || !ctx.session.user) {
+/** Middleware that enforces users are logged in before running the procedure. */
+const enforceUserIsAuthed = t.middleware(({ next, ctx }) => {
+  if (!ctx.auth.userId) {
     throw new TRPCError({ code: 'UNAUTHORIZED' })
   }
   return next({
     ctx: {
-      // infers the `session` as non-nullable
-      session: { ...ctx.session, user: ctx.session.user },
-    },
-  })
-})
-
-/** Reusable middleware that enforces users to have the admin role before running the procedure. */
-const enforceUserIsAdmin = t.middleware(({ ctx, next }) => {
-  if (
-    !ctx.session ||
-    !ctx.session.user ||
-    authorizeAdmin(ctx.session.user.role)
-  ) {
-    throw new TRPCError({ code: 'UNAUTHORIZED' })
-  }
-  return next({
-    ctx: {
-      // infers the `session` as non-nullable
-      session: { ...ctx.session, user: ctx.session.user },
+      auth: ctx.auth,
     },
   })
 })
 
 /**
- * Middleware to enforce a specific header key on every request.
+ *  Middleware to enforce a specific header key on every request.
  */
 const enforceHeaderKey = (headerKey: string, expectedKeyValue: string) => {
   return t.middleware(({ ctx, next }) => {
@@ -188,12 +159,6 @@ export const publicProcedure = t.procedure
  */
 export const protectedProcedure = t.procedure.use(enforceUserIsAuthed)
 
-/** Admin procedure. unused currently but here for reference of a role check.
- * checks users role for 'ADMIN'
- * clerk will handle this for us
- */
-export const adminProcedure = t.procedure.use(enforceUserIsAdmin)
-
 /**
  * Open API procedure
  * This is an easy way to expose a restful endpoint. It enforces a specific header key on every request.
@@ -201,20 +166,3 @@ export const adminProcedure = t.procedure.use(enforceUserIsAdmin)
 export const openAPIProcedure = t.procedure.use(
   enforceHeaderKey('x-api-key', process.env.CLOUD_AGENT_KEY || '')
 )
-
-const isAuthed = t.middleware(({ next, ctx }) => {
-  if (!ctx.auth.userId) {
-    throw new TRPCError({ code: 'UNAUTHORIZED' })
-  }
-  return next({
-    ctx: {
-      auth: ctx.auth,
-    },
-  })
-})
-
-/**
- * Clerk procedure
- * This is the new protectedProcedure
- */
-export const clerkProcedure = t.procedure.use(isAuthed)
