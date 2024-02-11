@@ -1,23 +1,8 @@
-import { MagickContentDialog } from './MagickContentDialog'
 import { useState } from 'react'
-import { XMarkIcon } from '@heroicons/react/24/outline'
-import { useAtom } from 'jotai'
-import { createProjectOpenAtom } from '@magickml/portal-state'
 import { api } from '@magickml/portal-api-client'
 import { toast } from 'react-hot-toast'
-import Image from 'next/legacy/image'
 import { MagickDialog } from './MagickDialog'
 import { Input, Label, formInputStyles } from '@magickml/client-ui'
-
-type Template = {
-  id: number
-  name: string
-  description: string
-  label?: string
-}
-
-type ImageMode = 'upload' | 'prompt' | 'icon'
-
 interface CreateProjectDialogProps {
   state: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
 }
