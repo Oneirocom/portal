@@ -33,55 +33,6 @@ const amountSchema = z.object({
 export const AccountPage = () => {
   const router = useRouter()
   const [open, setOpen] = useState(false)
-  const session = useSession()
-  const passwordFormSchema = z
-    .object({
-      password: z
-        .string()
-        .min(8, { message: 'Password must be at least 8 chars' }),
-      confirmPassword: z.string(),
-    })
-    .refine(data => data.password === data.confirmPassword, {
-      message: "Passwords don't match",
-      path: ['confirmPassword'],
-    })
-
-  const formSchema = passwordFormSchema
-  type FormValues = z.infer<typeof formSchema>
-
-  const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      password: '',
-      confirmPassword: '',
-    },
-  })
-
-  const clearData = () => {
-    setOpen(false)
-    form.resetField('password')
-    form.resetField('confirmPassword')
-  }
-
-  const { mutateAsync: updatePassword, isLoading } =
-    api.auth.updatePassword.useMutation({
-      onSuccess: () => {
-        toast.success('Password updated successfully')
-        clearData()
-      },
-      onError: error => {
-        toast.error(error.message)
-        clearData()
-      },
-    })
-
-  const handlePasswordUpdate = async (values: z.infer<typeof formSchema>) => {
-    const email = session.data?.user?.email
-    return await updatePassword({
-      password: values.password,
-      email: email ?? '',
-    })
-  }
 
   const [inputValue, setInputValue] = useState<string>('5.00')
   const [error, setError] = useState<string | undefined>()
@@ -162,18 +113,6 @@ export const AccountPage = () => {
 
   const introAmount = (introCredits / 100) * 2
 
-  // const getSubscriptionName = () => {
-  //   if (!subscription) {
-  //     return "Free Tier";
-  //   }
-
-  //   if (subscription.exists) {
-  //     return subscription.subscription?.items;
-  //   }
-
-  //   return "Free Tier";
-  // };
-
   return (
     <div className="flex flex-col font-montserrat justify-center items-start">
       {/* Header */}
@@ -181,85 +120,6 @@ export const AccountPage = () => {
         <h1 className="grow shrink basis-0 text-2xl font-bold font-montAlt">
           Account
         </h1>
-      </div>
-
-      {/* Security */}
-      <div className="flex flex-col gap-y-2 p-4 lg:p-10 border-b border-ds-neutral w-full">
-        <h3 className="text-2xl font-montAlt font-medium">Security</h3>
-        <p className="font-montAlt pb-2">
-          Update or Set the password for your account.
-        </p>
-        <Button
-          onClick={() => setOpen(true)}
-          variant="portal-neutral"
-          size="md"
-          className="max-w-2xs text-lg"
-        >
-          Update Password
-        </Button>
-        <MagickDialog
-          open={open}
-          setOpen={setOpen}
-          submitButton={false}
-          description="Create a password that is at least 8 characters long."
-        >
-          <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(handlePasswordUpdate)}
-              className="w-full space-y-8"
-            >
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Input
-                        className={formInputStyles}
-                        placeholder="Password"
-                        type="password"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="confirmPassword"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Input
-                        type="password"
-                        className={formInputStyles}
-                        placeholder="Confirm Password"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button
-                size="lg"
-                variant="primary"
-                className="w-full"
-                type="submit"
-                disabled={form.formState.isSubmitting}
-              >
-                Submit
-                {isLoading && (
-                  <div
-                    className="inline-block ml-4 h-4 w-4 animate-spin rounded-full border-2 border-solid border-white border-r-transparent align-[-0.125em] text-info motion-reduce:animate-[spin_1.5s_linear_infinite]"
-                    role="status"
-                  />
-                )}
-              </Button>
-            </form>
-          </Form>
-        </MagickDialog>
       </div>
 
       {/* Billing */}
