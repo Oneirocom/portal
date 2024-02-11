@@ -1,30 +1,30 @@
 import { FrigadeProvider as FrigadeProviderOG, useUser } from '@frigade/react'
-import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import { useAtomValue } from 'jotai'
 import { anonymousUserIdAtom } from './AnonymousProvider'
+import { useSession } from '@clerk/nextjs'
 
 type Props = {
   children: React.ReactNode
 }
 
 export const FrigadeProvider = ({ children }: Props) => {
-  const { data: session, status } = useSession()
+  const { session, isSignedIn } = useSession()
   const router = useRouter()
   const anonymousId = useAtomValue(anonymousUserIdAtom)
-  const user = useUser()
+  const frigadeUser = useUser()
 
   // Set or reset the user ID based on the authentication status
   useEffect(() => {
-    if (status === 'authenticated' && session?.user?.id) {
-      user.setUserId(session.user.id)
+    if (isSignedIn) {
+      frigadeUser.setUserId(session.user.id)
     } else if (status === 'unauthenticated' && anonymousId) {
-      user.setUserId(anonymousId)
+      frigadeUser.setUserId(anonymousId)
     } else {
-      user.setUserId('anonymous')
+      frigadeUser.setUserId('anonymous')
     }
-  }, [status, session, anonymousId, user])
+  }, [status, session, anonymousId, frigadeUser])
 
   return (
     <FrigadeProviderOG

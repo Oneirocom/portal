@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import posthog from 'posthog-js'
 import { PostHogProvider } from 'posthog-js/react'
-import { useSession } from 'next-auth/react'
 import { CookieBanner } from '@magickml/portal-ui'
 import { useAtomValue } from 'jotai'
 import { anonymousUserIdAtom } from './AnonymousProvider'
+import { useSession } from '@clerk/nextjs'
 
 type Props = {
   children: React.ReactNode
@@ -13,7 +13,7 @@ type Props = {
 
 export const CustomPosthogProvider = ({ children }: Props) => {
   const router = useRouter()
-  const { data: session, status } = useSession()
+  const { isSignedIn, session } = useSession()
   const [showBanner, setShowBanner] = useState(false)
   const anonymousId = useAtomValue(anonymousUserIdAtom)
 
@@ -43,15 +43,15 @@ export const CustomPosthogProvider = ({ children }: Props) => {
 
   // Set identity
   useEffect(() => {
-    if (status === 'authenticated') {
-      posthog.identify(session?.user?.email || undefined)
+    if (isSignedIn) {
+      posthog.identify(session.user.id || undefined)
     } else if (anonymousId) {
       // Use the anonymous ID if not authenticated
       posthog.identify(anonymousId)
     } else {
       posthog.reset()
     }
-  }, [status, session, anonymousId])
+  }, [isSignedIn, session, anonymousId])
 
   // Check cookie tracking status
   useEffect(() => {

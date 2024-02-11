@@ -3,7 +3,7 @@ import { useEffect, ReactNode } from 'react'
 import Cookies from 'js-cookie'
 import { ClientJS } from 'clientjs'
 import { api } from '@magickml/portal-api-client'
-import { useSession } from 'next-auth/react'
+import { useSession } from '@clerk/nextjs'
 
 export const anonymousUserIdAtom = atom<string | null>(null)
 
@@ -12,12 +12,12 @@ export const AnonymousUserProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
   const setAnonymousUserId = useSetAtom(anonymousUserIdAtom)
   const { mutateAsync: create } = api.anonUsers.create.useMutation()
-  const { status } = useSession()
+  const { isSignedIn } = useSession()
 
   useEffect(() => {
-    if (status === 'authenticated') {
+    if (isSignedIn) {
       return
-    } else if (status === 'loading') {
+    } else if (isSignedIn === undefined) {
       return
     }
 
