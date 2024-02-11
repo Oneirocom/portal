@@ -163,3 +163,30 @@ export const secondaryNavigation = [
 export const filteredSecondaryNavigation = secondaryNavigation.filter(
   item => item.enabled
 )
+
+export const navigationV2 = [
+  {
+    name: 'Home',
+    href: '/',
+    icon: '/images/icons/home.svg',
+    enabled: true,
+    Iicon: HomeIcon,
+    admin: false,
+  },
+  {
+    name: 'Agents',
+    href: '/agents',
+    icon: '/images/icons/agents.svg',
+    enabled: true,
+    Iicon: AgentIcon,
+    admin: false,
+  },
+  {
+    name: 'Projects',
+    href: '/projects',
+    icon: '/images/icons/project-light.svg',
+    enabled: true,
+    Iicon: ProjectIcon,
+    admin: false,
+  },
+]
