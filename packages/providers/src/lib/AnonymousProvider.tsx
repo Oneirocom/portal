@@ -44,7 +44,7 @@ export const AnonymousUserProvider: React.FC<{ children: ReactNode }> = ({
     } else {
       setAnonymousUserId(anonymousId)
     }
-  }, [status, setAnonymousUserId, create])
+  }, [isSignedIn, setAnonymousUserId, create])
 
   return <>{children}</>
 }

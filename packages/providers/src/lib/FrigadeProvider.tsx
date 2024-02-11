@@ -19,7 +19,7 @@ export const FrigadeProvider = ({ children }: Props) => {
   useEffect(() => {
     if (isSignedIn) {
       frigadeUser.setUserId(session.user.id)
-    } else if (status === 'unauthenticated' && anonymousId) {
+    } else if (anonymousId) {
       frigadeUser.setUserId(anonymousId)
     } else {
       frigadeUser.setUserId('anonymous')
