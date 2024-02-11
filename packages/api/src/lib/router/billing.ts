@@ -36,7 +36,7 @@ export const billingRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const id = ctx.auth.userId
-      const email = ctx.auth.user?.emailAddresses[0]
+      const email = ctx.auth.user?.emailAddresses[0].emailAddress
       if (!email) {
         throw new Error('User must have an email address to create a checkout.')
       }

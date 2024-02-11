@@ -25,7 +25,7 @@ export async function prepareToken(
     token: {
       user: {
         id: params.user.userId,
-        email: params.user.user?.emailAddresses[0],
+        email: params.user.user?.emailAddresses[0].emailAddress,
         permissions: ['owner:*'],
       },
       project: params.projectId,
