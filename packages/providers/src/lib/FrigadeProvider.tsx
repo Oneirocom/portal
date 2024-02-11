@@ -24,7 +24,7 @@ export const FrigadeProvider = ({ children }: Props) => {
     } else {
       frigadeUser.setUserId('anonymous')
     }
-  }, [status, session, anonymousId, frigadeUser])
+  }, [isSignedIn, session, anonymousId, frigadeUser])
 
   return (
     <FrigadeProviderOG
