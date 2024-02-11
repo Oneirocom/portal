@@ -1,5 +1,4 @@
 import { type FC } from 'react'
-import { NewCreateProject } from '@magickml/portal-ui'
 /**
  * Props for the `PortalLayout` component.
  */
@@ -13,12 +12,9 @@ interface AccountLayoutProps {
  */
 export const PortalLayout: FC<AccountLayoutProps> = ({ children }) => {
   return (
-    <>
-      <NewCreateProject />
-      <div className="relative bg-ds-background color-transition h-dvh flex">
-        {children}
-      </div>
-    </>
+    <div className="relative bg-ds-background color-transition h-dvh flex">
+      {children}
+    </div>
   )
 }
 

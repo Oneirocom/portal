@@ -1,32 +1,19 @@
 import { useState } from 'react'
 import { api } from '@magickml/portal-api-client'
-import { PlusCircleIcon } from '@heroicons/react/24/solid'
-import { createProjectOpenAtom, workspaceAtom } from '@magickml/portal-state'
-import { useAtomValue, useSetAtom } from 'jotai'
-import { useDebounce } from 'use-debounce'
 import { useScreenWidth } from '@magickml/portal-hooks'
 import {
   ProjectGrid,
   ProjectIcon,
   ProjectGridPagination,
+  CreateProjectDialog,
 } from '@magickml/portal-ui'
 import { MainLayout, PortalLayout } from '@magickml/portal-layout'
 
 export const ProjectsPage = () => {
-  const setCreateProjectOpen = useSetAtom(createProjectOpenAtom)
-
-  const workspace = useAtomValue(workspaceAtom)
-  const debouncedWorkspace = useDebounce(workspace, 500)
+  const createState = useState(false)
 
   const { data: ownedProjects, isLoading: ownedProjectsLoading } =
-    api.projects.getProjects.useQuery(
-      {
-        workspaceId: workspace?.id,
-      },
-      {
-        enabled: debouncedWorkspace?.[0]?.id.length > 0,
-      }
-    )
+    api.projects.getProjects.useQuery()
 
   const width = useScreenWidth()
   const [currentPage, setCurrentPage] = useState(1)
@@ -55,23 +42,13 @@ export const ProjectsPage = () => {
     <>
       <div className="inline-flex w-full p-4">
         <div className="flex-grow" />
-        <button
-          id="new-project-btn"
-          onClick={() => setCreateProjectOpen(true)}
-          className="font-berkley-mono text-black items-center dark:text-white inline-flex justify-center gap-x-1.5 rounded-md px-3 py-2 bg-[#DCE8ED] dark:bg-[#18181D] shadow-sm ring-1 ring-secondary-main hover:bg-gray-50"
-        >
-          New Project
-          <PlusCircleIcon
-            className="w-5 h-5 -mr-1 text-black dark:text-white"
-            aria-hidden="true"
-          />
-        </button>
+        <CreateProjectDialog state={createState} />
       </div>
 
       <ProjectGrid
         itemsToShow={projectsToShow || []}
         Icon={ProjectIcon}
-        setCreateProjectOpen={setCreateProjectOpen}
+        setCreateProjectOpen={createState[1]}
         placeholderText="Create New Project"
         placeholderClassNames="w-[200px] h-[220px] hidden md:inline-block"
         gridClassNames="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 3xl:grid-cols-6 4xl:grid-cols-6 gap-y-4"
