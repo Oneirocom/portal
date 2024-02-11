@@ -1,5 +1,4 @@
 export * from './menus'
 export * from './PortalHeader'
-export * from './MagickMobileHeader'
 export * from './MobileHeader'
 export * from './WorkspaceModalContent'
