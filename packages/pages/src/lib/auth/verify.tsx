@@ -1,4 +1,4 @@
-import { Button } from '@magickml/portal-ui'
+import { Button } from '@magickml/portal-core-ui'
 import {
   PortalLayout,
   AuthLayout,

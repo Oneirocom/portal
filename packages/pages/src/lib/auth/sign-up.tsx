@@ -24,7 +24,7 @@ import {
   FormField,
   FormItem,
   FormMessage,
-} from '@magickml/portal-ui'
+} from '@magickml/portal-core-ui'
 import { signIn } from 'next-auth/react'
 
 const formSchema = z.object({

@@ -1,4 +1,4 @@
-import Image from "next/legacy/image"
+import Image from 'next/legacy/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { Fragment, useEffect, useState } from 'react'
@@ -13,7 +13,7 @@ import {
   formInputStyles,
   Button,
   Input,
-} from '@magickml/portal-ui'
+} from '@magickml/portal-core-ui'
 import { useForm } from 'react-hook-form'
 import { signIn, useSession } from 'next-auth/react'
 import toast from 'react-hot-toast'

@@ -5,14 +5,17 @@ import {
   FormField,
   FormItem,
   FormMessage,
-} from '@magickml/portal-ui'
+  Input,
+  Button,
+  formInputStyles,
+  Label,
+} from '@magickml/portal-core-ui'
 import * as z from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { api } from '@magickml/portal-api-client'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/router'
-import { Input, Button, formInputStyles, Label } from '@magickml/portal-ui'
 import {
   PortalLayout,
   MainLayout,
