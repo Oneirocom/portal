@@ -1,7 +1,3 @@
-export * from './lib/utils/shadcn'
-export * from './lib/components/ui'
-
-// plan is to move all these below to a separate package: @magickml/portal-components
 export * from './lib/components/Icons'
 export * from './lib/components/motion'
 export * from './lib/components/CreateProject'

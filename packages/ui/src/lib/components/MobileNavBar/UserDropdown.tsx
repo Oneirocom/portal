@@ -6,11 +6,10 @@ import {
 } from '@heroicons/react/24/outline'
 import {
   LoginIcon,
-  Switch,
   DarkIcon,
   LightIcon,
   DashboardIcon,
-} from '@magickml/portal-ui'
+} from '../Icons'
 import { useTheme } from 'next-themes'
 import { useEffect } from 'react'
 import clsx from 'clsx'
@@ -19,6 +18,7 @@ import { useRouter } from 'next/router'
 import Cookies from 'js-cookie'
 import DropDown from './DropDown'
 import { dropDownMenuItemsType, navProps } from './types'
+import { Switch } from '@magickml/portal-core-ui'
 
 export const DropDownUserMenu = () => {
   const { theme, setTheme } = useTheme()

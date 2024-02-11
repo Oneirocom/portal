@@ -1,13 +1,13 @@
-import { Transition } from "@headlessui/react";
-import { useMedia } from "@magickml/portal-hooks";
-import { Toaster, ToastIcon, resolveValue } from "react-hot-toast";
+import { Transition } from '@headlessui/react'
+import { useMedia } from '@magickml/portal-hooks'
+import { Toaster, ToastIcon, resolveValue } from 'react-hot-toast'
 
 export const StyledToaster = () => {
-  const small = useMedia("(max-width: 640px)");
+  const small = useMedia('(max-width: 640px)')
 
   return (
-    <Toaster position={small ? "bottom-center" : "bottom-left"}>
-      {(t) => (
+    <Toaster position={small ? 'bottom-center' : 'bottom-left'}>
+      {t => (
         <Transition
           appear
           show={t.visible}
@@ -33,5 +33,5 @@ export const StyledToaster = () => {
         </Transition>
       )}
     </Toaster>
-  );
-};
+  )
+}

@@ -1,4 +1,4 @@
-import { Card, CardDescription, CardHeader, CardTitle } from '../../ui/card'
+import { Card, CardDescription, CardHeader, CardTitle } from '@magickml/portal-core-ui'
 import Image from "next/legacy/image"
 import { ImageType, getImage } from '@magickml/portal-utils-shared'
 

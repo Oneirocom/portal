@@ -3,7 +3,7 @@ import { useAtomValue } from 'jotai'
 import { api } from '@magickml/portal-api-client'
 import { useState, useEffect } from 'react'
 import toast from 'react-hot-toast'
-import { MagickDialog } from '@magickml/portal-ui'
+import { MagickDialog } from '../../Dialog'
 import { EllipsisVerticalIcon } from '@heroicons/react/20/solid'
 import Link from 'next/link'
 import {
@@ -11,13 +11,13 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '../../ui/dropdown-menu'
+  Button,
+  Input,
+  Label,
+  Checkbox,
+  Textarea,
+} from '@magickml/portal-core-ui'
 
-import { Button } from '../../ui/button'
-import { Input } from '../../ui/input'
-import { Label } from '../../ui/label'
-import { Checkbox } from '../../ui/checkbox'
-import { Textarea } from '../../ui/textarea'
 import { convertFileToBase64 } from '@magickml/portal-utils-shared'
 
 type AgentCardMenuProps = {

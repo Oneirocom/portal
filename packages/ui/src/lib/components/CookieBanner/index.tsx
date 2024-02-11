@@ -1,21 +1,17 @@
-import { Fragment } from "react";
-import { Transition } from "@headlessui/react";
+import { Fragment } from 'react'
+import { Transition } from '@headlessui/react'
 
 type CookieBannerProps = {
-  showBanner: boolean;
-  acceptCookies: () => void;
-  declineCookies: () => void;
-};
-
-
-
+  showBanner: boolean
+  acceptCookies: () => void
+  declineCookies: () => void
+}
 
 export const CookieBanner: React.FC<CookieBannerProps> = ({
   showBanner,
   acceptCookies,
   declineCookies,
 }) => {
-
   return (
     <div
       aria-live="assertive"
@@ -61,7 +57,6 @@ export const CookieBanner: React.FC<CookieBannerProps> = ({
           </div>
         </Transition>
       </div>
-    </div >
-  );
+    </div>
+  )
 }
-
