@@ -1,20 +1,6 @@
 import { toast } from 'react-hot-toast'
 import { MainLayout, PortalLayout } from '@magickml/portal-layout'
-import { MagickDialog } from '@magickml/portal-ui'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import {
-  Input,
-  formInputStyles,
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-  Progress,
-  Button,
-} from '@magickml/client-ui'
-import { useSession } from 'next-auth/react'
+import { Input, Progress, Button } from '@magickml/client-ui'
 import { useRouter } from 'next/router'
 import axios from 'axios'
 import clsx from 'clsx'
@@ -22,6 +8,7 @@ import { useState } from 'react'
 import { z } from 'zod'
 import { api } from '@magickml/portal-api-client'
 import { PriceKeys } from '@magickml/portal-utils-shared'
+
 
 const amountSchema = z.object({
   amount: z
@@ -32,8 +19,6 @@ const amountSchema = z.object({
 
 export const AccountPage = () => {
   const router = useRouter()
-  const [open, setOpen] = useState(false)
-
   const [inputValue, setInputValue] = useState<string>('5.00')
   const [error, setError] = useState<string | undefined>()
 
