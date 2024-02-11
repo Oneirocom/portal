@@ -1,6 +1,6 @@
 import AgentCreatorInputContainer from '../Inputs/AgentCreatorInputContainer'
 import AgentCreatorToggle from '../Inputs/AgentCreatorToggle'
-import { Label, Textarea } from '@magickml/portal-ui'
+import { Label, Textarea } from '@magickml/portal-core-ui'
 import { AllNodesData, NodeDataWithType } from '@magickml/portal-types'
 
 type PublicVarComponentProps = {

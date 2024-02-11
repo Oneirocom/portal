@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import { Textarea } from '@magickml/portal-ui'
+import { Textarea } from '@magickml/portal-core-ui'
 import { useEffect, useRef, useState } from 'react'
 import ChatInput from './InputSheet'
 import { useKeyboardDisplacement } from '@magickml/portal-hooks'

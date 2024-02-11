@@ -1,4 +1,5 @@
-import { cn, Switch, Label, InfoIcon } from '@magickml/portal-ui'
+import { cn, Switch, Label } from '@magickml/portal-core-ui'
+import { InfoIcon } from '@magickml/portal-ui'
 
 type ToggleCardProps = {
   title: string

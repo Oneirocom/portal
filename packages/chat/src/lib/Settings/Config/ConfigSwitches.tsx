@@ -1,7 +1,7 @@
 import { AgentData, Agent } from '@magickml/portal-types'
 import { useState } from 'react'
 import toast from 'react-hot-toast'
-import { Switch, Label } from '@magickml/portal-ui'
+import { Switch, Label } from '@magickml/portal-core-ui'
 import { api } from '@magickml/portal-api-client'
 import { authorizeAdmin } from '@magickml/portal-utils-shared'
 import { Role } from '@magickml/portal-config'

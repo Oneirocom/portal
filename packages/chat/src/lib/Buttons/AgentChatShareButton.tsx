@@ -1,9 +1,10 @@
-import { MagickDialog, Button, Input, agentInputStyles } from '@magickml/portal-ui'
+import { Button, Input, agentInputStyles } from '@magickml/portal-core-ui'
 import { useState } from 'react'
 import toast from 'react-hot-toast'
 import { FiShare } from 'react-icons/fi'
 import Image from "next/legacy/image"
 import { DocumentDuplicateIcon } from '@heroicons/react/20/solid'
+import { MagickDialog } from '@magickml/portal-ui'
 
 type Props = {
   agentId: string

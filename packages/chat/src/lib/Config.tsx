@@ -1,5 +1,5 @@
 import { api } from '@magickml/portal-api-client'
-import Image from "next/legacy/image"
+import Image from 'next/legacy/image'
 import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import { useDebounce } from 'use-debounce'
@@ -23,8 +23,8 @@ import {
   Button,
   buttonVariants,
   Label,
-  MagickDialog,
-} from '@magickml/portal-ui'
+} from '@magickml/portal-core-ui'
+import { MagickDialog } from '@magickml/portal-ui'
 import ConfigSwitches from './Settings/Config/ConfigSwitches'
 import clsx from 'clsx'
 import { workspaceAtom } from '@magickml/portal-state'

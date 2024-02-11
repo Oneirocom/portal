@@ -1,6 +1,6 @@
 import clsx from 'clsx'
 import { MagickUnauthorizedDialog } from '@magickml/portal-ui'
-import { Button } from '@magickml/portal-ui'
+import { Button } from '@magickml/portal-core-ui'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import { FunctionComponent, useState } from 'react'
