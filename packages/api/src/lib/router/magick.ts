@@ -2,7 +2,7 @@ import { z } from 'zod'
 import { createTRPCRouter, openAPIProcedure } from '../trpc'
 import { prisma } from '@magickml/portal-db'
 import { StripeService } from '@magickml/portal-billing'
-
+import { clerkClient } from '@clerk/clerk-sdk-node'
 
 // Zod schemas
 const budgetDataSchema = z.object({
@@ -12,28 +12,28 @@ const budgetDataSchema = z.object({
   last_updated_at: z.number(),
   current_cost: z.number().optional(),
   model_cost: z.record(z.number()).optional(),
-});
+})
 
 const statusSchema = z.union([
-  z.literal("success"),
-  z.literal("error"),
+  z.literal('success'),
+  z.literal('error'),
   z.string(),
-]);
+])
 
 const getBudgetResponseSchema = z.object({
   status: statusSchema,
   data: z.record(budgetDataSchema),
-});
+})
 
 const setBudgetRequestSchema = z.object({
   project_name: z.string(),
   user_dict: z.record(budgetDataSchema),
-});
+})
 
 const setBudgetResponseSchema = z.object({
   status: statusSchema,
   message: z.string(),
-});
+})
 
 const userSchema = z
   .object({
@@ -46,21 +46,21 @@ const userSchema = z
     hasSubscription: z.boolean(),
     subscriptionName: z.string().nullable(),
   })
-  .nullable();
+  .nullable()
 
 const getUserResponseSchema = z.object({
   status: statusSchema,
   user: userSchema,
-});
+})
 
 export const budgetRouter = createTRPCRouter({
   getBudget: openAPIProcedure
     .meta({
       openapi: {
-        method: "POST",
-        path: "/magick/budget/get_budget",
-        tags: ["budget"],
-        summary: "Get budget information for a project",
+        method: 'POST',
+        path: '/magick/budget/get_budget',
+        tags: ['budget'],
+        summary: 'Get budget information for a project',
       },
     })
     .input(z.object({ project_name: z.string() }))
@@ -70,40 +70,44 @@ export const budgetRouter = createTRPCRouter({
         where: {
           id: input.project_name,
         },
-      });
+        select: {
+          id: true,
+          owner: true,
+        },
+      })
 
       if (!project) {
-        throw new Error("Project not found");
+        throw new Error('Project not found')
       }
 
       const budget = await prisma.budget.findFirst({
         where: {
-          userId: project.creatorId,
+          userId: project.owner,
         },
-      });
+      })
 
       if (!budget) {
         return {
-          status: "error",
+          status: 'error',
           data: {},
-          message: "Budget not found",
-        };
+          message: 'Budget not found',
+        }
       }
 
       const promotions = await prisma.promotion.findMany({
         where: {
-          userId: project.creatorId,
+          userId: project.owner,
           validUntil: {
             gte: new Date(),
           },
           isUsed: false,
         },
-      });
+      })
 
       const promoCredit = promotions.reduce(
         (acc, promo) => acc + promo.amount.toNumber(),
         0
-      );
+      )
 
       const data = {
         [project.id]: {
@@ -114,21 +118,21 @@ export const budgetRouter = createTRPCRouter({
           current_cost: budget?.currentCost?.toNumber() || 0,
           model_cost: (budget.modelCost as Record<string, number>) || {},
         },
-      };
+      }
 
       return {
-        status: "success",
+        status: 'success',
         data,
-      };
+      }
     }),
 
   setBudget: openAPIProcedure
     .meta({
       openapi: {
-        method: "POST",
-        path: "/magick/budget/set_budget",
-        tags: ["budget"],
-        summary: "Set budget information for a project",
+        method: 'POST',
+        path: '/magick/budget/set_budget',
+        tags: ['budget'],
+        summary: 'Set budget information for a project',
       },
     })
     .input(setBudgetRequestSchema)
@@ -138,89 +142,89 @@ export const budgetRouter = createTRPCRouter({
         where: {
           id: input.project_name,
         },
-      });
+      })
 
       if (!project) {
-        throw new Error("Project not found");
+        throw new Error('Project not found')
       }
 
       const wallet = await prisma.budget.findUnique({
         where: {
-          userId: project.creatorId,
+          userId: project.owner,
         },
-      });
+      })
 
       if (!wallet) {
-        throw new Error("Wallet not found");
+        throw new Error('Wallet not found')
       }
 
       const promotions = await prisma.promotion.findMany({
         where: {
-          userId: project.creatorId,
+          userId: project.owner,
           validUntil: {
             gte: new Date(),
           },
           isUsed: false,
         },
-      });
+      })
 
-      const currentCost = input.user_dict[project.id].current_cost || 0;
-      const modelCost = input.user_dict[project.id].model_cost || {};
-      const markUp = 1.2;
-      const newCharge = currentCost * markUp;
+      const currentCost = input.user_dict[project.id].current_cost || 0
+      const modelCost = input.user_dict[project.id].model_cost || {}
+      const markUp = 1.2
+      const newCharge = currentCost * markUp
 
       // Apply promotions and update their remaining amounts
-      let remainingCharge = newCharge;
+      let remainingCharge = newCharge
       for (const promo of promotions) {
-        if (remainingCharge <= 0) break;
-        let promoAmount = promo.amount.toNumber();
+        if (remainingCharge <= 0) break
+        let promoAmount = promo.amount.toNumber()
 
         if (promoAmount <= remainingCharge) {
           // Full promotion amount is used
-          remainingCharge -= promoAmount;
+          remainingCharge -= promoAmount
           await prisma.promotion.update({
             where: { id: promo.id },
             data: { isUsed: true },
-          });
+          })
         } else {
           // Only part of the promotion is used
-          promoAmount -= remainingCharge;
-          remainingCharge = 0;
+          promoAmount -= remainingCharge
+          remainingCharge = 0
           await prisma.promotion.update({
             where: { id: promo.id },
             data: { amount: promoAmount },
-          });
+          })
         }
       }
 
-      const effectiveCharge = Math.max(0, remainingCharge);
-      const newUserBalance = wallet.balance.toNumber() - effectiveCharge;
+      const effectiveCharge = Math.max(0, remainingCharge)
+      const newUserBalance = wallet.balance.toNumber() - effectiveCharge
 
       // Update the budget
       await prisma.budget.update({
         where: {
-          userId: project.creatorId,
+          userId: project.owner,
         },
         data: {
           balance: newUserBalance,
           currentCost: currentCost,
           modelCost: modelCost,
         },
-      });
+      })
 
       return {
-        status: "success",
-        message: "Budget updated",
-      };
+        status: 'success',
+        message: 'Budget updated',
+      }
     }),
 
   getUser: openAPIProcedure
     .meta({
       openapi: {
-        method: "GET",
-        path: "/magick/user/{project_id}",
-        tags: ["budget"],
-        summary: "Get user information for a project",
+        method: 'GET',
+        path: '/magick/user/{project_id}',
+        tags: ['budget'],
+        summary: 'Get user information for a project',
       },
     })
     .input(z.object({ project_id: z.string() }))
@@ -230,99 +234,81 @@ export const budgetRouter = createTRPCRouter({
         where: {
           id: input.project_id,
         },
-        include: {
-          creator: {
-            select: {
-              id: true,
-              email: true,
-              name: true,
-            },
-          },
+        select: {
+          id: true,
+          owner: true,
         },
-      });
+      })
 
       if (!project) {
         return {
-          status: "error",
+          status: 'error',
           user: null,
-          message: "Project not found",
-        };
+          message: 'Project not found',
+        }
       }
+
+      const user = await clerkClient.users.getUser(project.owner)
 
       const wallet = await prisma.budget.findUnique({
         where: {
-          userId: project.creator.id,
+          userId: project.owner,
         },
-      });
+      })
 
       if (!wallet) {
         await prisma.budget.create({
           data: {
-            userId: project.creator.id,
+            userId: project.owner,
           },
-        });
+        })
       }
 
       // Retrieve promotions and calculate total promotional credit
       const promotions = await prisma.promotion.findMany({
         where: {
-          userId: project.creator.id,
+          userId: project.owner,
           validUntil: {
             gte: new Date(),
           },
           isUsed: false,
         },
-      });
+      })
 
       const introCredit = promotions
-        .filter((promo) => promo.type === "INTRO")[0]
-        .amount.toNumber();
+        .filter(promo => promo.type === 'INTRO')[0]
+        .amount.toNumber()
 
       const promoCredit = promotions.reduce(
         (acc, promo) => acc + promo.amount.toNumber(),
         0
-      );
+      )
 
       // Add promotional credit to the user's balance
-      const userBalance = wallet?.balance.toNumber() || 0;
+      const userBalance = wallet?.balance.toNumber() || 0
 
-      const stripeService = new StripeService();
+      const stripeService = new StripeService()
       const isCustomer = await stripeService.checkIfUserIsCustomer(
-        project.creator.id
-      );
+        project.owner
+      )
 
       const subscriptionName =
-        isCustomer &&
-        (await stripeService.getUserSubscription(project.creator.id));
-
-      // console.log({
-      //   status: "success",
-      //   user: {
-      //     id: project.creator.id,
-      //     email: project.creator.email,
-      //     name: project.creator.name,
-      //     balance: userBalance,
-      //     promoCredit: promoCredit || 0,
-      //     introCredit: introCredit || 0,
-      //     hasSubscription: !!subscriptionName,
-      //     subscriptionName: subscriptionName || null,
-      //   },
-      // });
+        isCustomer && (await stripeService.getUserSubscription(project.owner))
 
       return {
-        status: "success",
+        status: 'success',
         user: {
-          id: project.creator.id,
-          email: project.creator.email,
-          name: project.creator.name,
+          id: user.id,
+          email: user.emailAddresses[0].emailAddress,
+          name: user.username,
           balance: userBalance,
           promoCredit: promoCredit || 0,
           introCredit: introCredit || 0,
           hasSubscription: !!subscriptionName,
           subscriptionName: subscriptionName || null,
         },
-      };
+      }
     }),
-});
+})
 
-export default budgetRouter;
+export default budgetRouter
