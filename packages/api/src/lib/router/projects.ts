@@ -1,41 +1,24 @@
 import { z } from 'zod'
 import { createTRPCRouter, protectedProcedure } from '../trpc'
 import { prisma } from '@magickml/portal-db'
-import { InvitationStatus, TeamRole } from '@magickml/portal-db'
-import { checkIfUserIsMember, prepareToken } from '../utils/shared'
+import { hasAccess, prepareToken } from '../utils/shared'
 import { uploadImage } from '../utils/upload'
-import { v4 as uuidv4 } from 'uuid'
+import { v4 } from 'uuid'
+import { auth } from '@clerk/nextjs'
 
 export const projectsRouter = createTRPCRouter({
   // Create a project
   createProject: protectedProcedure
     .input(
       z.object({
-        workspaceId: z.string(),
         name: z.string(),
         description: z.string().optional(),
-        completed: z.boolean().optional(),
-        templateId: z.number().optional(),
         base64Image: z.string().optional().nullable(),
       })
     )
     .mutation(async ({ input, ctx }) => {
       const { base64Image } = input
-      const userId = ctx.session.user.id
-      const email = ctx.session.user.email as string
-      const completed = input.completed || true
-      const templateId = input.templateId || 0
-      const id = uuidv4()
-
-      const userMembership = await checkIfUserIsMember(
-        input.workspaceId,
-        ctx.session.user.id,
-        false
-      )
-
-      if (!userMembership) {
-        throw new Error('User is not a member of the specified workspace')
-      }
+      const id = v4()
 
       let filePath: string | null = null
 
@@ -47,103 +30,44 @@ export const projectsRouter = createTRPCRouter({
 
       const project = await prisma.project.create({
         data: {
-          creatorId: userId,
+          id,
+          owner: ctx.auth.orgId || ctx.auth.userId,
           image: filePath,
           description: input.description,
-          workspace_id: input.workspaceId,
-          members: {
-            create: {
-              email: email,
-              inviter: email,
-              status: InvitationStatus.ACCEPTED,
-              teamRole: TeamRole.OWNER,
-            },
-          },
-          name: completed ? input.name : `project-${input.name}`,
-          slug: '',
-          completed: completed || true,
+          name: input.name,
         },
       })
 
-      if (templateId !== 0) {
-        const newToken = await prepareToken(ctx, { projectId: project.id })
-        await createProjectData(newToken, {
-          projectId: project.id,
-          templateId,
-        })
-      }
+      const newToken = await prepareToken({
+        user: ctx.auth,
+        projectId: project.id,
+      })
+
+      await createProjectData({ token: newToken, projectId: project.id })
 
       return project
     }),
 
   // Get all projects for the current user
-  getProjects: protectedProcedure
-    .input(z.object({ workspaceId: z.string() }))
-    .query(async ({ ctx, input }) => {
-      const userMembership = await checkIfUserIsMember(
-        input.workspaceId,
-        ctx.session.user.id,
-        false
-      )
-
-      if (!userMembership) {
-        throw new Error('User is not a member of the specified workspace')
-      }
-
-      if (userMembership.status !== 'accepted') {
-        throw new Error('User is not a member of the specified workspace')
-      }
-
-      // If user is a member, fetch the projects within the workspace
-      const projects = await prisma.project.findMany({
-        where: {
-          workspace_id: input.workspaceId,
-          deletedAt: null,
-          completed: true,
-        },
-      })
-
-      return projects
-    }),
-
-  // Get all projects for the current user
-  getProjectList: protectedProcedure
-    .input(z.object({ workspaceId: z.string() }))
-    .query(async ({ ctx, input }) => {
-      const userMembership = await checkIfUserIsMember(
-        input.workspaceId,
-        ctx.session.user.id,
-        false
-      )
-
-      if (!userMembership) {
-        throw new Error('User is not a member of the specified workspace')
-      }
-
-      return await prisma.project.findMany({
-        where: {
-          workspace_id: input.workspaceId,
-          deletedAt: null,
-          completed: true,
-        },
-        select: {
-          id: true,
-          name: true,
-          image: true,
-        },
-        orderBy: {
-          lastActive: 'desc',
-        },
-      })
-    }),
+  getProjects: protectedProcedure.query(async ({ ctx }) => {
+    return await prisma.project.findMany({
+      where: {
+        owner: ctx.auth.orgId || ctx.auth.userId,
+        deletedAt: null,
+      },
+    })
+  }),
 
   // Get a specific project by ID
   getProject: protectedProcedure
     .input(z.object({ projectId: z.string() }))
     .query(async ({ input, ctx }) => {
-      const userId = ctx.session.user.id
       return await prisma.project.findFirst({
-        where: { id: input.projectId, creatorId: userId, completed: true },
+        where: {
+          id: input.projectId,
+          deletedAt: null,
+          owner: ctx.auth.orgId || ctx.auth.userId,
+        },
       })
     }),
 
@@ -152,18 +76,15 @@ export const projectsRouter = createTRPCRouter({
     .input(
       z.object({
         projectId: z.string(),
-        workspaceId: z.string().optional(),
         name: z.string().optional(),
         description: z.string().optional(),
-        slug: z.string().optional(),
       })
     )
     .mutation(async ({ input, ctx }) => {
-      const access = await checkIfUserIsMember(
-        input.workspaceId || '',
-        ctx.session.user.id,
-        true
-      )
+      const access = await hasAccess({
+        projectId: input.projectId,
+        user: ctx.auth,
+      })
 
       if (!access) {
         throw new Error('User is not a member of the specified workspace')
@@ -174,7 +95,6 @@ export const projectsRouter = createTRPCRouter({
         data: {
           name: input.name,
           description: input.description,
-          slug: input.slug,
         },
       })
     }),
@@ -183,11 +103,10 @@ export const projectsRouter = createTRPCRouter({
   deleteProject: protectedProcedure
     .input(z.object({ projectId: z.string(), workspaceId: z.string() }))
     .mutation(async ({ input, ctx }) => {
-      const access = await checkIfUserIsMember(
-        input.workspaceId,
-        ctx.session.user.id,
-        true
-      )
+      const access = await hasAccess({
+        projectId: input.projectId,
+        user: ctx.auth,
+      })
 
       if (!access) {
         throw new Error('User is not a member of the specified workspace')
@@ -199,110 +118,25 @@ export const projectsRouter = createTRPCRouter({
         data: { deletedAt: new Date() },
       })
     }),
-
-  getProjectData: protectedProcedure
-    .input(
-      z.object({
-        projectId: z.string(),
-        omitEmbeddings: z.boolean().optional(),
-        returnSpells: z.boolean().optional(),
-        returnAgents: z.boolean().optional(),
-        returnDocuments: z.boolean().optional(),
-      })
-    )
-    .query(async ({ input, ctx }) => {
-      const newToken = await prepareToken(ctx, input)
-      const projectData = await fetchProjectData(newToken, input)
-      return projectData
-    }),
 })
 
-const fetchProjectData = async (
-  token: string | null,
-  input: {
-    projectId: string
-    omitEmbeddings?: boolean
-    returnSpells?: boolean
-    returnAgents?: boolean
-    returnDocuments?: boolean
-  }
-): Promise<any> => {
-  // build query string based on input
-  let queryString = ''
-  if (input.omitEmbeddings) {
-    queryString += '&omitEmbeddings=true'
-  }
-  if (input.returnSpells) {
-    queryString += '&returnSpells=true'
-  }
-  if (input.returnAgents) {
-    queryString += '&returnAgents=true'
-  }
-  if (input.returnDocuments) {
-    queryString += '&returnDocuments=true'
-  }
-
-  try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/projects?projectId=${input.projectId}${queryString}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    )
-
-    const data = await response.json()
-
-    return data
-  } catch (error) {
-    console.error('ERROR', error)
-  }
+interface CreateProjectDataParams {
+  token: string
+  projectId: string
 }
-
-const createProjectData = async (
-  token: string | null,
-  input: {
-    projectId: string
-    templateId: number
-  }
-) => {
-  const data = {
-    id: 0,
-  }
-
-  // switch (input.templateId) {
-  //   case 1:
-  //     data = starterTemplate
-  //     break
-  //   case 2:
-  //     data = discordTemplate
-  //     break
-  //   case 3:
-  //     data = restTemplate
-  //     break
-  //   case 4:
-  //     data = documentSearchTemplate
-  //     break
-  //   case 5:
-  //     data = elizaTemplate
-  //     break
-  //   default:
-  //     data = { id: '0' }
-  // }
-
-  // delete data.id
-
+export async function createProjectData(
+  params: CreateProjectDataParams
+): Promise<void> {
   await fetch(`${process.env.NEXT_PUBLIC_API_URL}/projects`, {
     method: 'POST',
     body: JSON.stringify({
-      ...data,
-      projectId: input.projectId,
+      data: { id: '0' },
+      projectId: params.projectId,
       replace: true,
     }),
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${params.token}`,
     },
   })
 }
