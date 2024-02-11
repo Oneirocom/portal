@@ -28,6 +28,10 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'directus-production-1d52.up.railway.app',
       },
+      {
+        protocol: 'https',
+        hostname: 'img.clerk.com',
+      },
     ],
   },
   reactStrictMode: false,
