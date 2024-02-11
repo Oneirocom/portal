@@ -1,5 +1,4 @@
 import { createTRPCRouter } from './trpc'
-import { usersRouter } from './router/user'
 import { projectsRouter } from './router/projects'
 import { documentsRouter } from './router/documents'
 import { spellsRouter } from './router/spells'
@@ -16,7 +15,6 @@ import { budgetRouter } from './router/magick'
  * All routers added in /api/routers should be manually added here.
  */
 export const portalRouter = createTRPCRouter({
-  users: usersRouter,
   projects: projectsRouter,
   documents: documentsRouter,
   spells: spellsRouter,
