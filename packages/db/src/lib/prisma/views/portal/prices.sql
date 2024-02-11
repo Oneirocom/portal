@@ -1,0 +1,21 @@
+SELECT
+  prices.id,
+  prices.object,
+  prices.active,
+  prices.currency,
+  prices.metadata,
+  prices.nickname,
+  prices.recurring,
+  prices.type,
+  prices.unit_amount,
+  prices.billing_scheme,
+  prices.created,
+  prices.livemode,
+  prices.lookup_key,
+  prices.tiers_mode,
+  prices.transform_quantity,
+  prices.unit_amount_decimal,
+  prices.product,
+  prices.updated_at
+FROM
+  stripe.prices;

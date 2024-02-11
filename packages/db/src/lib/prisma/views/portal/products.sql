@@ -1,0 +1,19 @@
+SELECT
+  products.id,
+  products.object,
+  products.active,
+  products.description,
+  products.metadata,
+  products.name,
+  products.created,
+  products.images,
+  products.livemode,
+  products.package_dimensions,
+  products.shippable,
+  products.statement_descriptor,
+  products.unit_label,
+  products.updated,
+  products.url,
+  products.updated_at
+FROM
+  stripe.products;

@@ -41,3 +41,15 @@ SELECT ad.*,
     p.workspace_id
 FROM public.documents ad
     JOIN portal.projects p ON ad."projectId" = p.id;
+CREATE OR REPLACE VIEW portal.customers AS
+SELECT *
+FROM stripe.customers;
+CREATE OR REPLACE VIEW portal.subscriptions AS
+SELECT *
+FROM stripe.subscriptions;
+CREATE OR REPLACE VIEW portal.products AS
+SELECT *
+FROM stripe.products;
+CREATE OR REPLACE VIEW portal.prices AS
+SELECT *
+FROM stripe.prices;
