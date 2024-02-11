@@ -26,11 +26,8 @@ export const PortalHeader = () => {
         case Roles.TESTER:
           setNavigation(getNavigationForRole(Roles.TESTER))
           break
-        case Roles.USER:
-          setNavigation(getNavigationForRole(Roles.USER))
-          break
         default:
-          setNavigation(getNavigationForRole(ANONYMOUS))
+          setNavigation(getNavigationForRole(Roles.USER))
           break
       }
     }
