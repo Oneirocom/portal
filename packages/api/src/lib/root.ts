@@ -4,7 +4,6 @@ import { projectsRouter } from './router/projects'
 import { documentsRouter } from './router/documents'
 import { spellsRouter } from './router/spells'
 import { agentsRouter } from './router/agents'
-import { workspaceRouter } from './router/workspaces'
 import { publicAgentsRouter } from './router/publicAgents'
 import { chatRouter } from './router/chat'
 import { anonUserRouter } from './router/anonUsers'
@@ -22,7 +21,6 @@ export const portalRouter = createTRPCRouter({
   documents: documentsRouter,
   spells: spellsRouter,
   agents: agentsRouter,
-  workspace: workspaceRouter,
   publicAgents: publicAgentsRouter,
   chat: chatRouter,
   anonUsers: anonUserRouter,
