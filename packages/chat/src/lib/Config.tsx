@@ -3,7 +3,7 @@ import Image from 'next/legacy/image'
 import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import { useDebounce } from 'use-debounce'
-import { useAtom, useAtomValue } from 'jotai'
+import { useAtom } from 'jotai'
 import { agentGreetingAtom } from '@magickml/portal-state'
 import {
   AllNodesData,
@@ -27,13 +27,11 @@ import {
 import { MagickDialog } from '@magickml/portal-ui'
 import ConfigSwitches from './Settings/Config/ConfigSwitches'
 import clsx from 'clsx'
-import { workspaceAtom } from '@magickml/portal-state'
 import DiscordConfig from './Settings/Config/DiscordConfig'
 
 const Config = ({ agent }: { agent: AgentData }) => {
   const utils = api.useContext()
   const [imageFile, setImageFile] = useState<File | null>(null)
-  const workspaceId = useAtomValue(workspaceAtom)?.id
   const [updatedDiscordToken, setUpdatedDiscordToken] = useState<boolean>(false)
   const [deleteDiscordToken, setDeleteDiscordToken] = useState<boolean>(false)
   const [discordToken, setDiscordToken] = useState('')
@@ -100,7 +98,6 @@ const Config = ({ agent }: { agent: AgentData }) => {
     await updatePublicAgentDesc({
       description: greeting,
       agentId: agent?.data.id ?? '',
-      workspaceId,
     })
       .then(async data => {
         toast.success('Greeting updated.')

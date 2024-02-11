@@ -11,7 +11,7 @@ import { Button } from '@magickml/client-ui'
 import EditorButton from '../Buttons/EditorButton'
 import clsx from 'clsx'
 import { AgentData } from '@magickml/portal-types'
-import { useSession } from 'next-auth/react'
+import { useSession } from '@clerk/nextjs'
 
 export const AgentChatHeader = ({
   isPrivate = false,
@@ -26,7 +26,7 @@ export const AgentChatHeader = ({
   const [toggleAgentSettings, setToggleAgentSettings] = useAtom(
     toggleAgentSettingsAtom
   )
-  const { status } = useSession()
+  const { isSignedIn } = useSession()
 
   return (
     <div
@@ -45,7 +45,7 @@ export const AgentChatHeader = ({
           className="self-center"
           variant="ghost"
           onClick={() =>
-            status === 'authenticated'
+            isSignedIn
               ? router.push('/agents')
               : router.push('/explore')
           }
@@ -80,7 +80,6 @@ export const AgentChatHeader = ({
           </div>
         </div>
 
-        {/* <div className="flex-grow" /> */}
 
         {/* Buttons */}
         <div className="flex mr-2 items-center justify-end ml-auto gap-x-0.5 lg:gap-x-3">

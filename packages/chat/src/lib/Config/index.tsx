@@ -1,6 +1,6 @@
 import { MagickTextInput } from '@magickml/portal-ui'
 import { api } from '@magickml/portal-api-client'
-import Image from "next/legacy/image"
+import Image from 'next/legacy/image'
 import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import { useAtom, useAtomValue } from 'jotai'
@@ -47,7 +47,7 @@ const Config = () => {
       navigator.clipboard.writeText(
         `${process.env.NEXT_PUBLIC_DEPLOYMENT_URL}/explore/${data.id}`
       )
-      await utils.publicAgents.invalidate()
+      // await utils.publicAgents.invalidate()
       await utils.agents.invalidate()
     },
     onError: () => {
@@ -58,7 +58,7 @@ const Config = () => {
   const { mutateAsync: makeAgentPrivate } = api.agents.makePrivate.useMutation({
     onSuccess: async () => {
       toast.success('Agent made private.')
-      await utils.publicAgents.invalidate()
+      // await utils.publicAgents.invalidate()
       await utils.agents.invalidate()
     },
     onError: () => {
@@ -69,11 +69,10 @@ const Config = () => {
   const handlePublicToggle = async () => {
     if (!agent.id || !workspace) return
     if (agent.isPublic) {
-      await makeAgentPrivate({ agentId: agent.id, workspaceId: workspace.id })
+      await makeAgentPrivate({ agentId: agent.id })
     } else {
       await makeAgentPublic({
         agentId: agent.id,
-        workspaceId: workspace.id,
       })
     }
   }

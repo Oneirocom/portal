@@ -3,8 +3,6 @@ import { useState } from 'react'
 import toast from 'react-hot-toast'
 import { Switch, Label } from '@magickml/client-ui'
 import { api } from '@magickml/portal-api-client'
-import { authorizeAdmin } from '@magickml/portal-utils-shared'
-import { Role } from '@magickml/portal-config'
 
 type Switch = {
   key: keyof Agent
@@ -22,7 +20,6 @@ const ConfigSwitches = ({ agent }: { agent: AgentData }) => {
     isTemplate: false,
   })
   const utils = api.useContext()
-  const { data: user } = api.users.getCurrentUser.useQuery()
 
   // make public mutation
   const { mutateAsync: makePublic } = api.agents.makePublic.useMutation({
@@ -97,7 +94,6 @@ const ConfigSwitches = ({ agent }: { agent: AgentData }) => {
           }))
           await makePublic({
             agentId: agent?.data.id ?? '',
-            workspaceId: agent?.data.workspace_id ?? '',
           })
         } else {
           setLoading(prevLoading => ({
@@ -106,7 +102,6 @@ const ConfigSwitches = ({ agent }: { agent: AgentData }) => {
           }))
           await makePrivate({
             agentId: agent?.data.id ?? '',
-            workspaceId: agent?.data.workspace_id ?? '',
           })
         }
       },
@@ -123,30 +118,10 @@ const ConfigSwitches = ({ agent }: { agent: AgentData }) => {
         }))
         await updatePublic({
           agentId: agent?.data.id ?? '',
-          workspaceId: agent?.data.workspace_id ?? '',
           remixable: !agent?.data.remixable,
         })
       },
       loading: loading.remixable,
-    },
-    {
-      name: 'Template',
-      key: 'isTemplate',
-      filter: () => {
-        return !authorizeAdmin(user?.role as Role)
-      },
-      action: async () => {
-        setLoading(prevLoading => ({
-          ...prevLoading,
-          isTemplate: true,
-        }))
-        await updatePublic({
-          agentId: agent?.data.id ?? '',
-          workspaceId: agent?.data.workspace_id ?? '',
-          isTemplate: !agent?.data.isTemplate,
-        })
-      },
-      loading: loading.isTemplate,
     },
   ]
 

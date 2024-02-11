@@ -13,6 +13,7 @@ import clsx from 'clsx'
 import { AgentChatHeader } from './Chat/AgentChatHeader'
 import { Application } from '@feathersjs/feathers'
 import { AgentData } from '@magickml/portal-types'
+import { useUser } from '@clerk/nextjs'
 
 type AgentChatProps = {
   isPrivate?: boolean
@@ -31,7 +32,7 @@ const AgentChat = ({
 }: AgentChatProps) => {
   const toggleAgentSettings = useAtomValue(toggleAgentSettingsAtom)
   const [backupSender, setBackupSender] = useState<any>(null)
-  const user = api.users.getCurrentUser.useQuery()
+  const { user } = useUser()
   const [messages, setMessages] = useAtom(agentMessagesAtom)
   const [input, setInput] = useState('')
   const messageContainerRef = useRef<HTMLDivElement | null>(null)
@@ -103,9 +104,9 @@ const AgentChat = ({
   const handlePrivateChat = async () => {
     await privateChat({
       agentId: agent?.data.id || '',
-      workspaceId: agent?.data.workspace_id || '',
+      projectId: agent?.data.projectId || '',
       prompt: input,
-      sender: user.data?.id || backupSender,
+      sender: user?.id || backupSender,
       sessionId,
     })
   }
@@ -122,13 +123,13 @@ const AgentChat = ({
   const handlePublicChat = async () => {
     console.log(
       'public chat sender',
-      user.data?.id || `backup sender: ${backupSender}`
+      user?.id || `backup sender: ${backupSender}`
     )
 
     await publicChat({
       agentId: agent?.data.id || '',
       prompt: input,
-      sender: user.data?.id || backupSender,
+      sender: user?.id || backupSender,
       sessionId,
     })
   }

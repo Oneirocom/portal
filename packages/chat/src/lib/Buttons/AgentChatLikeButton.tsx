@@ -1,11 +1,11 @@
 import clsx from 'clsx'
 import { MagickUnauthorizedDialog } from '@magickml/portal-ui'
 import { Button } from '@magickml/client-ui'
-import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import { FunctionComponent, useState } from 'react'
 import { AiFillHeart } from 'react-icons/ai'
-import { api } from '@magickml/portal-api-client'
+// import { api } from '@magickml/portal-api-client'
+import { useSession } from '@clerk/nextjs'
 
 type AgentChatLikeButtonProps = {
   publicAgentId: string
@@ -17,52 +17,58 @@ const AgentChatLikeButton: FunctionComponent<AgentChatLikeButtonProps> = ({
   const session = useSession()
   const router = useRouter()
   const [open, setOpen] = useState<boolean>(false)
-  const utils = api.useContext()
+  // const utils = api.useContext()
 
-  const { data: likes } = api.publicAgents.getLikedPublicAgents.useQuery(
-    undefined,
-    {
-      enabled: session.status === 'authenticated',
-    }
-  )
+  const isLiked = false
 
-  const isLiked = likes?.some(like => like.publicAgentId === publicAgentId)
+  // const { data: likes } = api.publicAgents.getLikedPublicAgents.useQuery(
+  //   undefined,
+  //   {
+  //     enabled: session.status === 'authenticated',
+  //   }
+  // )
 
-  const { mutateAsync: handleLike } = api.publicAgents.likeAgent.useMutation({
-    onSuccess: async () => {
-      await utils.publicAgents.getLikedPublicAgents.invalidate()
-    },
-    onError: err => {
-      console.error('Error liking agent', err)
-    },
-  })
+  // const isLiked = likes?.some(like => like.publicAgentId === publicAgentId)
 
-  const { mutateAsync: handleUnlike } =
-    api.publicAgents.unlikeAgent.useMutation({
-      onSuccess: async () => {
-        await utils.publicAgents.getLikedPublicAgents.invalidate()
-      },
-      onError: err => {
-        console.error('Error unliking agent', err)
-      },
-    })
+  // const { mutateAsync: handleLike } = api.publicAgents.likeAgent.useMutation({
+  //   onSuccess: async () => {
+  //     await utils.publicAgents.getLikedPublicAgents.invalidate()
+  //   },
+  //   onError: err => {
+  //     console.error('Error liking agent', err)
+  //   },
+  // })
 
-  const handleLikeToggle = async () => {
-    if (publicAgentId && session.status === 'authenticated') {
-      const isLiked = likes?.some(like => like.publicAgentId === publicAgentId)
+  // const { mutateAsync: handleUnlike } =
+  //   api.publicAgents.unlikeAgent.useMutation({
+  //     onSuccess: async () => {
+  //       await utils.publicAgents.getLikedPublicAgents.invalidate()
+  //     },
+  //     onError: err => {
+  //       console.error('Error unliking agent', err)
+  //     },
+  //   })
 
-      if (isLiked) {
-        await handleUnlike({ publicAgentId })
-      } else {
-        await handleLike({ publicAgentId })
-      }
-    }
-  }
+  // const handleLikeToggle = async () => {
+  //   if (publicAgentId && session.status === 'authenticated') {
+  //     const isLiked = likes?.some(like => like.publicAgentId === publicAgentId)
+
+  //     if (isLiked) {
+  //       await handleUnlike({ publicAgentId })
+  //     } else {
+  //       await handleLike({ publicAgentId })
+  //     }
+  //   }
+  // }
 
   return (
     <>
-      {session.status === 'authenticated' ? (
-        <LikeButton onClick={handleLikeToggle} isLiked={isLiked} />
+      {session.isSignedIn ? (
+        <LikeButton
+          // onClick={handleLikeToggle}
+          onClick={() => {}}
+          isLiked={isLiked}
+        />
       ) : (
         <MagickUnauthorizedDialog
           open={open}

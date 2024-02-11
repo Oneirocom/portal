@@ -1,6 +1,6 @@
-import toast from 'react-hot-toast'
+// import toast from 'react-hot-toast'
 import { AiOutlineWarning } from 'react-icons/ai'
-import { api } from '@magickml/portal-api-client'
+// import { api } from '@magickml/portal-api-client'
 import { useState } from 'react'
 import { Checkbox, Textarea, Button } from '@magickml/client-ui'
 import { MagickDialog } from '@magickml/portal-ui'
@@ -10,21 +10,21 @@ const AgentChatReportButton = ({
 }: {
   publicAgentId: string
 }) => {
-  const { mutateAsync: makeReport, isLoading: isReporting } =
-    api.publicAgents.reportAgent.useMutation({
-      onSuccess: () => {
-        toast.success('Agent reported')
-      },
-      onError: error => {
-        toast.error(error.message)
-      },
-    })
+  // const { mutateAsync: makeReport, isLoading: isReporting } =
+  //   api.publicAgents.reportAgent.useMutation({
+  //     onSuccess: () => {
+  //       toast.success('Agent reported')
+  //     },
+  //     onError: error => {
+  //       toast.error(error.message)
+  //     },
+  //   })
 
-  const handleReport = async () => {
-    await makeReport({ publicAgentId, message: report })
-    setOpen(false)
-    setReport('')
-  }
+  // const handleReport = async () => {
+  //   await makeReport({ publicAgentId, message: report })
+  //   setOpen(false)
+  //   setReport('')
+  // }
 
   const [open, setOpen] = useState<boolean>(false)
   const [report, setReport] = useState<string>('')
@@ -34,7 +34,7 @@ const AgentChatReportButton = ({
       <MagickDialog
         title="Report an Issue"
         open={open}
-        isLoading={isReporting}
+        // isLoading={isReporting}
         trigger={
           <Button onClick={() => setOpen(true)} variant="agent" size="sm">
             <AiOutlineWarning />
@@ -42,7 +42,7 @@ const AgentChatReportButton = ({
           </Button>
         }
         setOpen={setOpen}
-        onSubmit={handleReport}
+        // onSubmit={handleReport}
         submitText="Report"
         description="Reporting this agent will send a report to the MagickML team. Please provide a description of why you are reporting this agent."
       >
