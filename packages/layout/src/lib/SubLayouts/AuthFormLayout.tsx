@@ -14,7 +14,7 @@ import {
   Input,
   Label,
   Button,
-} from '@magickml/portal-ui'
+} from '@magickml/portal-core-ui'
 import { useForm } from 'react-hook-form'
 import { useSession } from 'next-auth/react'
 import { IoIosArrowBack } from 'react-icons/io'

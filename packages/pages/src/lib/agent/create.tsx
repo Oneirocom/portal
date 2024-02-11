@@ -6,18 +6,8 @@ import { workspaceAtom } from '@magickml/portal-state'
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
 import { SlRefresh } from 'react-icons/sl'
-import {
-  Label,
-  Button,
-  Input,
-  MagickDialog,
-  AgentCardTemplate,
-  //   AgentIcon,
-} from '@magickml/portal-ui'
-// import {
-//   OtherEventTypes,
-//   PublicEventTypes,
-// } from '@magickml/portal-utils-shared'
+import { MagickDialog, AgentCardTemplate } from '@magickml/portal-ui'
+import { Label, Button, Input } from '@magickml/portal-core-ui'
 import React from 'react'
 import Head from 'next/head'
 

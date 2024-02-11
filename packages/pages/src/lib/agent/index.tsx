@@ -5,7 +5,8 @@ import { MainLayout, PortalLayout } from '@magickml/portal-layout'
 import Head from 'next/head'
 import { useInView } from 'react-intersection-observer'
 import clsx from 'clsx'
-import { Card, Button, AgentCard } from '@magickml/portal-ui'
+import { AgentCard } from '@magickml/portal-ui'
+import { Card, Button } from '@magickml/portal-core-ui'
 
 export const AgentsPage = ({ initialData }) => {
   const router = useRouter()
