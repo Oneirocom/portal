@@ -22,6 +22,7 @@ export const PortalHeader = () => {
       switch (metadata?.role) {
         case Roles.ADMIN:
           setNavigation(getNavigationForRole(Roles.ADMIN))
+          break
         case Roles.TESTER:
           setNavigation(getNavigationForRole(Roles.TESTER))
           break
