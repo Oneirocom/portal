@@ -1,8 +1,14 @@
 import { z } from 'zod'
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc'
-import { checkIfUserIsMember } from '../utils/shared'
+import { checkIfUserIsMember, hasAccess } from '../utils/shared'
 import { trackServerEvent } from '@magickml/portal-utils-server'
-import { PrivateEventTypes, PublicEventTypes } from '@magickml/portal-utils-shared'
+import {
+  PrivateEventTypes,
+  PublicEventTypes,
+} from '@magickml/portal-utils-shared'
+import { encode } from 'next-auth/jwt'
+import { authOptions } from '@magickml/portal-auth'
+import { prisma } from '@magickml/portal-db'
 
 export const chatRouter = createTRPCRouter({
   privateChat: protectedProcedure
@@ -96,6 +102,53 @@ export const chatRouter = createTRPCRouter({
         return responseString || ''
       } catch (err) {
         console.error('Error talking to agent', err)
+      }
+    }),
+
+  chatToken: publicProcedure
+    .input(z.object({ agentId: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      if (ctx.session?.user?.id) {
+        const agent = await prisma.agents.findUnique({
+          where: { id: input.agentId },
+          select: {
+            projectId: true,
+          },
+        })
+        if (!agent || !agent.projectId) {
+          throw new Error('Agent not found')
+        }
+
+        const access = hasAccess(ctx.session?.user?.id, agent?.projectId)
+        if (!access) {
+          return await encode({
+            token: {
+              user: ctx.session?.user,
+              permissions: ['public', 'agent:run', 'agent:message'],
+            },
+            secret: authOptions.secret as string,
+            maxAge: 10 * 60,
+          })
+        }
+
+        return await encode({
+          token: {
+            user: ctx.session?.user,
+            permissions: ['public', 'agent:run', 'agent:message'],
+            project: agent?.projectId,
+          },
+          secret: authOptions.secret as string,
+          maxAge: 10 * 60,
+        })
+      } else {
+        return await encode({
+          token: {
+            user: 'anonymous',
+            permissions: ['public', 'agent:run', 'agent:message'],
+          },
+          secret: authOptions.secret as string,
+          maxAge: 10 * 60,
+        })
       }
     }),
 })
