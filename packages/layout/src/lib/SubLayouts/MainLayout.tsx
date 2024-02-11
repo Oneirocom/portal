@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Image from "next/legacy/image"
-import MagickHeader from '../Header/MagickHeader'
+import { PortalHeader } from '../Header/PortalHeader'
 import MagickMobileNav from '../MobileNav/MagickMobileNav'
 import clsx from 'clsx'
 import MagickFooter from '../Footer/MagickFooter'
@@ -126,7 +126,7 @@ export const MainLayout: React.FC<Props> = ({
             <div className="absolute top-0 left-0 w-full h-full object-cover bg-black/10" />
           </div>
         )}
-        <MagickHeader />
+        <PortalHeader />
         <div
           className={clsx(
             'flex flex-col z-10 h-full overflow-y-auto overflow-x-hidden pb-20',

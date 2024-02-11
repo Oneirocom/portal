@@ -1,93 +1,39 @@
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/router'
-import { useSession } from 'next-auth/react'
+import { useUser } from '@clerk/nextjs'
 import Link from 'next/link'
 import clsx from 'clsx'
-import {
-  Route,
-  allRoutes,
-  getNavigationForRole,
-  rolesConfig,
-} from '../navigation'
-import { ANONYMOUS, Role } from '@magickml/portal-config'
+import { Route, getNavigationForRole } from '../navigation'
+import { ANONYMOUS, Roles } from '@magickml/portal-config'
 import { InfoMenu, UserMenu } from './menus'
-import { Button } from '@magickml/portal-ui'
+import { Button } from '@magickml/portal-core-ui'
+import { PageProgress } from './PageProgress'
+import { useRouter } from 'next/router'
 
-const MagickHeader = () => {
-  const session = useSession()
+export const PortalHeader = () => {
   const router = useRouter()
-
-  // Progress bar
-  const [progress, setProgress] = useState<number>(0)
-  const [isRouting, setIsRouting] = useState<boolean>(false)
-
-  const simulateProgress = () => {
-    // Ensure progress does not reach 100% while still loading
-    const maxProgressWhileLoading = 95
-    if (isRouting && progress < maxProgressWhileLoading) {
-      const increment =
-        progress > 85 ? 0.5 : progress > 70 ? 1 : progress > 50 ? 2 : 5
-      setProgress(progress + increment)
-    } else if (!isRouting && progress < 100) {
-      // Rapidly complete the progress when loading is done
-      setProgress(progress + 5)
-    }
-  }
-
-  useEffect(() => {
-    const intervalId: NodeJS.Timeout = setInterval(
-      simulateProgress,
-      isRouting ? 100 : 20
-    )
-
-    return () => clearInterval(intervalId)
-  }, [isRouting, progress])
-
-  useEffect(() => {
-    const handleStart = () => {
-      setProgress(0)
-      setIsRouting(true)
-    }
-    const handleComplete = () => {
-      setIsRouting(false)
-    }
-
-    router.events.on('routeChangeStart', handleStart)
-    router.events.on('routeChangeComplete', handleComplete)
-    router.events.on('routeChangeError', handleComplete)
-
-    return () => {
-      router.events.off('routeChangeStart', handleStart)
-      router.events.off('routeChangeComplete', handleComplete)
-      router.events.off('routeChangeError', handleComplete)
-    }
-  }, [router])
-
-  const [role, setRole] = useState<Role>(ANONYMOUS)
-
-  const [filteredNavigation, setFilteredNavigation] = useState<Route[]>(
-    rolesConfig[role].map(routeKey => allRoutes[routeKey])
+  const { user, isSignedIn } = useUser()
+  const [navigation, setNavigation] = useState<Route[]>(
+    getNavigationForRole(ANONYMOUS)
   )
 
-  // Determine which navigation to use based on the user's role
   useEffect(() => {
-    getNavigationForRole(role)
-      .then(navigation => {
-        setFilteredNavigation(navigation)
-      })
-      .catch(err => {
-        console.log(err)
-      })
-  }, [role])
-
-  useEffect(() => {
-    if (session.data?.user?.role) {
-      setRole(session.data.user.role as Role)
-    } else {
-      setRole(ANONYMOUS)
+    if (isSignedIn) {
+      const metadata = user.publicMetadata
+      switch (metadata?.role) {
+        case Roles.ADMIN:
+          setNavigation(getNavigationForRole(Roles.ADMIN))
+        case Roles.TESTER:
+          setNavigation(getNavigationForRole(Roles.TESTER))
+          break
+        case Roles.USER:
+          setNavigation(getNavigationForRole(Roles.USER))
+          break
+        default:
+          setNavigation(getNavigationForRole(ANONYMOUS))
+          break
+      }
     }
-  }, [session.data?.user?.role])
-
+  }, [isSignedIn, user])
 
   return (
     <div className="bg-ds-header shrink-0 h-12 lg:h-20 relative w-full inline-flex justify-start items-center text-left text-ds-black dark:text-ds-white lg:px-10">
@@ -159,9 +105,9 @@ const MagickHeader = () => {
       </Link>
       {/* LINKS */}
       <div className="items-center justify-start hidden pl-20 lg:inline-flex gap-x-10">
-        {filteredNavigation &&
-          filteredNavigation.length > 0 &&
-          filteredNavigation.map(
+        {navigation &&
+          navigation.length > 0 &&
+          navigation.map(
             (item: Route) =>
               item.enabled && (
                 <Link
@@ -206,11 +152,11 @@ const MagickHeader = () => {
           variant="portal-primary"
           size="sm"
           onClick={() => {
-            router.push(session.data ? '/agents/create' : '/auth/sign-in')
+            router.push(isSignedIn ? '/agents/create' : '/sign-in')
           }}
           className="hidden lg:flex"
         >
-          {session.data ? 'Create Agent' : 'Sign in'}
+          {isSignedIn ? 'Create Agent' : 'Sign in'}
         </Button>
 
         <InfoMenu />
@@ -218,28 +164,7 @@ const MagickHeader = () => {
       </div>
 
       {/* PROGRESS BAR */}
-      <div
-        className={clsx(
-          'absolute bottom-0 left-0 z-50 w-full transition-[width] duration-500 ease-in-out',
-          progress === 0 && !isRouting ? 'hidden' : ''
-        )}
-      >
-        <div
-          className={clsx(
-            'h-[1px] transition-colors ease-in-out duration-75',
-            progress <= 33
-              ? 'bg-secondary-highlight/60'
-              : progress <= 66
-              ? 'bg-secondary-highlight/80'
-              : progress <= 99
-              ? 'bg-secondary-highlight'
-              : 'bg-[#262730]'
-          )}
-          style={{ width: `${progress}%` }}
-        />
-      </div>
+      <PageProgress />
     </div>
   )
 }
-
-export default MagickHeader
