@@ -51,8 +51,6 @@ export const agentsRouter = createTRPCRouter({
   getAgent: publicProcedure
     .input(z.object({ agentId: z.string() }))
     .query(async ({ ctx, input }) => {
-      const session = ctx.session
-
       const agentData = await getAgentData(session, input.agentId)
 
       if (!agentData) {
@@ -72,111 +70,11 @@ export const agentsRouter = createTRPCRouter({
       return agentData
     }),
 
-  // Get all agents for a project
-  getAgents: protectedProcedure
-    .input(z.object({ projectId: z.string(), workspaceId: z.string() }))
-    .query(async ({ input }) => {
-      const agents = await prisma.agents.findMany({
-        where: {
-          projectId: input.projectId,
-        },
-        select: {
-          id: true,
-          name: true,
-          enabled: true,
-          image: true,
-          updatedAt: true,
-          projectId: true,
-          rootSpellId: true,
-        },
-
-        orderBy: {
-          updatedAt: 'desc',
-        },
-      })
-
-      return agents
-    }),
-  getUserAgents: publicProcedure
-    .input(z.object({ userId: z.string() }))
-    .query(async ({ input }) => {
-      const agents = prisma.agents.findMany({
-        where: {
-          creatorId: input.userId,
-          isPublic: true,
-        },
-        select: {
-          id: true,
-          name: true,
-          enabled: true,
-          image: true,
-          description: true,
-          updatedAt: true,
-          projectId: true,
-          rootSpellId: true,
-          isPublic: true,
-          creatorId: true,
-          creatorImage: true,
-          creatorName: true,
-          likesCount: true,
-          commentsCount: true,
-        },
-
-        orderBy: {
-          updatedAt: 'desc',
-        },
-      })
-
-      return agents
-    }),
   getAgentAnalytics: protectedProcedure
     .input(z.object({ agentId: z.string(), projectId: z.string() }))
     .query(async ({ input, ctx }) => {
       const newToken = await prepareToken(ctx, input)
       const agents = await fetchAgentAnalytics(newToken, input)
-      return agents
-    }),
-
-  // Get all agents for a workplace
-  getAllAgents: protectedProcedure
-    .input(z.object({ workspaceId: z.string() }))
-    .query(async ({ ctx, input }) => {
-      const check = await checkIfUserIsMember(
-        input.workspaceId,
-        ctx.session.user.id,
-        false
-      )
-
-      if (!check) {
-        throw new Error('User is not a member of the specified workspace')
-      }
-
-      const agents = prisma.agents.findMany({
-        where: {
-          workspace_id: input.workspaceId,
-        },
-        select: {
-          id: true,
-          name: true,
-          enabled: true,
-          image: true,
-          description: true,
-          updatedAt: true,
-          projectId: true,
-          rootSpellId: true,
-          isPublic: true,
-          creatorId: true,
-          creatorImage: true,
-          creatorName: true,
-          likesCount: true,
-          commentsCount: true,
-        },
-
-        orderBy: {
-          updatedAt: 'desc',
-        },
-      })
-
       return agents
     }),
 
@@ -491,59 +389,6 @@ export const agentsRouter = createTRPCRouter({
       // If the agent doesn't exist, no need to make it private
       throw new Error('Agent not found')
     }),
-
-  getPublicAgent: publicProcedure
-    .input(
-      z.object({
-        agentId: z.string(),
-      })
-    )
-    .query(async ({ input }) => {
-      const publicAgent = await prisma.publicAgent.findFirst({
-        where: {
-          agentId: input.agentId,
-          deletedAt: null,
-        },
-      })
-
-      if (!publicAgent) {
-        throw new Error('Public agent not found')
-      }
-
-      // for that agent get its info
-      const agent = await prisma.agents.findUnique({
-        where: {
-          id: publicAgent.agentId,
-        },
-        select: {
-          id: true,
-          name: true,
-          enabled: true,
-          image: true,
-          updatedAt: true,
-          projectId: true,
-        },
-      })
-
-      return {
-        ...agent,
-        publicAgentId: publicAgent.id,
-      }
-    }),
-
-  getPublicAgents: protectedProcedure.query(async () => {
-    const publicAgents = await prisma.publicAgent.findMany({
-      where: {
-        deletedAt: null,
-      },
-      include: {
-        comments: true,
-        likes: true,
-      },
-    })
-
-    return publicAgents
-  }),
 
   getInfinite: publicProcedure
     .input(
