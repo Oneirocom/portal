@@ -8,16 +8,16 @@ import { LoginIcon, DarkIcon, LightIcon, DashboardIcon } from '../Icons'
 import { useTheme } from 'next-themes'
 import { useEffect } from 'react'
 import clsx from 'clsx'
-import { signOut, useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import Cookies from 'js-cookie'
 import DropDown from './DropDown'
 import { dropDownMenuItemsType, navProps } from './types'
 import { Switch } from '@magickml/client-ui'
+import { useClerk } from '@clerk/nextjs'
 
 export const DropDownUserMenu = () => {
   const { theme, setTheme } = useTheme()
-  const session = useSession()
+  const { signOut, session } = useClerk()
 
   const router = useRouter()
   useEffect(() => {
@@ -30,21 +30,6 @@ export const DropDownUserMenu = () => {
     setTheme(theme === 'dark' ? 'light' : 'dark')
   }
 
-  const handleLogin = async () => {
-    router.push('/auth/sign-in')
-  }
-
-  const handleLogout = async () => {
-    await signOut({
-      redirect: false,
-    })
-    if (router.pathname !== '/') {
-      router.push('/')
-    }
-
-    Cookies.remove('workspace')
-  }
-
   const handleNavigation = async (args: navProps) => {
     router.push(args.target)
   }
@@ -55,9 +40,13 @@ export const DropDownUserMenu = () => {
       children: (
         <div
           className="flex w-full"
-          onClick={session?.data ? handleLogout : handleLogin}
+          onClick={
+            session?.status === 'active'
+              ? () => signOut(() => router.push('/'))
+              : () => router.push('/sign-in')
+          }
         >
-          {session.data ? (
+          {session?.status === 'active' ? (
             <>
               <ArrowRightOnRectangleIcon className="w-6 h-6 mr-2" />
               <span>Log out</span>
@@ -76,7 +65,7 @@ export const DropDownUserMenu = () => {
     },
     {
       id: 'profile',
-      enabled: session.data ? true : false,
+      enabled: session?.status === 'active' ? true : false,
       children: (
         <>
           <UserCircleIcon className="w-6 h-6 mr-2" />
@@ -134,11 +123,11 @@ export const DropDownUserMenu = () => {
       ),
       enabled: true,
       type: 'button',
-      separator: session.data ? true : false,
+      separator: session?.status === 'active' ? true : false,
     },
     {
       id: 'settings',
-      enabled: session.data ? true : false,
+      enabled: session?.status === 'active' ? true : false,
       children: (
         <>
           <Cog6ToothIcon className="w-6 h-6 mr-2" />
