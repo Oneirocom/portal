@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc'
-import { checkIfUserIsMember, hasAccess } from '../utils/shared'
+import { hasAccess } from '../utils/shared'
 import { trackServerEvent } from '@magickml/portal-utils-server'
 import {
   PrivateEventTypes,
@@ -16,26 +16,37 @@ export const chatRouter = createTRPCRouter({
       z.object({
         agentId: z.string(),
         sessionId: z.string(),
-        workspaceId: z.string(),
+        projectId: z.string(),
         prompt: z.string().optional(),
         sender: z.string().optional(),
       })
     )
     .mutation(async ({ input, ctx }) => {
+      // get projectId from agentId
+      const project = await prisma.agents.findUnique({
+        where: { id: input.agentId },
+        select: {
+          projectId: true,
+        },
+      })
+
+      if (!project?.projectId) {
+        throw new Error('Agent not found')
+      }
+
       try {
-        const access = await checkIfUserIsMember(
-          input.workspaceId,
-          ctx.session.user.id,
-          false
-        )
+        const access = await hasAccess({
+          user: ctx.auth,
+          projectId: project.projectId,
+        })
 
         if (!access) {
-          throw new Error('User is not a member of the specified workspace')
+          throw new Error('User does not have access to this agent')
         }
 
         trackServerEvent(
           PrivateEventTypes.AGENT_PRIVATE_MESSAGE,
-          ctx.session?.user.email ?? '',
+          ctx.auth.user?.emailAddresses[0].emailAddress ?? '',
           input.agentId
         )
 
@@ -53,7 +64,7 @@ export const chatRouter = createTRPCRouter({
 
         trackServerEvent(
           PrivateEventTypes.AGENT_PRIVATE_RESPONSE,
-          ctx.session?.user.email ?? '',
+          ctx.auth.user?.emailAddresses[0].emailAddress ?? '',
           input.agentId
         )
         return responseString || ''
@@ -74,7 +85,7 @@ export const chatRouter = createTRPCRouter({
     .mutation(async ({ input, ctx }) => {
       trackServerEvent(
         PublicEventTypes.AGENT_PUBLIC_MESSAGE,
-        ctx.session?.user.email ?? '',
+        ctx.auth.user?.emailAddresses[0].emailAddress ?? '',
         input.agentId
       )
 
@@ -95,7 +106,7 @@ export const chatRouter = createTRPCRouter({
 
         trackServerEvent(
           PublicEventTypes.AGENT_PUBLIC_RESPONSE,
-          ctx.session?.user.email ?? '',
+          ctx.auth.user?.emailAddresses[0].emailAddress ?? '',
           input.agentId
         )
 
@@ -108,7 +119,7 @@ export const chatRouter = createTRPCRouter({
   chatToken: publicProcedure
     .input(z.object({ agentId: z.string() }))
     .mutation(async ({ input, ctx }) => {
-      if (ctx.session?.user?.id) {
+      if (ctx.auth.userId) {
         const agent = await prisma.agents.findUnique({
           where: { id: input.agentId },
           select: {
@@ -119,11 +130,18 @@ export const chatRouter = createTRPCRouter({
           throw new Error('Agent not found')
         }
 
-        const access = hasAccess(ctx.session?.user?.id, agent?.projectId)
+        const access = hasAccess({
+          user: ctx.auth,
+          projectId: agent.projectId,
+        })
+
         if (!access) {
           return await encode({
             token: {
-              user: ctx.session?.user,
+              user: {
+                id: ctx.auth.userId,
+                email: ctx.auth.user?.emailAddresses[0].emailAddress ?? '',
+              },
               permissions: ['public', 'agent:run', 'agent:message'],
             },
             secret: authOptions.secret as string,
@@ -133,7 +151,10 @@ export const chatRouter = createTRPCRouter({
 
         return await encode({
           token: {
-            user: ctx.session?.user,
+            user: {
+              id: ctx.auth.userId,
+              email: ctx.auth.user?.emailAddresses[0].emailAddress ?? '',
+            },
             permissions: ['public', 'agent:run', 'agent:message'],
             project: agent?.projectId,
           },
