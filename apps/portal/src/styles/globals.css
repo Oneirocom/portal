@@ -638,3 +638,21 @@ h6 {
 .cl-accordionTriggerButton {
   @apply focus:ring-0 focus:border-none focus:outline-none hover:bg-none; 
 }
+
+.cl-signIn-havingTrouble [data-localization-key="signIn.alternativeMethods.getHelp.blockButton__emailSupport"] {
+  @apply text-ds-black dark:text-ds-white font-montserrat;
+}
+.cl-signIn-havingTrouble [data-localization-key="signIn.alternativeMethods.getHelp.content"] {
+ @apply text-ds-black dark:text-ds-white font-montserrat;
+}
+
+.cl-signIn-havingTrouble svg {
+  @apply text-ds-black dark:text-ds-white;
+}
+
+.cl-signIn-havingTrouble button {
+  @apply text-ds-black dark:text-ds-white font-montserrat  border-ds-neutral border;
+}
+.cl-headerBackIcon {
+  @apply text-ds-primary
+}
