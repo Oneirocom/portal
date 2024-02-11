@@ -5,7 +5,11 @@ export default authMiddleware({
     // if (auth.userId || auth.isPublicRoute) {
     // }
   },
-  publicRoutes: ['/, /auth/sign-in, /auth/sign-up, /auth/verify', '/api'],
+  publicRoutes: [
+    '/, /auth/sign-in, /auth/sign-up, /auth/verify',
+    '/api',
+    '/api/auth/sync',
+  ],
 })
 
 export const config = {
