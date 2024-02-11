@@ -612,9 +612,29 @@ h6 {
   }
 }
 
+/* Clerk overrides that are hard to do in the theme config */
 .cl-selectOption div, .cl-selectOption p {
   @apply text-ds-black dark:text-ds-white font-montserrat;
 }
 .cl-selectOptionsContainer div div input {
   @apply bg-ds-card font-montserrat text-ds-black focus:ring-0 dark:text-ds-white placeholder:text-ds-black dark:placeholder:text-ds-white;
+}
+
+/* 
+.cl-profileSectionContent p {
+  @apply text-ds-black dark:text-ds-white font-montserrat;
+}
+
+.cl-profileSectionPrimaryButton div span , .cl-accordionTriggerButton div span, .cl-accordionTriggerButton div span div {
+  @apply  font-montserrat font-medium text-ds-black dark:text-ds-white;
+}
+ */
+
+/* .cl-activeDeviceListItem .cl-accordionTriggerButton {
+  @apply h-full
+} */
+
+
+.cl-accordionTriggerButton {
+  @apply focus:ring-0 focus:border-none focus:outline-none hover:bg-none; 
 }
