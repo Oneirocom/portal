@@ -2,7 +2,7 @@ import { z } from 'zod'
 import { feathers } from '@feathersjs/feathers'
 import rest from '@feathersjs/rest-client'
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc'
-import { checkIfUserIsMember, prepareToken } from '../utils/shared'
+import { hasAccess, prepareToken } from '../utils/shared'
 import { prisma } from '@magickml/portal-db'
 import { PublicVariable } from '@magickml/portal-types'
 import axios from 'axios'
@@ -34,7 +34,6 @@ app.configure(
 
 // zod schema for the input of the createAgentWithSpell mutation
 const createAgentWithSpellInputSchema = z.object({
-  workspaceId: z.string(),
   projectId: z.string(),
   publicVariables: z.any(),
   data: z.object({
@@ -51,7 +50,10 @@ export const agentsRouter = createTRPCRouter({
   getAgent: publicProcedure
     .input(z.object({ agentId: z.string() }))
     .query(async ({ ctx, input }) => {
-      const agentData = await getAgentData(session, input.agentId)
+      const agentData = await getAgentData({
+        auth: ctx.auth,
+        agentId: input.agentId,
+      })
 
       if (!agentData) {
         throw new Error('Agent not found')
@@ -73,24 +75,27 @@ export const agentsRouter = createTRPCRouter({
   getAgentAnalytics: protectedProcedure
     .input(z.object({ agentId: z.string(), projectId: z.string() }))
     .query(async ({ input, ctx }) => {
-      const newToken = await prepareToken(ctx, input)
-      const agents = await fetchAgentAnalytics(newToken, input)
+      const newToken = await prepareToken({
+        user: ctx.auth,
+        projectId: input.projectId,
+      })
+      const agents = await fetchAgentAnalytics({
+        token: newToken,
+        agentId: input.agentId,
+        projectId: input.projectId,
+      })
+
       return agents
     }),
 
   createAgentWithSpell: protectedProcedure
     .input(createAgentWithSpellInputSchema)
     .mutation(async ({ input, ctx }) => {
-      const access = await checkIfUserIsMember(
-        input.workspaceId,
-        ctx.session.user.id,
-        false
-      )
-      if (!access) {
-        throw new Error('User is not a member of the specified workspace')
-      }
+      const token = await prepareToken({
+        user: ctx.auth,
+        projectId: input.projectId,
+      })
 
-      const newToken = await prepareToken(ctx, input)
       const spellInput = {
         projectId: input.projectId,
         name: input.name,
@@ -98,7 +103,7 @@ export const agentsRouter = createTRPCRouter({
         publicVariables: input.publicVariables as PublicVariable[],
         agentData: input.data,
       }
-      const createdSpell = await createSpell(newToken, spellInput)
+      const createdSpell = await createSpell(token, spellInput)
 
       const agentInput = {
         projectId: input.projectId,
@@ -108,7 +113,7 @@ export const agentsRouter = createTRPCRouter({
         data: input.data,
       }
 
-      const createdAgent = await createAgent(newToken, agentInput)
+      const createdAgent = await createAgent(token, agentInput)
       return createdAgent
     }),
 
@@ -116,11 +121,18 @@ export const agentsRouter = createTRPCRouter({
   deleteAgent: protectedProcedure
     .input(z.object({ agentId: z.string(), projectId: z.string() }))
     .mutation(async ({ input, ctx }) => {
-      const newToken = await prepareToken(ctx, input)
-      const deletedAgent = await deleteAgent(newToken, input)
+      const token = await prepareToken({
+        user: ctx.auth,
+        projectId: input.projectId,
+      })
+      const deletedAgent = await deleteAgent({
+        token,
+        agentId: input.agentId,
+        projectId: input.projectId,
+      })
       trackServerEvent(
         PrivateEventTypes.AGENT_PRIVATE_DELETE,
-        ctx.session?.user.email ?? '',
+        ctx.auth.user?.emailAddresses[0].emailAddress ?? '',
         input.agentId
       )
       return deletedAgent
@@ -144,15 +156,18 @@ export const agentsRouter = createTRPCRouter({
           id: input.agentId,
         },
         select: {
-          workspace_id: true,
+          projectId: true,
         },
       })
 
-      const access = await checkIfUserIsMember(
-        a?.workspace_id ?? '',
-        ctx.session.user.id,
-        false
-      )
+      if (!a?.projectId) {
+        throw new Error('Agent not found')
+      }
+
+      const access = await hasAccess({
+        projectId: a.projectId,
+        user: ctx.auth,
+      })
 
       if (!access) {
         throw new Error('No access to the specified workspace')
@@ -192,7 +207,7 @@ export const agentsRouter = createTRPCRouter({
 
       trackServerEvent(
         PrivateEventTypes.AGENT_PRIVATE_UPDATE,
-        ctx.session?.user.email ?? '',
+        ctx.auth.user?.emailAddresses[0].emailAddress ?? '',
         input.agentId
       )
 
@@ -203,18 +218,28 @@ export const agentsRouter = createTRPCRouter({
     .input(
       z.object({
         agentId: z.string(),
-        workspaceId: z.string(),
         description: z.string().optional(),
         remixable: z.boolean().optional(),
       })
     )
     .mutation(async ({ input, ctx }) => {
-      // has access
-      const access = await checkIfUserIsMember(
-        input.workspaceId,
-        ctx.session.user.id,
-        false
-      )
+      const a = await prisma.agents.findUnique({
+        where: {
+          id: input.agentId,
+        },
+        select: {
+          projectId: true,
+        },
+      })
+
+      if (!a?.projectId) {
+        throw new Error('Agent not found')
+      }
+
+      const access = await hasAccess({
+        projectId: a.projectId,
+        user: ctx.auth,
+      })
 
       if (!access) {
         throw new Error('User is not a member of the specified workspace')
@@ -251,7 +276,7 @@ export const agentsRouter = createTRPCRouter({
       const newPublicAgent = await prisma.publicAgent.create({
         data: {
           agentId: input.agentId,
-          userId: ctx.session.user.id, // Assuming the current user is the one making it public
+          userId: ctx.auth.userId,
           description: input.description ?? '',
           remixable: input.remixable ?? false,
         },
@@ -259,7 +284,7 @@ export const agentsRouter = createTRPCRouter({
 
       trackServerEvent(
         PrivateEventTypes.AGENT_PRIVATE_MAKE_PUBLIC,
-        ctx.session?.user.email ?? '',
+        ctx.auth.user?.emailAddresses[0].emailAddress ?? '',
         input.agentId
       )
 
@@ -269,23 +294,34 @@ export const agentsRouter = createTRPCRouter({
     .input(
       z.object({
         agentId: z.string(),
-        workspaceId: z.string(),
         description: z.string().optional(),
         remixable: z.boolean().optional(),
         isTemplate: z.boolean().optional(),
       })
     )
     .mutation(async ({ input, ctx }) => {
-      // has access
-      const access = await checkIfUserIsMember(
-        input.workspaceId,
-        ctx.session.user.id,
-        false
-      )
+      const a = await prisma.agents.findUnique({
+        where: {
+          id: input.agentId,
+        },
+        select: {
+          projectId: true,
+        },
+      })
+
+      if (!a?.projectId) {
+        throw new Error('Agent not found')
+      }
+
+      const access = await hasAccess({
+        projectId: a.projectId,
+        user: ctx.auth,
+      })
 
       if (!access) {
         throw new Error('User is not a member of the specified workspace')
       }
+
       const agent = await prisma.publicAgent.update({
         where: {
           agentId: input.agentId,
@@ -300,7 +336,7 @@ export const agentsRouter = createTRPCRouter({
 
       trackServerEvent(
         PublicEventTypes.AGENT_PUBLIC_UPDATE,
-        ctx.session?.user.email ?? '',
+        ctx.auth.user?.emailAddresses[0].emailAddress ?? '',
         input.agentId
       )
 
@@ -311,21 +347,32 @@ export const agentsRouter = createTRPCRouter({
     .input(
       z.object({
         agentId: z.string(),
-        workspaceId: z.string(),
         description: z.string().optional(),
       })
     )
     .mutation(async ({ input, ctx }) => {
-      // has access
-      const access = await checkIfUserIsMember(
-        input.workspaceId,
-        ctx.session.user.id,
-        false
-      )
+      const a = await prisma.agents.findUnique({
+        where: {
+          id: input.agentId,
+        },
+        select: {
+          projectId: true,
+        },
+      })
+
+      if (!a?.projectId) {
+        throw new Error('Agent not found')
+      }
+
+      const access = await hasAccess({
+        projectId: a.projectId,
+        user: ctx.auth,
+      })
 
       if (!access) {
         throw new Error('User is not a member of the specified workspace')
       }
+
       const agent = await prisma.publicAgent.update({
         where: {
           agentId: input.agentId,
@@ -337,7 +384,7 @@ export const agentsRouter = createTRPCRouter({
 
       trackServerEvent(
         PublicEventTypes.AGENT_PUBLIC_UPDATE,
-        ctx.session?.user.email ?? '',
+        ctx.auth.user?.emailAddresses[0].emailAddress ?? '',
         input.agentId
       )
 
@@ -347,15 +394,26 @@ export const agentsRouter = createTRPCRouter({
     .input(
       z.object({
         agentId: z.string(),
-        workspaceId: z.string(),
       })
     )
     .mutation(async ({ input, ctx }) => {
-      const access = await checkIfUserIsMember(
-        input.workspaceId,
-        ctx.session.user.id,
-        false
-      )
+      const a = await prisma.agents.findUnique({
+        where: {
+          id: input.agentId,
+        },
+        select: {
+          projectId: true,
+        },
+      })
+
+      if (!a?.projectId) {
+        throw new Error('Agent not found')
+      }
+
+      const access = await hasAccess({
+        projectId: a.projectId,
+        user: ctx.auth,
+      })
 
       if (!access) {
         throw new Error('User is not a member of the specified workspace')
@@ -390,7 +448,7 @@ export const agentsRouter = createTRPCRouter({
       throw new Error('Agent not found')
     }),
 
-  getInfinite: publicProcedure
+  getInfinite: protectedProcedure
     .input(
       z.object({ limit: z.number().optional(), cursor: z.string().optional() })
     )
@@ -398,12 +456,12 @@ export const agentsRouter = createTRPCRouter({
       const { input } = opts
       const limit = input.limit ?? 10
       const { cursor } = input
-      const userId = opts.ctx.session?.user?.id
-      if (!userId) {
-        throw new Error('User not found')
-      }
 
-      const fetchedItems = await getInfiniteAgents({ limit, cursor, userId })
+      const fetchedItems = await getInfiniteAgents({
+        limit,
+        cursor,
+        userId: opts.ctx.auth.userId,
+      })
       const result = paginateItems(fetchedItems, limit)
 
       return result
@@ -428,48 +486,47 @@ export const agentsRouter = createTRPCRouter({
   }),
 })
 
+interface FetchAgentAnalyticsInput {
+  token: string
+  agentId: string
+  projectId: string
+}
 const fetchAgentAnalytics = async (
-  token: string | null,
-  input: { agentId: string; projectId: string }
+  params: FetchAgentAnalyticsInput
 ): Promise<any> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/request/analytics?agentId=${input.agentId}?projectId=${input.projectId}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/request/analytics?agentId=${params.agentId}?projectId=${params.projectId}`,
       {
         method: 'GET',
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${params.token}`,
         },
       }
     )
-
-    const data = await response.json()
-
-    return data
+    return await response.json()
   } catch (error) {
     console.error('ERROR', error)
   }
 }
 
-const deleteAgent = async (
-  token: string | null,
-  input: { agentId: string; projectId: string }
-): Promise<any> => {
+interface DeleteAgentParams {
+  token: string
+  agentId: string
+  projectId: string
+}
+const deleteAgent = async (params: DeleteAgentParams): Promise<any> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/agents/${input.agentId}?projectId=${input.projectId}`,
-
+      `${process.env.NEXT_PUBLIC_API_URL}/agents/${params.agentId}?projectId=${params.projectId}`,
       {
         method: 'DELETE',
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${params.token}`,
         },
       }
     )
-
-    const data = await response.json()
-
-    return data
+    return await response.json()
   } catch (error) {
     console.error('ERROR', error)
   }
