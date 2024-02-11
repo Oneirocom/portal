@@ -3,11 +3,6 @@ import { createTRPCRouter, protectedProcedure } from '../trpc'
 import { prisma } from '@magickml/portal-db'
 import { InvitationStatus, TeamRole } from '@magickml/portal-db'
 import { checkIfUserIsMember, prepareToken } from '../utils/shared'
-import starterTemplate from '../templates/projects/starter.project.json'
-import discordTemplate from '../templates/projects/discord.project.json'
-import restTemplate from '../templates/projects/rest.project.json'
-import documentSearchTemplate from '../templates/projects/documentSearch.project.json'
-import elizaTemplate from '../templates/projects/ELIZA.project.json'
 import { uploadImage } from '../utils/upload'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -272,9 +267,7 @@ const createProjectData = async (
     templateId: number
   }
 ) => {
-  let data: any
-
-  data = {
+  const data = {
     id: 0,
   }
 
