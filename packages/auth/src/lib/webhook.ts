@@ -50,10 +50,6 @@ export const clerkWebhook = async (
     return res.status(400).json({ Error: err })
   }
 
-  // Get the ID and type
-  const { id } = evt.data
-  const eventType = evt.type
-
   await clerkEventService.handleEvent(evt)
 
   return res.status(200).json({ response: 'Success' })
