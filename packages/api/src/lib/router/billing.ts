@@ -12,7 +12,7 @@ import { PriceKeys } from '@magickml/portal-utils-shared'
 export const billingRouter = createTRPCRouter({
   getSubscription: protectedProcedure.query(async ({ ctx }) => {
     const subscription = await stripeService.getClientSubscription(
-      ctx.session.userId
+      ctx.auth.userId
     )
 
     if (!subscription) {
@@ -35,7 +35,11 @@ export const billingRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const { id, email } = ctx.session.user
+      const id = ctx.auth.userId
+      const email = ctx.auth.user?.emailAddresses[0]
+      if (!email) {
+        throw new Error('User must have an email address to create a checkout.')
+      }
       if (typeof id !== 'string' || typeof email !== 'string') {
         throw new Error('Invalid session')
       }
@@ -89,7 +93,7 @@ export const billingRouter = createTRPCRouter({
 
   getBudget: protectedProcedure.query(async ({ ctx }) => {
     const budget = await prisma.budget.findFirst({
-      where: { userId: ctx.session.userId },
+      where: { userId: ctx.auth.userId },
     })
 
     return budget
@@ -98,7 +102,7 @@ export const billingRouter = createTRPCRouter({
   getPromotions: protectedProcedure.query(async ({ ctx }) => {
     const promotions = await prisma.promotion.findMany({
       where: {
-        userId: ctx.session.userId,
+        userId: ctx.auth.userId,
         isUsed: false,
         validFrom: { lte: new Date() },
         validUntil: { gte: new Date() },
