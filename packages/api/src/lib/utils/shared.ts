@@ -1,141 +1,51 @@
 import { authOptions } from '@magickml/portal-auth'
 import { decode, encode } from 'next-auth/jwt'
-import { OpenMeter } from '@openmeter/sdk'
 import { prisma } from '@magickml/portal-db'
-import { TRPCError } from '@trpc/server'
+import { SignedInAuthObject, emails } from '@clerk/clerk-sdk-node'
 
-export const prepareToken = async (ctx: any, input: { projectId: string }) => {
-  // decode the token
-  const decodedToken = await decode({
-    token: ctx.token as string,
-    secret: authOptions.secret as string,
-  })
-  if (!decodedToken) {
-    throw new Error('Invalid token')
-  }
+interface PrepareTokenParams {
+  user: SignedInAuthObject
+  projectId: string
+}
 
-  // check if the user has access to the project
-  const access = await hasAccess(decodedToken?.user.id, input.projectId)
+// this function is duct tapped to support the old way of checking access
+// the aide expects next-auth tokens but thats deprecated in the portal
+// we can setup a similar method to hasAccess in the aide
+// for now were just going to verify with hasAccess and write a new next-auth style token
+export async function prepareToken(
+  params: PrepareTokenParams
+): Promise<string> {
+  const access = await hasAccess(params)
 
   if (!access) {
     throw new Error('No access to project')
   }
 
-  // add project to token
-  const newToken = await encode({
+  return await encode({
     token: {
-      ...decodedToken,
       user: {
-        ...decodedToken.user,
+        id: params.user.userId,
+        email: params.user.user?.emailAddresses[0],
         permissions: ['owner:*'],
       },
-      project: input.projectId,
+      project: params.projectId,
     },
     secret: authOptions.secret as string,
 
     maxAge: 24 * 60 * 60, // 24 hours
   })
-
-  return newToken
 }
 
-export const openmeter = new OpenMeter({
-  baseUrl: process.env.OPENMETER_ENDPOINT || '',
-})
-
-export const checkIfUserIsMember = async (
-  workspaceId: string,
-  userId: string,
-  highPrivilege = false
-) => {
-  const userMembership = await prisma.workspace_members.findUnique({
-    where: {
-      workspace_id_user_id: {
-        workspace_id: workspaceId,
-        user_id: userId,
-      },
-    },
-  })
-
-  if (!userMembership) {
-    // throw new Error('User is not a member of the specified workspace');
-    throw new TRPCError({
-      code: 'UNAUTHORIZED',
-      message: 'User is not a member of the specified workspace',
-      cause: new Error('User is not a member of the specified workspace'),
-    })
-  }
-
-  if (userMembership.status !== 'accepted') {
-    throw new TRPCError({
-      code: 'UNAUTHORIZED',
-      message: 'User is not a member of the specified workspace',
-      cause: new Error('User is not a member of the specified workspace'),
-    })
-  }
-
-  if (highPrivilege) {
-    if (userMembership?.role === 'member' || null) {
-      throw new TRPCError({
-        code: 'UNAUTHORIZED',
-        message:
-          'User does not have permission to invite to the specified workspace',
-        cause: new Error(
-          'User does not have permission to invite to the specified workspace'
-        ),
-      })
-    }
-  }
-  return userMembership
-}
-
-export function serializeBigints(obj: any): any {
-  if (obj === null) return null
-  if (typeof obj !== 'object') return obj
-
-  if (typeof obj === 'bigint') return obj.toString()
-
-  for (const key in obj) {
-    obj[key] = serializeBigints(obj[key])
-  }
-
-  return obj
-}
-
-// Function to check if the user has access to a project
-export async function hasAccess(
-  userId: string,
+interface HasAccessParams {
+  user: SignedInAuthObject
   projectId: string
-): Promise<boolean> {
-  // Check if the user is the project owner
-  const isProjectOwner = await prisma.project.findFirst({
+}
+
+export async function hasAccess(params: HasAccessParams): Promise<boolean> {
+  return !!(await prisma.project.findFirst({
     where: {
-      id: projectId,
-      creatorId: userId,
+      id: params.projectId,
+      owner: params.user.orgId || params.user.userId,
     },
-  })
-
-  if (isProjectOwner) {
-    return true
-  }
-
-  // Check if the user is a team member
-  const isTeamMember = await prisma.member.findFirst({
-    where: {
-      projectId: projectId,
-      email: {
-        equals: (
-          await prisma.user.findUnique({ where: { id: userId } })
-        )?.email as string,
-      },
-      status: 'ACCEPTED',
-    },
-  })
-
-  if (isTeamMember) {
-    return true
-  }
-
-  // User has no access to the project
-  return false
+  }))
 }
