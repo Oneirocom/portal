@@ -7,11 +7,13 @@ import {
   LightIcon,
   DarkIcon,
   LoginIcon,
+} from '@magickml/portal-ui'
+import {
   Switch,
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from '@magickml/portal-ui'
+} from '@magickml/portal-core-ui'
 import { CgProfile } from 'react-icons/cg'
 import { useRouter } from 'next/router'
 import {
@@ -23,7 +25,7 @@ import { useTheme } from 'next-themes'
 import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import clsx from 'clsx'
-import { signOut, useSession } from 'next-auth/react'
+import { useClerk, useUser } from '@clerk/nextjs'
 import { MP } from '../MP'
 
 export const UserMenu = () => {
@@ -34,12 +36,9 @@ export const UserMenu = () => {
     setSheetOpen(false)
   }
   const { theme, setTheme } = useTheme()
-  const session = useSession()
+  const { signOut } = useClerk()
+  const {isSignedIn, user} = useUser()
   const utils = api.useUtils()
-
-  const { data: user } = api.users.getCurrentUser.useQuery(undefined, {
-    enabled: session.status === 'authenticated',
-  })
 
   const router = useRouter()
 
@@ -48,24 +47,20 @@ export const UserMenu = () => {
   }
 
   const handleLogout = async () => {
-    await signOut({
-      redirect: false,
-    }).then(() => {})
-    Cookies.remove('workspace')
-    router.push('/')
-    session.update()
-    utils.invalidate()
-    toast.success('See you soon!')
+    signOut().then(() => {
+      Cookies.remove('workspace')
+      utils.invalidate()
+      router.push('/')
+      toast.success('See you soon!')
+    })
   }
 
   const dropDownStyles =
     'flex items-center gap-2 px-6 border-t border-t-black dark:border-t-[#e9edf1] w-full pt-4'
 
-  const isAuthed = session.status === 'authenticated'
-
   const dropDownMenuItems = [
     {
-      enabled: isAuthed,
+      enabled: isSignedIn,
       children: (
         <Link
           id="your-profile"
@@ -80,7 +75,7 @@ export const UserMenu = () => {
       ),
     },
     {
-      enabled: isAuthed,
+      enabled: isSignedIn,
       children: (
         <Link
           key="your-agents"
@@ -100,7 +95,7 @@ export const UserMenu = () => {
           id="theme-switcher"
           key="theme-switcher"
           className={
-            isAuthed ? dropDownStyles : 'flex items-center gap-2 px-6 w-full'
+            isSignedIn ? dropDownStyles : 'flex items-center gap-2 px-6 w-full'
           }
         >
           <DarkIcon
@@ -132,7 +127,7 @@ export const UserMenu = () => {
       enabled: true,
     },
     {
-      enabled: isAuthed,
+      enabled: isSignedIn,
       children: (
         <Link
           href="/account"
@@ -153,12 +148,12 @@ export const UserMenu = () => {
         <button
           key="login-logout"
           onClick={() => {
-            isAuthed ? handleLogout() : router.push('/auth/sign-in')
+            isSignedIn ? handleLogout() : router.push('/sign-in')
             handleClose()
           }}
           className={dropDownStyles}
         >
-          {isAuthed ? (
+          {isSignedIn ? (
             <>
               <ArrowRightOnRectangleIcon className="w-6 h-6 mr-2" />
               <span>Log out</span>
@@ -194,11 +189,11 @@ export const UserMenu = () => {
         popoverOpen={popoverOpen}
         setPopoverOpen={setPopoverOpen}
         triggerIcon={
-          user ? (
+          isSignedIn && user.hasImage ? (
             <UserAvatar
               className="border-ds-secondary h-6 w-6 lg:w-8 lg:h-8 color-transition"
-              imagePath={user.image}
-              username={user.name}
+              imagePath={user.imageUrl}
+              username={user.username}
             />
           ) : (
             <CgProfile
@@ -210,15 +205,15 @@ export const UserMenu = () => {
           )
         }
       >
-        {user && (
+        {isSignedIn && (
           <div className="flex flex-col items-center justify-center w-full">
             <UserAvatar
               className="w-48 h-48"
-              imagePath={user.image}
-              username={user.name}
+              imagePath={user.imageUrl}
+              username={user.username}
             />
             <h2 className="pt-4 text-base font-bold text-center">
-              {user.name}
+              {user.username}
             </h2>
             <MP />
           </div>

@@ -7,7 +7,7 @@ import {
   Popover,
   PopoverTrigger,
   PopoverContent,
-} from '@magickml/portal-ui'
+} from '@magickml/portal-core-ui'
 
 type SheetPopoverProps = {
   children: ReactNode
