@@ -11,7 +11,7 @@ import { useEffect, useState } from 'react'
 import Autoplay, { AutoplayOptionsType } from 'embla-carousel-autoplay'
 import clsx from 'clsx'
 import { useRouter } from 'next/router'
-import { useSession } from 'next-auth/react'
+import { useSession } from '@clerk/nextjs'
 
 type Slide = {
   id: number
@@ -74,11 +74,11 @@ export function CarouselHero() {
   const [current, setCurrent] = useState(0)
   const [count, setCount] = useState(0)
   const router = useRouter()
-  const session = useSession()
+  const { isSignedIn } = useSession()
 
   const onButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
-    if (session.data) {
+    if (isSignedIn) {
       router.push('/agents/create')
     } else {
       router.push('/sign-in')
