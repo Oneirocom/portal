@@ -164,5 +164,5 @@ export const protectedProcedure = t.procedure.use(enforceUserIsAuthed)
  * This is an easy way to expose a restful endpoint. It enforces a specific header key on every request.
  */
 export const openAPIProcedure = t.procedure.use(
-  enforceHeaderKey('x-api-key', process.env.CLOUD_AGENT_KEY || '')
+  enforceHeaderKey('x-api-key', process.env.PORTAL_AGENT_KEY || '')
 )

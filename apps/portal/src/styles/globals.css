@@ -32,8 +32,8 @@
     --ds-header: #fbfbfb;
 
     /* SHAD DEFAULT COLORS. THESE ARE TO BE REMOVED */
-    --background: 190, 25%, 95%;
-    --foreground: 234, 12%, 17%;
+    --background: 190 25% 95%;
+    --foreground: 234 12% 17%;
 
     --card: 0 0% 100%;
     --card-foreground: 222.2 84% 4.9%;
@@ -131,13 +131,13 @@
 }
 
 @font-face {
-  font-family: "Berkley Mono";
-  src: url("../../public/fonts/BerkeleyMono-Regular.otf");
+  font-family: 'Berkley Mono';
+  src: url('../../public/fonts/BerkeleyMono-Regular.otf');
 }
 
 @font-face {
-  font-family: "Libre Baskerville";
-  src: url("https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&display=swap");
+  font-family: 'Libre Baskerville';
+  src: url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&display=swap');
 }
 
 @layer utilities {
@@ -174,7 +174,7 @@
 }
 
 .montserrat {
-  font-family: "Montserrat", sans-serif;
+  font-family: 'Montserrat', sans-serif;
 }
 
 .btn {
@@ -381,7 +381,7 @@ h6 {
 
 .list-alpha li:before {
   counter-increment: item;
-  content: "(" counter(item, lower-alpha) ") ";
+  content: '(' counter(item, lower-alpha) ') ';
   position: absolute;
   left: 0;
 }
@@ -389,7 +389,7 @@ h6 {
 /* Second level list style */
 .list-alpha .list-roman li:before {
   counter-increment: item;
-  content: "(" counter(item, lower-roman) ") ";
+  content: '(' counter(item, lower-roman) ') ';
   position: absolute;
   left: 0;
 }
@@ -397,7 +397,7 @@ h6 {
 /* Third level list style */
 .list-alpha .list-roman .list-alpha li:before {
   counter-increment: item;
-  content: "(" counter(item, upper-alpha) ") ";
+  content: '(' counter(item, upper-alpha) ') ';
   position: absolute;
   left: 0;
 }
@@ -485,9 +485,9 @@ h6 {
 }
 
 #prompt-textarea {
-  display: "block";
-  overflow: "hidden";
-  width: "100%";
+  display: 'block';
+  overflow: 'hidden';
+  width: '100%';
   resize: none;
   height: 40px;
   max-height: 200px;
@@ -613,7 +613,8 @@ h6 {
 }
 
 /* Clerk overrides that are hard to do in the theme config */
-.cl-selectOption div, .cl-selectOption p {
+.cl-selectOption div,
+.cl-selectOption p {
   @apply text-ds-black dark:text-ds-white font-montserrat;
 }
 .cl-selectOptionsContainer div div input {
@@ -634,16 +635,17 @@ h6 {
   @apply h-full
 } */
 
-
 .cl-accordionTriggerButton {
-  @apply focus:ring-0 focus:border-none focus:outline-none hover:bg-none; 
+  @apply focus:ring-0 focus:border-none focus:outline-none hover:bg-none;
 }
 
-.cl-signIn-havingTrouble [data-localization-key="signIn.alternativeMethods.getHelp.blockButton__emailSupport"] {
+.cl-signIn-havingTrouble
+  [data-localization-key='signIn.alternativeMethods.getHelp.blockButton__emailSupport'] {
   @apply text-ds-black dark:text-ds-white font-montserrat;
 }
-.cl-signIn-havingTrouble [data-localization-key="signIn.alternativeMethods.getHelp.content"] {
- @apply text-ds-black dark:text-ds-white font-montserrat;
+.cl-signIn-havingTrouble
+  [data-localization-key='signIn.alternativeMethods.getHelp.content'] {
+  @apply text-ds-black dark:text-ds-white font-montserrat;
 }
 
 .cl-signIn-havingTrouble svg {
@@ -654,5 +656,5 @@ h6 {
   @apply text-ds-black dark:text-ds-white font-montserrat  border-ds-neutral border;
 }
 .cl-headerBackIcon {
-  @apply text-ds-primary
+  @apply text-ds-primary;
 }
