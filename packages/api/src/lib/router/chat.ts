@@ -7,7 +7,6 @@ import {
   PublicEventTypes,
 } from '@magickml/portal-utils-shared'
 import { encode } from 'next-auth/jwt'
-import { authOptions } from '@magickml/portal-auth'
 import { prisma } from '@magickml/portal-db'
 
 export const chatRouter = createTRPCRouter({
@@ -144,7 +143,7 @@ export const chatRouter = createTRPCRouter({
               },
               permissions: ['public', 'agent:run', 'agent:message'],
             },
-            secret: authOptions.secret as string,
+            secret: process.env.NEXTAUTH_SECRET as string,
             maxAge: 10 * 60,
           })
         }
@@ -158,7 +157,7 @@ export const chatRouter = createTRPCRouter({
             permissions: ['public', 'agent:run', 'agent:message'],
             project: agent?.projectId,
           },
-          secret: authOptions.secret as string,
+          secret: process.env.NEXTAUTH_SECRET as string,
           maxAge: 10 * 60,
         })
       } else {
@@ -167,7 +166,7 @@ export const chatRouter = createTRPCRouter({
             user: 'anonymous',
             permissions: ['public', 'agent:run', 'agent:message'],
           },
-          secret: authOptions.secret as string,
+          secret: process.env.NEXTAUTH_SECRET as string,
           maxAge: 10 * 60,
         })
       }
