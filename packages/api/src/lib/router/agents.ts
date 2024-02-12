@@ -4,7 +4,6 @@ import rest from '@feathersjs/rest-client'
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc'
 import { hasAccess, prepareToken } from '../utils/shared'
 import { prisma } from '@magickml/portal-db'
-import { PublicVariable } from '@magickml/portal-types'
 import axios from 'axios'
 import {
   trackServerEvent,
@@ -16,7 +15,6 @@ import {
   PublicEventTypes,
   PrivateEventTypes,
 } from '@magickml/portal-utils-shared'
-import { template } from 'lodash'
 import { v4 as uuidv4 } from 'uuid'
 
 const app = feathers()
@@ -102,11 +100,6 @@ export const agentsRouter = createTRPCRouter({
       if (!template) {
         throw new Error('Template not found')
       }
-
-      const token = await prepareToken({
-        user: ctx.auth,
-        projectId: project.id,
-      })
 
       const spellInput = {
         id: uuidv4(),
