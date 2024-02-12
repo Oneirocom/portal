@@ -98,10 +98,16 @@ export class ClerkEventService {
     this.log('User created', event.data.id)
     const user = await clerkClient.users.getUser(event.data.id)
 
-    await stripeService.handleNewCustomer(
+    const customer = await stripeService.handleNewCustomer(
       user.id,
       user.emailAddresses[0].emailAddress
     )
+
+    await clerkClient.users.updateUserMetadata(user.id, {
+      privateMetadata: {
+        stripeId: customer,
+      },
+    })
   }
 
   private async handleUserUpdated(event: UserWebhookEvent) {
