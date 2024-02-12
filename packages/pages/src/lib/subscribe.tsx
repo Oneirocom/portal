@@ -77,7 +77,7 @@ const subscriptionOptions: SubscriptionOption[] = [
 
 export const SubscribePage = () => {
   const router = useRouter()
-  const { mutateAsync: createCheckout, isLoading: checkoutLoading } =
+  const { mutateAsync: createCheckout } =
     api.billing.createCheckout.useMutation({
       onSuccess: data => {
         typeof data.checkoutSession.url === 'string'
@@ -180,7 +180,7 @@ export const SubscribePage = () => {
             </TooltipProvider>
 
             {/* Features */}
-            <ul role="list" className="mt-6 space-y-4 list-disc text-sm">
+            <ul className="mt-6 space-y-4 list-disc text-sm">
               {option.features.map(feature => (
                 <li className="ml-4" key={feature}>
                   {feature}
