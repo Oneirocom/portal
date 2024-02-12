@@ -1,3 +1,4 @@
+import { clerkClient } from '@clerk/nextjs'
 import {
   WebhookEvent,
   WebhookEventType,
@@ -9,6 +10,7 @@ import {
   OrganizationMembershipWebhookEvent,
   OrganizationInvitationWebhookEvent,
 } from '@clerk/nextjs/server'
+import { stripeService } from '@magickml/portal-billing'
 
 export class ClerkEventService {
   private useLogs = process.env.CLERK_WEBHOOK_LOGGING === 'true'
@@ -94,6 +96,12 @@ export class ClerkEventService {
   // USER EVENTS
   private async handleUserCreated(event: UserWebhookEvent) {
     this.log('User created', event.data.id)
+    const user = await clerkClient.users.getUser(event.data.id)
+
+    await stripeService.handleNewCustomer(
+      user.id,
+      user.emailAddresses[0].emailAddress
+    )
   }
 
   private async handleUserUpdated(event: UserWebhookEvent) {
