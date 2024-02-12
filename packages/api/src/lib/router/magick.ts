@@ -3,7 +3,6 @@ import { createTRPCRouter, openAPIProcedure } from '../trpc'
 import { prisma } from '@magickml/portal-db'
 import { StripeService } from '@magickml/portal-billing'
 import { clerkClient } from '@clerk/clerk-sdk-node'
-
 // Zod schemas
 const budgetDataSchema = z.object({
   total_budget: z.number(),
@@ -275,14 +274,19 @@ export const budgetRouter = createTRPCRouter({
         },
       })
 
-      const introCredit = promotions
-        .filter(promo => promo.type === 'INTRO')[0]
-        .amount.toNumber()
+      let introCredit = 0
+      let promoCredit = 0
 
-      const promoCredit = promotions.reduce(
-        (acc, promo) => acc + promo.amount.toNumber(),
-        0
-      )
+      if (promotions && promotions.length > 0) {
+        introCredit = promotions
+          .filter(promo => promo.type === 'INTRO')[0]
+          .amount.toNumber()
+
+        promoCredit = promotions.reduce(
+          (acc, promo) => acc + promo.amount.toNumber(),
+          0
+        )
+      }
 
       // Add promotional credit to the user's balance
       const userBalance = wallet?.balance.toNumber() || 0
