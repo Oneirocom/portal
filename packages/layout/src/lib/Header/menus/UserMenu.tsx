@@ -3,7 +3,12 @@ import Cookies from 'js-cookie'
 import SheetPopover from './SheetPopover'
 import Link from 'next/link'
 import { AgentIcon, LightIcon, DarkIcon, LoginIcon } from '@magickml/portal-ui'
-import { Switch, Avatar, AvatarFallback, AvatarImage } from '@magickml/client-ui'
+import {
+  Switch,
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from '@magickml/client-ui'
 import { CgProfile } from 'react-icons/cg'
 import { useRouter } from 'next/router'
 import {
@@ -220,7 +225,7 @@ const UserAvatar = ({
   username,
   className,
 }: {
-  imagePath: string | null
+  imagePath: string
   username: string | null
   className?: string
 }) => {
@@ -228,17 +233,10 @@ const UserAvatar = ({
     <Avatar className={clsx('self-center border border-ds-primary', className)}>
       <AvatarImage
         className="object-cover w-full h-full rounded-full"
-        src={
-          imagePath
-            ? `${process.env.NEXT_PUBLIC_BUCKET_PREFIX}${imagePath}`
-            : '/images/magick-icon.png'
-        }
+        src={imagePath}
         alt={username ?? 'User'}
       />
-      <AvatarFallback>
-        {username?.charAt(0)}
-        {username?.charAt(1)}
-      </AvatarFallback>
+      <AvatarFallback>{username?.charAt(0)}</AvatarFallback>
     </Avatar>
   )
 }

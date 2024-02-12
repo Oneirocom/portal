@@ -257,11 +257,11 @@ export class StripeService {
     }
   }
 
-  async handleNewCustomer(userId: string, email: string): Promise<void> {
+  async handleNewCustomer(userId: string, email: string): Promise<string> {
     if (!(await this.checkBudgetExists(userId))) {
       this.createDefaultBudget(userId)
     }
-    await this.createOrRetrieveStripeCustomerId(userId, email)
+    return await this.createOrRetrieveStripeCustomerId(userId, email)
   }
 
   async getClientSubscription(
