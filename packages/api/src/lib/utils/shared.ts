@@ -1,4 +1,3 @@
-import { authOptions } from '@magickml/portal-auth'
 import { encode } from 'next-auth/jwt'
 import { prisma } from '@magickml/portal-db'
 import { SignedInAuthObject } from '@clerk/clerk-sdk-node'
@@ -30,7 +29,7 @@ export async function prepareToken(
       },
       project: params.projectId,
     },
-    secret: authOptions.secret as string,
+    secret: process.env.NEXTAUTH_SECRET as string,
 
     maxAge: 24 * 60 * 60, // 24 hours
   })
