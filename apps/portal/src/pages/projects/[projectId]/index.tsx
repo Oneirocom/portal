@@ -6,6 +6,8 @@ import { getAuth } from '@clerk/nextjs/server'
 
 export default Editor
 
+const apiUrl = process.env.NEXT_PUBLIC_API_URL
+
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   const projectId = ctx.params?.projectId
   const auth = getAuth(ctx.req)
@@ -57,6 +59,9 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
     props: {
       token,
       projectId,
+      userId: auth.userId,
+      email: '',
+      apiUrl,
     },
   }
 }

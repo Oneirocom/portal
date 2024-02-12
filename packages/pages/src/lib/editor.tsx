@@ -9,46 +9,19 @@ const MagickIDE = dynamic(
   { ssr: false }
 )
 
-type Props = {
-  token: string
-  projectId: string
-  email: string
-}
-
-const ideUrl = process.env.NEXT_PUBLIC_EDITOR_URL || 'http://localhost:3000'
-if (!ideUrl) {
-  throw new Error('NEXT_PUBLIC_EDITOR_URL is not defined')
-}
-
-const apiUrl = process.env.NEXT_PUBLIC_API_URL
-if (!apiUrl) {
-  throw new Error('NEXT_PUBLIC_API_URL is not defined')
-}
-
-export const Editor = ({
-  token,
-  projectId,
-}: Props): React.ReactElement | null => {
+export const Editor = (props: AppConfig): React.ReactElement | null => {
   const [cookie, setCookie] = useState<boolean | null>(null)
 
   useEffect(() => {
     setCookie(!posthog.has_opted_out_capturing())
   }, [])
 
-  const config: AppConfig = {
-    apiUrl,
-    projectId,
-    token,
-    userId: '',
-    email: undefined,
-  }
-
   return (
     <>
       {process.env.NEXT_PUBLIC_AIDE_MAINTENANCE_MODE === 'true' ? (
         <Maintenance mode="editor" />
       ) : cookie !== null ? (
-        <MagickIDE config={config} />
+        <MagickIDE config={props} />
       ) : null}
     </>
   )
