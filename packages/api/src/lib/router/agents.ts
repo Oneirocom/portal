@@ -11,13 +11,13 @@ import {
   paginateItems,
   getAgentData,
   getInfiniteAgents,
-  createAgent,
-  createSpell,
 } from '@magickml/portal-utils-server'
 import {
   PublicEventTypes,
   PrivateEventTypes,
 } from '@magickml/portal-utils-shared'
+import { template } from 'lodash'
+import { v4 as uuidv4 } from 'uuid'
 
 const app = feathers()
 
@@ -31,20 +31,6 @@ app.configure(
     })
   )
 )
-
-// zod schema for the input of the createAgentWithSpell mutation
-const createAgentWithSpellInputSchema = z.object({
-  projectId: z.string(),
-  publicVariables: z.any(),
-  data: z.object({
-    discord_api_key: z.string(),
-    discord_enabled: z.boolean(),
-    rest_enabled: z.boolean(),
-    use_voice: z.boolean(),
-  }),
-  name: z.string(),
-  spellData: z.any(),
-})
 
 export const agentsRouter = createTRPCRouter({
   getAgent: publicProcedure
@@ -88,33 +74,50 @@ export const agentsRouter = createTRPCRouter({
       return agents
     }),
 
-  createAgentWithSpell: protectedProcedure
-    .input(createAgentWithSpellInputSchema)
+  createFromTemplate: protectedProcedure
+    .input(
+      z.object({
+        name: z.string(),
+        templateId: z.string(),
+      })
+    )
     .mutation(async ({ input, ctx }) => {
+      const project = await prisma.project.create({
+        data: {
+          owner: ctx.auth.userId,
+          name: input.name,
+          description: `created from template ${input.templateId}`,
+        },
+      })
+
+      const template = await prisma.template.findUnique({
+        where: {
+          id: input.templateId,
+        },
+        select: {
+          graph: true,
+        },
+      })
+
+      if (!template) {
+        throw new Error('Template not found')
+      }
+
       const token = await prepareToken({
         user: ctx.auth,
-        projectId: input.projectId,
+        projectId: project.id,
       })
 
       const spellInput = {
-        projectId: input.projectId,
+        id: uuidv4(),
+        projectId: project.id,
         name: input.name,
-        spellData: input.spellData,
-        publicVariables: input.publicVariables as PublicVariable[],
-        agentData: input.data,
+        graph: template.graph,
+        type: 'behave',
       }
-      const createdSpell = await createSpell(token, spellInput)
-
-      const agentInput = {
-        projectId: input.projectId,
-        name: input.name,
-        rootSpellId: createdSpell.id,
-        publicVariables: input.publicVariables as PublicVariable[],
-        data: input.data,
-      }
-
-      const createdAgent = await createAgent(token, agentInput)
-      return createdAgent
+      // const agent = await app.service('agents').patch(agentId, updateData)
+      const spell = await app.service('spells').create(spellInput)
+      return { spell, project: project.id }
     }),
 
   // delete a single agent

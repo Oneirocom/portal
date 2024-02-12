@@ -1,8 +1,6 @@
 import { PortalLayout, MainLayout } from '@magickml/portal-layout'
 import { api } from '@magickml/portal-api-client'
 import { FunctionComponent, useState } from 'react'
-import { useAtomValue } from 'jotai'
-import { workspaceAtom } from '@magickml/portal-state'
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
 import { SlRefresh } from 'react-icons/sl'
@@ -13,43 +11,39 @@ import Head from 'next/head'
 
 export const CreateAgentPage = () => {
   const [open, setOpen] = useState<boolean>(false)
-  const workspaceId = useAtomValue(workspaceAtom)?.id
   const [name, setName] = useState<string>('')
-  const [agentId, setAgentId] = useState<string>('')
+  const [templateId, setTemplateId] = useState<string | null>('')
 
   const router = useRouter()
 
   const { data: templates, isLoading: templatesLoading } =
     api.agents.getTemplates.useQuery()
 
-  const { mutateAsync: remixAgent, isLoading: isMakingAgentRemix } =
-    api.publicAgents.remix.useMutation({
+  const { mutateAsync: create, isLoading: isMakingAgentRemix } =
+    api.agents.createFromTemplate.useMutation({
       onSuccess: agent => {
         setOpen(false)
         setName('')
-        router.push(`/agents/${agent.id}`)
-        setAgentId('')
+        router.push(`/projects/${agent.project}`)
+        setTemplateId('')
       },
       onError: error => {
         setOpen(false)
         setName('')
-        setAgentId('')
+        setTemplateId('')
         toast.error(error.message)
       },
     })
 
   const handleRemixAgent = async () => {
-    if (!name) {
-      toast.error("New Agent's name should be set!")
-      return
-    }
-    await remixAgent({ publicAgentId: agentId, workspaceId, name })
+    if (!templateId) return
+    await create({ name, templateId })
   }
 
-  const onAgentClick = (agentId: string | null) => {
-    if (!agentId) return
+  const onTemplateClick = (templateId: string | null) => {
+    if (!templateId) return
     setOpen(true)
-    setAgentId(agentId)
+    setTemplateId(templateId)
   }
 
   return (
@@ -74,7 +68,7 @@ export const CreateAgentPage = () => {
               name={t.name ?? 'Untitled'}
               image={t.image}
               description={t?.description ?? ''}
-              handleClick={() => onAgentClick(t.id)}
+              handleClick={() => onTemplateClick(t.id)}
             />
           ))}
       </div>
