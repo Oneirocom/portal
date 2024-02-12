@@ -4,6 +4,7 @@ import { NextApiRequest } from 'next'
 import { buffer } from 'micro'
 import { makeTrialPromotion } from './promotions'
 import { PriceKeys, ProductKeys } from '@magickml/portal-utils-shared'
+import clerkClient from '@clerk/clerk-sdk-node'
 
 export interface CreateCheckoutInput {
   price: keyof typeof PriceKeys
@@ -74,11 +75,11 @@ export class StripeService {
 
   private async getUser(userId: string) {
     try {
-      const user = await prisma.user.findFirst({
-        where: { id: userId },
-        select: { email: true, id: true },
-      })
-      return user
+      const user = await clerkClient.users.getUser(userId)
+      return {
+        ...user,
+        email: user.emailAddresses[0].emailAddress,
+      }
     } catch (error) {
       console.error('Error getting user:', error)
       throw error
@@ -183,7 +184,7 @@ export class StripeService {
       throw error
     }
   }
-  
+
   async createCheckout(
     input: CreateCheckoutInput
   ): Promise<Stripe.Checkout.Session> {
@@ -234,11 +235,7 @@ export class StripeService {
     try {
       await prisma.budget.create({
         data: {
-          User: {
-            connect: {
-              id: userId,
-            },
-          },
+          userId,
           balance: 0,
         },
       })
