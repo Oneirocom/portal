@@ -1,5 +1,5 @@
 import { Fragment, FunctionComponent, ReactNode, useState } from 'react'
-import Image from "next/legacy/image"
+import Image from 'next/legacy/image'
 import Link from 'next/link'
 import { useTheme } from 'next-themes'
 import { EllipsisVerticalIcon } from '@heroicons/react/24/solid'
@@ -128,7 +128,6 @@ const ProjectDropdown: React.FunctionComponent<ProjectDropdownProps> = ({
       return
     } else
       await renameProject({
-        workspaceId: workspace?.id,
         projectId: projectId ?? '',
         name: rename,
       })
@@ -136,7 +135,6 @@ const ProjectDropdown: React.FunctionComponent<ProjectDropdownProps> = ({
 
   const handleDelete = async () => {
     await deleteProject({
-      workspaceId: workspace?.id,
       projectId: projectId ?? '',
     })
     setDisableConfirmDelete(true)

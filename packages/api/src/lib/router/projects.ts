@@ -100,7 +100,7 @@ export const projectsRouter = createTRPCRouter({
 
   // Soft delete a project
   deleteProject: protectedProcedure
-    .input(z.object({ projectId: z.string(), workspaceId: z.string() }))
+    .input(z.object({ projectId: z.string() }))
     .mutation(async ({ input, ctx }) => {
       const access = await hasAccess({
         projectId: input.projectId,
