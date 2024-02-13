@@ -6,8 +6,6 @@ import { EllipsisVerticalIcon } from '@heroicons/react/24/solid'
 import { motion } from 'framer-motion'
 import toast from 'react-hot-toast'
 import { api } from '@magickml/portal-api-client'
-import { useAtomValue } from 'jotai'
-import { workspaceAtom } from '@magickml/portal-state'
 import clsx from 'clsx'
 import { Dialog, Menu, Transition } from '@headlessui/react'
 
@@ -86,7 +84,6 @@ const ProjectDropdown: React.FunctionComponent<ProjectDropdownProps> = ({
   projectId,
   projectName,
 }) => {
-  const workspace = useAtomValue(workspaceAtom)
   const utils = api.useContext()
   const [rename, setRename] = useState('')
   const [renameModalOpen, setRenameModalOpen] = useState(false)
