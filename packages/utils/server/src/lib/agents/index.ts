@@ -121,6 +121,9 @@ export const getAgentData = async (params: GetAgentDataParams) => {
   // we need to make sure that thew spell is the source of truth for public variables at all times
   data.publicVariables = JSON.stringify(publicVariables)
 
+  if (!params.auth.user) {
+    throw new Error('User not found')
+  }
   const status = {
     isPublic: data?.isPublic ?? false,
     isCreator: data?.creatorId === params.auth?.user.id,

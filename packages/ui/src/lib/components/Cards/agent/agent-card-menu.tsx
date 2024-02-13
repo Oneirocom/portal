@@ -100,7 +100,6 @@ export const AgentCardMenu: React.FunctionComponent<AgentCardMenuProps> = ({
           `${process.env.NEXT_PUBLIC_DEPLOYMENT_URL}/agents/${data.id}`
         )
         setDescription('')
-        await utils.publicAgents.invalidate()
         await utils.agents.invalidate()
       },
       onError: () => {
@@ -113,7 +112,6 @@ export const AgentCardMenu: React.FunctionComponent<AgentCardMenuProps> = ({
     api.agents.makePrivate.useMutation({
       onSuccess: async () => {
         publicModalState[1](false)
-        await utils.publicAgents.invalidate()
         await utils.agents.invalidate()
       },
       onError: err => {
@@ -125,7 +123,7 @@ export const AgentCardMenu: React.FunctionComponent<AgentCardMenuProps> = ({
   const handlePublicToggle = async () => {
     if (!agentId || !workspace) return
     if (isPublic) {
-      await makeAgentPrivate({ agentId, workspaceId: workspace.id })
+      await makeAgentPrivate({ agentId })
     } else {
       // make sure description is not empty
       if (!description) {
@@ -134,7 +132,6 @@ export const AgentCardMenu: React.FunctionComponent<AgentCardMenuProps> = ({
       }
       await makeAgentPublic({
         agentId,
-        workspaceId: workspace.id,
         description,
         remixable,
       })
