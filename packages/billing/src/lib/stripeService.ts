@@ -258,10 +258,14 @@ export class StripeService {
   }
 
   async handleNewCustomer(userId: string, email: string): Promise<string> {
+    // weird lint fix
+    if (!userId) throw new Error('userId is required')
     if (!(await this.checkBudgetExists(userId))) {
       this.createDefaultBudget(userId)
     }
-    return await this.createOrRetrieveStripeCustomerId(userId, email)
+    const stripe = await this.createOrRetrieveStripeCustomerId(userId, email)
+    if (!stripe) throw new Error('Stripe customer not found')
+    return stripe
   }
 
   async getClientSubscription(
