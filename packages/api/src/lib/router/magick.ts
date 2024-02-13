@@ -2,7 +2,8 @@ import { z } from 'zod'
 import { createTRPCRouter, openAPIProcedure } from '../trpc'
 import { prisma } from '@magickml/portal-db'
 import { StripeService } from '@magickml/portal-billing'
-import { clerkClient } from '@clerk/clerk-sdk-node'
+import { clerkClient } from '@clerk/nextjs'
+
 // Zod schemas
 const budgetDataSchema = z.object({
   total_budget: z.number(),

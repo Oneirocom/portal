@@ -4,7 +4,7 @@ import { NextApiRequest } from 'next'
 import { buffer } from 'micro'
 import { makeTrialPromotion } from './promotions'
 import { PriceKeys, ProductKeys } from '@magickml/portal-utils-shared'
-import clerkClient from '@clerk/clerk-sdk-node'
+import { clerkClient } from '@clerk/nextjs'
 
 export interface CreateCheckoutInput {
   price: keyof typeof PriceKeys

@@ -1,6 +1,6 @@
 import { encode } from 'next-auth/jwt'
 import { prisma } from '@magickml/portal-db'
-import { SignedInAuthObject } from '@clerk/clerk-sdk-node'
+import { type SignedInAuthObject } from '@clerk/clerk-sdk-node'
 
 interface PrepareTokenParams {
   user: SignedInAuthObject
