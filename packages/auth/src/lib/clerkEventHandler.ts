@@ -89,12 +89,19 @@ export class ClerkEventService {
     }
   }
 
-  private log(event: string, content: string) {
-    this.useLogs && console.log(`\x1b[35mCLERK: ${event}: ${content}\x1b[0m`)
+  private log(event: string, content: string | undefined) {
+    this.useLogs &&
+      console.log(
+        `\x1b[35mCLERK: ${event}: ${content || 'Content was undefined.'}\x1b[0m`
+      )
   }
 
   // USER EVENTS
   private async handleUserCreated(event: UserWebhookEvent) {
+    if (!event.data.id) {
+      this.log('User created', 'No user ID found in payload.')
+      return
+    }
     this.log('User created', event.data.id)
     const user = await clerkClient.users.getUser(event.data.id)
 
