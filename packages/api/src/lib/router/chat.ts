@@ -183,7 +183,7 @@ async function agentPOST(
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: process.env.CLOUD_AGENT_KEY || '',
+      Authorization: process.env.PORTAL_AGENT_KEY || '',
     },
     body: JSON.stringify({
       agentId: id,
