@@ -9,7 +9,6 @@ import { z } from 'zod'
 import { api } from '@magickml/portal-api-client'
 import { PriceKeys } from '@magickml/portal-utils-shared'
 
-
 const amountSchema = z.object({
   amount: z
     .number()
@@ -58,7 +57,8 @@ export const AccountPage = () => {
 
     try {
       await createCheckout({
-        priceKey: PriceKeys.Balance,
+        name: 'Add Balance',
+        price: PriceKeys.Balance,
         amount: parsedValue,
       })
     } catch (error) {
