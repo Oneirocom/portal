@@ -18,6 +18,7 @@ import {
   SignedInAuthObject,
   SignedOutAuthObject,
 } from '@clerk/nextjs/server'
+import { AuthObjectWithDeprecatedResources } from '@clerk/nextjs/dist/types/server/types'
 
 /**
  * 1. CONTEXT
@@ -29,7 +30,9 @@ import {
 
 type CreateContextOptions = {
   req?: NextApiRequest
-  auth: SignedInAuthObject | SignedOutAuthObject
+  auth:
+    | AuthObjectWithDeprecatedResources<SignedInAuthObject>
+    | AuthObjectWithDeprecatedResources<SignedOutAuthObject>
 }
 
 /**
