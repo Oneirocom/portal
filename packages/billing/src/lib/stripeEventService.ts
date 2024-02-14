@@ -68,7 +68,14 @@ class StripeEventHandler {
   async handleCheckoutSessionCompleted(event: Stripe.Event) {
     const session = event.data.object as Stripe.Checkout.Session
     const userId = session?.metadata?.userId as string | undefined
-    const subscriptionName = session?.metadata.subscriptionName as string
+    const subscriptionName = session?.metadata?.subscriptionName as string
+
+    if (!userId || !subscriptionName) {
+      console.error(
+        'BIG WARNING: Missing userId or subscriptionName in handleCheckoutSessionCompleted'
+      )
+      return
+    }
 
     // add promotion
     switch (subscriptionName.toUpperCase() as PortalSubscriptions) {
@@ -79,7 +86,11 @@ class StripeEventHandler {
         await makeWizardPromotion(userId)
         break
       default:
-        console.log('BIG WARNING: Unhandled subscription:', subscriptionName)
+        console.log(
+          'BIG WARNING: Unhandled subscription:',
+          subscriptionName,
+          'in handleCheckoutSessionCompleted'
+        )
         break
     }
 
@@ -90,7 +101,11 @@ class StripeEventHandler {
         },
       })
     } catch (error) {
-      console.error('BIG WARNING: Error updating user metadata:', error)
+      console.error(
+        'BIG WARNING: Error updating user metadata:',
+        error,
+        'in handleCheckoutSessionCompleted'
+      )
     }
   }
 }
