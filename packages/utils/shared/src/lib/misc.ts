@@ -38,3 +38,6 @@ export const convertFileToBase64 = (file: File) => {
     reader.onerror = error => reject(error)
   })
 }
+
+
+export const capitalizeFirst = (s: string) => s.charAt(0) + s.slice(1).toLowerCase();
