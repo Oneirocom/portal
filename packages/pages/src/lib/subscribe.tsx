@@ -11,8 +11,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import toast from 'react-hot-toast'
-import { PriceKeys } from '@magickml/portal-utils-shared'
 import { api } from '@magickml/portal-api-client'
+import { useSession } from '@clerk/nextjs'
 
 type SubscriptionTooltip = {
   title: string
@@ -29,6 +29,17 @@ type SubscriptionOption = {
   imageUrl: string
   isBestValue?: boolean
   subscriptionTooltip: SubscriptionTooltip
+  key: CheckoutKey['name']
+}
+
+type CheckoutKey = {
+  product: string
+  price: string
+  name: string
+}
+export interface SubscribePageProps {
+  APPRENTICE: CheckoutKey
+  WIZARD: CheckoutKey
 }
 
 const subscriptionOptions: SubscriptionOption[] = [
@@ -45,6 +56,7 @@ const subscriptionOptions: SubscriptionOption[] = [
       content:
         'Opt for a hands-on approach with our Basic Package, where you bring your own API keys to access Large Language Models (LLMs). Ideal for users who prefer managing their compute costs independently, this package offers you the flexibility to use your existing API keys while utilizing our development environment.',
     },
+    key: 'APPRENTICE',
   },
   {
     id: 'wizard',
@@ -60,6 +72,7 @@ const subscriptionOptions: SubscriptionOption[] = [
       content:
         'Enjoy seamless access to all major Large Language Models (LLMs) without needing separate API keys. We cover the compute costs and provide a single, consolidated bill for convenience. This package allows easy comparison of different LLMs with a nominal 20% markup for the unified access.',
     },
+    key: 'WIZARD',
   },
   {
     id: 'spellcaster-guild',
@@ -72,11 +85,13 @@ const subscriptionOptions: SubscriptionOption[] = [
       content:
         "For a subscription tailored to your organization's unique needs, please reach out to us. Remember, the more information you provide, the better we can tailor our solutions to fit your needs.",
     },
+    key: 'GUILD',
   },
 ]
 
-export const SubscribePage = () => {
+export const SubscribePage = (props: SubscribePageProps) => {
   const router = useRouter()
+  const { isSignedIn } = useSession()
   const { mutateAsync: createCheckout } =
     api.billing.createCheckout.useMutation({
       onSuccess: data => {
@@ -89,25 +104,19 @@ export const SubscribePage = () => {
       },
     })
 
-  const handleCheckout = async (optionId: string) => {
+  const handleCheckout = async ({
+    price,
+    name,
+  }: {
+    price: string
+    name: string
+  }) => {
+    if (!isSignedIn) {
+      router.push('/sign-in')
+      return
+    }
     try {
-      let priceKey: PriceKeys
-
-      switch (optionId) {
-        case 'apprentice':
-          priceKey = PriceKeys.Apprentice
-          break
-        case 'wizard':
-          priceKey = PriceKeys.Wizard
-          break
-        default:
-          throw new Error('Invalid subscription option')
-      }
-
-      // Call the createCheckout mutation
-      await createCheckout({
-        priceKey,
-      })
+      await createCheckout({ price, name })
     } catch (error: any) {
       toast.error(error?.message || 'Error processing checkout')
     }
@@ -115,6 +124,7 @@ export const SubscribePage = () => {
 
   return (
     <div className="mx-4 lg:mx-20 font-montserrat text-ds-dark-3 dark:text-ds-light-1">
+      {JSON.stringify(props)}
       {/* Header */}
       <div className="text-left lg:text-center mx-auto max-w-7xl pb-4 lg:pb-10 pt-0 sm:pt-10 lg:px-8">
         <div className="mx-auto max-w-2xl hidden lg:block">
@@ -205,13 +215,20 @@ export const SubscribePage = () => {
 
             <Button
               variant="portal-primary"
-              onClick={() => handleCheckout(option.id)}
+              onClick={() =>
+                handleCheckout({
+                  price: props[option.key].price,
+                  name: props[option.key].name,
+                })
+              }
             >
               {option.price ? 'Subscribe' : 'Reach Out'}
             </Button>
           </div>
         ))}
       </div>
+
+      {/* Skip Link */}
       <div className="w-full inline-flex justify-center">
         <Link
           href="/"
