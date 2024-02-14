@@ -2,12 +2,7 @@ import { createTRPCRouter, protectedProcedure } from '../trpc'
 import { stripeService } from '@magickml/portal-billing'
 import { z } from 'zod'
 import { prisma } from '@magickml/portal-db'
-import {
-  makeAddBalance,
-  makeApprenticeSub,
-  makeWizardSub,
-} from '@magickml/portal-billing'
-import { PriceKeys } from '@magickml/portal-utils-shared'
+import { clerkClient } from '@clerk/nextjs'
 
 export const billingRouter = createTRPCRouter({
   getSubscription: protectedProcedure.query(async ({ ctx }) => {
@@ -30,55 +25,30 @@ export const billingRouter = createTRPCRouter({
   createCheckout: protectedProcedure
     .input(
       z.object({
-        priceKey: z.nativeEnum(PriceKeys),
-        amount: z.number().optional(), // Amount is optional, only for adding to balance
+        price: z.string(),
+        name: z.string(),
+        amount: z.number().optional(), // Optional, only for adding to balance
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const id = ctx.auth.userId
-      const email = ctx.auth.user?.emailAddresses[0].emailAddress
-      if (!email) {
-        throw new Error('User must have an email address to create a checkout.')
+      // this is only because privateMetadata is not available in ctx.auth
+      const user = await clerkClient.users.getUser(ctx.auth.userId)
+      if (!user) {
+        throw new Error('User not found')
       }
-      if (typeof id !== 'string' || typeof email !== 'string') {
-        throw new Error('Invalid session')
+
+      const customer = user.privateMetadata.stripeId as string
+
+      if (!customer) {
+        throw new Error('Stripe customer not found')
       }
-      const { priceKey, amount } = input
 
       try {
-        const customerId = await stripeService.createOrRetrieveStripeCustomerId(
-          id,
-          email
-        )
-
-        if (!customerId) {
-          throw new Error(
-            'Failed to create or retrieve Stripe customer ID in createSubCheckout.'
-          )
-        }
-
-        let checkoutInput
-        switch (priceKey) {
-          case PriceKeys.Apprentice:
-            checkoutInput = makeApprenticeSub(customerId)
-            break
-          case PriceKeys.Wizard:
-            checkoutInput = makeWizardSub(customerId)
-            break
-          case PriceKeys.Balance:
-            if (amount === undefined) {
-              throw new Error('Amount must be specified for Balance.')
-            }
-            checkoutInput = makeAddBalance(customerId, amount)
-            break
-          default:
-            throw new Error('Invalid price key.')
-        }
-
-        // Create the Stripe checkout session
-        const checkoutSession = await stripeService.createCheckout(
-          checkoutInput
-        )
+        const checkoutSession = await stripeService.createSubscriptionCheckout({
+          priceId: input.price,
+          customer,
+          userId: ctx.auth.userId,
+        })
 
         if (!checkoutSession) {
           throw new Error('Failed to create Stripe checkout session.')
