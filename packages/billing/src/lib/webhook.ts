@@ -25,7 +25,7 @@ export const stripeWebhook = async function (
   }
 
   try {
-    await stripeService.handleStripeEvent(req)
+    await stripeService.handleWebhook(req)
     res.status(200).json({ received: true })
   } catch (err: any) {
     console.error(`Error message: ${err.message}`)

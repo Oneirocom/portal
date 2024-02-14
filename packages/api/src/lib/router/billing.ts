@@ -38,6 +38,7 @@ export const billingRouter = createTRPCRouter({
           priceId: input.price,
           customer: user.customer,
           userId: ctx.auth.userId,
+          name: input.name,
         })
 
         if (!checkoutSession) {
