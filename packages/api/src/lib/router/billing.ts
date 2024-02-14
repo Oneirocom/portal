@@ -2,7 +2,7 @@ import { createTRPCRouter, protectedProcedure } from '../trpc'
 import { stripeService } from '@magickml/portal-billing'
 import { z } from 'zod'
 import { prisma } from '@magickml/portal-db'
-import { clerkClient } from '@clerk/nextjs'
+import { getFullUser } from '@magickml/portal-auth'
 
 export const billingRouter = createTRPCRouter({
   getSubscription: protectedProcedure.query(async ({ ctx }) => {
@@ -31,22 +31,12 @@ export const billingRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      // this is only because privateMetadata is not available in ctx.auth
-      const user = await clerkClient.users.getUser(ctx.auth.userId)
-      if (!user) {
-        throw new Error('User not found')
-      }
-
-      const customer = user.privateMetadata.stripeId as string
-
-      if (!customer) {
-        throw new Error('Stripe customer not found')
-      }
+      const user = await getFullUser(ctx.auth.userId)
 
       try {
         const checkoutSession = await stripeService.createSubscriptionCheckout({
           priceId: input.price,
-          customer,
+          customer: user.customer,
           userId: ctx.auth.userId,
         })
 
