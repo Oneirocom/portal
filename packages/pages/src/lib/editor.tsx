@@ -16,6 +16,10 @@ export const Editor = (props: AppConfig): React.ReactElement | null => {
     setCookie(!posthog.has_opted_out_capturing())
   }, [])
 
+  if (!props || !props.apiUrl || !props.token) return null
+
+  console.log('EDITOR PROPS', props)
+
   return (
     <>
       {process.env.NEXT_PUBLIC_AIDE_MAINTENANCE_MODE === 'true' ? (
