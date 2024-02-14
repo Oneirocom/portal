@@ -234,6 +234,7 @@ export class StripeService {
   }): Promise<Stripe.Response<Stripe.Checkout.Session>> {
     try {
       const session = await this.stripe.checkout.sessions.create({
+        mode: 'subscription',
         payment_method_types: ['card'],
         billing_address_collection: 'required',
         customer,
