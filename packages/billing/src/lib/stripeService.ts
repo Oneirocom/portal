@@ -223,6 +223,41 @@ export class StripeService {
     return await this.stripe.checkout.sessions.create(sessionParams)
   }
 
+  async createSubscriptionCheckout({
+    priceId,
+    customer,
+    userId,
+  }: {
+    priceId: string
+    customer: string
+    userId: string
+  }): Promise<Stripe.Response<Stripe.Checkout.Session>> {
+    try {
+      const session = await this.stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        billing_address_collection: 'required',
+        customer,
+        customer_update: { address: 'auto' },
+        line_items: [
+          {
+            price: priceId,
+            quantity: 1,
+          },
+        ],
+        metadata: {
+          userId,
+        },
+        success_url: `${this.getAppURL()}/account`,
+        cancel_url: `${this.getAppURL()}/account`,
+      })
+
+      return session
+    } catch (error) {
+      console.error('Error creating subscription checkout:', error)
+      throw error
+    }
+  }
+
   async createPortal(customerId: string): Promise<string> {
     const portalSession = await this.stripe.billingPortal.sessions.create({
       customer: customerId,
@@ -257,15 +292,20 @@ export class StripeService {
     }
   }
 
-  async handleNewCustomer(userId: string, email: string): Promise<string> {
-    // weird lint fix
+  async handleNewCustomer(userId: string): Promise<string> {
     if (!userId) throw new Error('userId is required')
     if (!(await this.checkBudgetExists(userId))) {
       this.createDefaultBudget(userId)
     }
-    const stripe = await this.createOrRetrieveStripeCustomerId(userId, email)
+
+    const stripe = await this.stripe.customers.create({
+      metadata: {
+        userId,
+      },
+    })
+
     if (!stripe) throw new Error('Stripe customer not found')
-    return stripe
+    return stripe.id
   }
 
   async getClientSubscription(
@@ -306,6 +346,15 @@ export class StripeService {
       console.error('Error getting client subscription:', error)
       throw error
     }
+  }
+
+  async getSubscriptionKeys() {
+    // get all products from stripe where metadata field "subscription" exists
+    const products = await this.stripe.products.list({ limit: 100 })
+
+    return products.data.filter(
+      product => product.metadata.subscription === 'APPRENTICE' || 'WIZARD'
+    )
   }
 }
 
