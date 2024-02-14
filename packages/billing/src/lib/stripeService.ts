@@ -1,11 +1,10 @@
 import Stripe from 'stripe'
 import { prisma } from '@magickml/portal-db'
-import { NextApiRequest } from 'next'
-import { buffer } from 'micro'
 import { makeTrialPromotion } from './promotions'
 import { PriceKeys, ProductKeys } from '@magickml/portal-utils-shared'
 import { clerkClient } from '@clerk/nextjs'
 import { StripeEventHandler } from './stripeEventService'
+import { NextApiRequest } from 'next'
 
 export interface CreateCheckoutInput {
   price: keyof typeof PriceKeys
@@ -20,7 +19,7 @@ export class StripeService {
   private eventHandler: StripeEventHandler
 
   constructor() {
-    const stripeSigningSecret = this.getSigningSecret()
+    const stripeSigningSecret = this.getSecret()
 
     this.stripe = new Stripe(stripeSigningSecret, {
       apiVersion: '2023-10-16',
@@ -30,7 +29,7 @@ export class StripeService {
       },
     })
 
-    this.eventHandler = new StripeEventHandler()
+    this.eventHandler = new StripeEventHandler(this.stripe)
   }
 
   private getEnv(env: string): string {
@@ -50,19 +49,7 @@ export class StripeService {
     return this.getEnv('APP_URL')
   }
 
-  private getWebhookSecret = () => process.env.STRIPE_WEBHOOK_SECRET!
-
-  private getSigningSecret = () => process.env.STRIPE_SIGNING_SECRET!
-
-  private extractSignature = (req: NextApiRequest) =>
-    (() => {
-      const sig = req.headers['stripe-signature']
-      if (typeof sig !== 'string')
-        throw new Error('Stripe signature is not a string or is undefined.')
-      return sig
-    })()
-
-  private getRawBody = async (req: NextApiRequest) => await buffer(req)
+  private getSecret = () => process.env.STRIPE_SIGNING_SECRET!
 
   private getPriceKeyValue(input: keyof typeof PriceKeys): string | undefined {
     return PriceKeys[input]
@@ -231,10 +218,12 @@ export class StripeService {
     priceId,
     customer,
     userId,
+    name,
   }: {
     priceId: string
     customer: string
     userId: string
+    name: string
   }): Promise<Stripe.Response<Stripe.Checkout.Session>> {
     try {
       const session = await this.stripe.checkout.sessions.create({
@@ -251,6 +240,7 @@ export class StripeService {
         ],
         metadata: {
           userId,
+          subscriptionName: name.toUpperCase(),
         },
         success_url: `${this.getAppURL()}/account`,
         cancel_url: `${this.getAppURL()}/account`,
@@ -364,20 +354,8 @@ export class StripeService {
     )
   }
 
-  async handleStripeEvent(req: NextApiRequest) {
-    const sig = this.extractSignature(req)
-    const webhookSecret = this.getWebhookSecret()
-    try {
-      const event = await this.constructWebhookEvent(
-        await this.getRawBody(req),
-        sig,
-        webhookSecret
-      )
-      await this.eventHandler.handleEvent(event)
-    } catch (error) {
-      console.error('Error handling Stripe event:', error)
-      throw error
-    }
+  async handleWebhook(req: NextApiRequest) {
+    this.eventHandler.handleEvent(req)
   }
 }
 

@@ -108,9 +108,7 @@ export class ClerkEventService {
 
     const user = await clerkClient.users.getUser(event.data.id)
 
-    const customer = await stripeService.handleNewCustomer(
-      user.id,
-    )
+    const customer = await stripeService.handleNewCustomer(user.id)
 
     await clerkClient.users.updateUserMetadata(user.id, {
       privateMetadata: {
