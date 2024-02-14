@@ -1,17 +1,24 @@
 import { authMiddleware } from '@clerk/nextjs'
 
 export default authMiddleware({
-  afterAuth: (auth, req, evt) => {
-    // if (auth.userId || auth.isPublicRoute) {
-    // }
-  },
   publicRoutes: [
-    '/, /auth/sign-in, /auth/sign-up, /auth/verify',
+    '/',
+    '/auth/sign-in',
+    '/auth/sign-up',
+    '/auth/verify',
     '/api',
     '/api/auth/sync',
+    '/api/billing/sync',
   ],
 })
 
 export const config = {
-  matcher: ['/((?!.+\\.[\\w]+$|_next).*)', '/', '/(api|trpc)(.*)'],
+  matcher: [
+    '/((?!.+\\.[\\w]+$|_next).*)',
+    '/',
+    '/(api|trpc)(.*)',
+    '/agents(.*)',
+    '/account(.*)',
+    '/profile(.*)',
+  ],
 }
