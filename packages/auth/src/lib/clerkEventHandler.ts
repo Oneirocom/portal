@@ -11,6 +11,8 @@ import {
   OrganizationInvitationWebhookEvent,
 } from '@clerk/nextjs/server'
 import { stripeService } from '@magickml/portal-billing'
+import { Roles } from '@magickml/portal-config'
+import { PortalSubscriptions } from '@magickml/portal-utils-shared'
 
 export class ClerkEventService {
   private useLogs = process.env.CLERK_WEBHOOK_LOGGING === 'true'
@@ -103,16 +105,20 @@ export class ClerkEventService {
       return
     }
     this.log('User created', event.data.id)
+
     const user = await clerkClient.users.getUser(event.data.id)
 
     const customer = await stripeService.handleNewCustomer(
       user.id,
-      user.emailAddresses[0].emailAddress
     )
 
     await clerkClient.users.updateUserMetadata(user.id, {
       privateMetadata: {
         stripeId: customer,
+      },
+      publicMetadata: {
+        role: Roles.USER,
+        subscription: PortalSubscriptions.NEOPHYTE,
       },
     })
   }
