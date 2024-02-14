@@ -2,12 +2,13 @@ import { toast } from 'react-hot-toast'
 import { MainLayout, PortalLayout } from '@magickml/portal-layout'
 import { Input, Progress, Button } from '@magickml/client-ui'
 import { useRouter } from 'next/router'
-import axios from 'axios'
 import clsx from 'clsx'
 import { useState } from 'react'
 import { z } from 'zod'
 import { api } from '@magickml/portal-api-client'
-import { PriceKeys } from '@magickml/portal-utils-shared'
+import { PriceKeys, capitalizeFirst } from '@magickml/portal-utils-shared'
+import { useUser } from '@clerk/nextjs'
+import axios from 'axios'
 
 const amountSchema = z.object({
   amount: z
@@ -17,6 +18,11 @@ const amountSchema = z.object({
 })
 
 export const AccountPage = () => {
+  const user = useUser()
+  const subscription = user.user?.publicMetadata.subscription as
+    | string
+    | undefined
+
   const router = useRouter()
   const [inputValue, setInputValue] = useState<string>('5.00')
   const [error, setError] = useState<string | undefined>()
@@ -67,9 +73,9 @@ export const AccountPage = () => {
     }
   }
 
-  const handlePortal = async () => {
+  const createPortal = async () => {
     try {
-      const response = await axios.get('/api/billing/checkout/create-portal')
+      const response = await axios.get('/api/billing/portal')
       const portalUrl = response.data.url
       if (portalUrl) {
         window.location.href = portalUrl
@@ -81,8 +87,6 @@ export const AccountPage = () => {
       toast.error('Error accessing billing portal')
     }
   }
-
-  const { data: subscription } = api.billing.getSubscription.useQuery()
 
   const { data: budget } = api.billing.getBudget.useQuery()
 
@@ -117,11 +121,11 @@ export const AccountPage = () => {
         <div className="self-stretch pb-4 justify-center items-center gap-6 flex lg:flex-row flex-col">
           <Card>
             <p className="text-center text-3xl font-medium">
-              {subscription?.exists ? 'Pro' : 'Neophyte'}
+              {subscription ? capitalizeFirst(subscription) : 'Neophyte'}
             </p>
             <p className="text-center text-ds-secondary-p dark:text-ds-secondary-m text-base font-normal">
-              {subscription?.exists ? (
-                <pre>{JSON.stringify(subscription)}</pre>
+              {subscription && subscription !== 'NEOPHYTE' ? (
+                <pre>Premium Plan</pre>
               ) : (
                 <span>Free Tier Plan</span>
               )}
@@ -204,7 +208,7 @@ export const AccountPage = () => {
               />
 
               {error && (
-                <span className="text-red-500 text-xs mt-1 text-center">
+                <span className="text-ds-error text-xs mt-1 text-center">
                   {error}
                 </span>
               )}
@@ -229,7 +233,7 @@ export const AccountPage = () => {
           </div>
           <div className="items-baseline gap-2 lg:inline-flex">
             <Button
-              onClick={handlePortal}
+              onClick={() => createPortal()}
               size="lg"
               variant="agent"
               className="!bg-ds-neutral text-ds-white lg:px-10 w-full lg:w-fit rounded-lg justify-center items-center gap-2.5 flex"
