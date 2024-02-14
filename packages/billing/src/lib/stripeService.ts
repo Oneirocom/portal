@@ -5,6 +5,7 @@ import { buffer } from 'micro'
 import { makeTrialPromotion } from './promotions'
 import { PriceKeys, ProductKeys } from '@magickml/portal-utils-shared'
 import { clerkClient } from '@clerk/nextjs'
+import { StripeEventHandler } from './stripeEventService'
 
 export interface CreateCheckoutInput {
   price: keyof typeof PriceKeys
@@ -16,6 +17,7 @@ export interface CreateCheckoutInput {
 }
 export class StripeService {
   private stripe: Stripe
+  private eventHandler: StripeEventHandler
 
   constructor() {
     const stripeSigningSecret = this.getSigningSecret()
@@ -27,6 +29,8 @@ export class StripeService {
         version: '0.1.0',
       },
     })
+
+    this.eventHandler = new StripeEventHandler()
   }
 
   private getEnv(env: string): string {
@@ -260,10 +264,12 @@ export class StripeService {
   }
 
   async createPortal(customerId: string): Promise<string> {
+    console.log('Creating portal session')
     const portalSession = await this.stripe.billingPortal.sessions.create({
       customer: customerId,
-      return_url: this.getAppURL() + '/billing',
+      return_url: this.getAppURL() + '/account',
     })
+    console.log('Portal session created:', portalSession.url)
     return portalSession.url
   }
 
@@ -356,6 +362,22 @@ export class StripeService {
     return products.data.filter(
       product => product.metadata.subscription === 'APPRENTICE' || 'WIZARD'
     )
+  }
+
+  async handleStripeEvent(req: NextApiRequest) {
+    const sig = this.extractSignature(req)
+    const webhookSecret = this.getWebhookSecret()
+    try {
+      const event = await this.constructWebhookEvent(
+        await this.getRawBody(req),
+        sig,
+        webhookSecret
+      )
+      await this.eventHandler.handleEvent(event)
+    } catch (error) {
+      console.error('Error handling Stripe event:', error)
+      throw error
+    }
   }
 }
 
