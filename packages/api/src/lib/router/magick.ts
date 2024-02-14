@@ -1,8 +1,7 @@
 import { z } from 'zod'
 import { createTRPCRouter, openAPIProcedure } from '../trpc'
 import { prisma } from '@magickml/portal-db'
-import { StripeService } from '@magickml/portal-billing'
-import { clerkClient } from '@clerk/nextjs'
+import { getFullUser } from '@magickml/portal-utils-server'
 
 // Zod schemas
 const budgetDataSchema = z.object({
@@ -248,7 +247,8 @@ export const budgetRouter = createTRPCRouter({
         }
       }
 
-      const user = await clerkClient.users.getUser(project.owner)
+      // const user = await clerkClient.users.getUser(project.owner)
+      const user = await getFullUser(project.owner)
 
       const wallet = await prisma.budget.findUnique({
         where: {
@@ -292,25 +292,23 @@ export const budgetRouter = createTRPCRouter({
       // Add promotional credit to the user's balance
       const userBalance = wallet?.balance.toNumber() || 0
 
-      const stripeService = new StripeService()
-      const isCustomer = await stripeService.checkIfUserIsCustomer(
-        project.owner
-      )
-
-      const subscriptionName =
-        isCustomer && (await stripeService.getUserSubscription(project.owner))
-
       return {
         status: 'success',
         user: {
-          id: user.id,
-          email: user.emailAddresses[0].emailAddress,
-          name: user.username,
+          id: user.user.id,
+          email: user.user.emailAddresses[0].emailAddress,
+          name: user.user.username,
           balance: userBalance,
           promoCredit: promoCredit || 0,
           introCredit: introCredit || 0,
-          hasSubscription: !!subscriptionName,
-          subscriptionName: subscriptionName || null,
+          hasSubscription: (user.user.publicMetadata.subscription as
+            | string
+            | undefined)
+            ? true
+            : false,
+          subscriptionName:
+            (user.user.publicMetadata.subscription as string | undefined) ??
+            'Neophyte',
         },
       }
     }),
