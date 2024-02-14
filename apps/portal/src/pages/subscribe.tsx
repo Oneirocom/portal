@@ -1,6 +1,7 @@
 import { getSubscriptionKeys } from '@magickml/portal-billing'
-import { SubscribePage, type SubscribePageProps } from '@magickml/portal-pages'
+import { SubscribePage } from '@magickml/portal-pages'
 import { GetStaticProps } from 'next'
+import { SubscribePageProps } from '@magickml/portal-types'
 
 export default SubscribePage
 

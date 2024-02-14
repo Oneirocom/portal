@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { stripeService } from './stripeService'
 import { getAuth } from '@clerk/nextjs/server'
-import { getFullUser } from '@magickml/portal-auth'
+import { getFullUser } from '@magickml/portal-utils-server'
 
 export const portalEndpoint = async (
   req: NextApiRequest,

@@ -2,7 +2,7 @@ import { createTRPCRouter, protectedProcedure } from '../trpc'
 import { stripeService } from '@magickml/portal-billing'
 import { z } from 'zod'
 import { prisma } from '@magickml/portal-db'
-import { getFullUser } from '@magickml/portal-auth'
+import { getFullUser } from '@magickml/portal-utils-server'
 
 export const billingRouter = createTRPCRouter({
   getSubscription: protectedProcedure.query(async ({ ctx }) => {

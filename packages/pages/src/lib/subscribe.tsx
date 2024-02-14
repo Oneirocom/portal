@@ -13,6 +13,7 @@ import { useRouter } from 'next/router'
 import toast from 'react-hot-toast'
 import { api } from '@magickml/portal-api-client'
 import { useSession } from '@clerk/nextjs'
+import { CheckoutKey, SubscribePageProps } from '@magickml/portal-types'
 
 type SubscriptionTooltip = {
   title: string
@@ -30,16 +31,6 @@ type SubscriptionOption = {
   isBestValue?: boolean
   subscriptionTooltip: SubscriptionTooltip
   key: CheckoutKey['name']
-}
-
-type CheckoutKey = {
-  product: string
-  price: string
-  name: string
-}
-export interface SubscribePageProps {
-  APPRENTICE: CheckoutKey
-  WIZARD: CheckoutKey
 }
 
 const subscriptionOptions: SubscriptionOption[] = [

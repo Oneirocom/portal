@@ -1,5 +1,5 @@
-import { SubscribePageProps } from '@magickml/portal-pages'
 import { stripeService } from './stripeService'
+import { type SubscribePageProps } from '@magickml/portal-types'
 
 export const getSubscriptionKeys = async () => {
   const products = await stripeService.getSubscriptionKeys()
