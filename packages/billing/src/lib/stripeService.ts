@@ -256,11 +256,11 @@ export class StripeService {
   async createBalanceCheckout({
     amount,
     customer,
-    successUrl,
+    userId,
   }: {
     amount: number
     customer: string
-    successUrl: string
+    userId: string
   }): Promise<Stripe.Response<Stripe.Checkout.Session>> {
     try {
       const price = await this.createCustomPrice(amount)
@@ -278,7 +278,7 @@ export class StripeService {
           },
         ],
         metadata: {
-          userId: customer,
+          userId,
           amount: amount.toString(),
           balance: 'true',
         },

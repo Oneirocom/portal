@@ -64,7 +64,6 @@ export const AccountPage = () => {
     try {
       await createCheckout({
         name: 'Add Balance',
-        price: PriceKeys.Balance,
         amount: parsedValue,
       })
     } catch (error) {

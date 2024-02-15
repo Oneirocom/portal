@@ -3,6 +3,7 @@ import { stripeService } from '@magickml/portal-billing'
 import { z } from 'zod'
 import { prisma } from '@magickml/portal-db'
 import { getFullUser } from '@magickml/portal-utils-server'
+import type Stripe from 'stripe'
 
 export const billingRouter = createTRPCRouter({
   getSubscription: protectedProcedure.query(async ({ ctx }) => {
@@ -25,7 +26,7 @@ export const billingRouter = createTRPCRouter({
   createCheckout: protectedProcedure
     .input(
       z.object({
-        price: z.string(),
+        price: z.string().optional(), // Optional, only for subscriptions
         name: z.string(),
         amount: z.number().optional(), // Optional, only for adding to balance
       })
@@ -33,13 +34,25 @@ export const billingRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const user = await getFullUser(ctx.auth.userId)
 
+      let checkoutSession: Stripe.Response<Stripe.Checkout.Session>
       try {
-        const checkoutSession = await stripeService.createSubscriptionCheckout({
-          priceId: input.price,
-          customer: user.customer,
-          userId: ctx.auth.userId,
-          name: input.name,
-        })
+        if (input.amount) {
+          checkoutSession = await stripeService.createBalanceCheckout({
+            amount: input.amount,
+            customer: user.customer,
+            userId: ctx.auth.userId,
+          })
+        } else {
+          if (!input.price) {
+            throw new Error('Price ID is required for subscriptions')
+          }
+          checkoutSession = await stripeService.createSubscriptionCheckout({
+            priceId: input.price,
+            customer: user.customer,
+            userId: ctx.auth.userId,
+            name: input.name,
+          })
+        }
 
         if (!checkoutSession) {
           throw new Error('Failed to create Stripe checkout session.')
