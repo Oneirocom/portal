@@ -7,10 +7,15 @@ export default authMiddleware({
     '/auth/sign-in',
     '/auth/sign-up',
     '/auth/verify',
+    '/terms',
+    '/privacy',
+    '/eula',
+    '/404',
     '/api',
     '/api/auth/sync',
     '/api/billing/sync',
     '/api/magick(.*)',
+    '404',
   ],
 })
 
