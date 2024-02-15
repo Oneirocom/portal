@@ -23,7 +23,7 @@ export const makeApprenticePromotion = async (userId: string) => {
     data: {
       name: 'Apprentice',
       description: 'Apprentice subscription credits.',
-      type: PromotionType.INTRO,
+      type: PromotionType.ADMIN,
       amount: new Decimal(10),
       validFrom: new Date(),
       validUntil: new Date(new Date().setDate(new Date().getDate() + 30)),
@@ -40,7 +40,7 @@ export const makeWizardPromotion = async (userId: string) => {
     data: {
       name: 'Wizard',
       description: 'Wizard subscription credits.',
-      type: PromotionType.INTRO,
+      type: PromotionType.ADMIN,
       amount: new Decimal(25),
       validFrom: new Date(),
       validUntil: new Date(new Date().setDate(new Date().getDate() + 30)),
