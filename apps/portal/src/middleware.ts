@@ -10,6 +10,7 @@ export default authMiddleware({
     '/api',
     '/api/auth/sync',
     '/api/billing/sync',
+    '/api/magick(.*)',
   ],
 })
 
