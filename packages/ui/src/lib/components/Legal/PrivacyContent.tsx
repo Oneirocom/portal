@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-const PrivacyContent = () => {
+export const PrivacyContent = () => {
   return (
     <>
       <p>

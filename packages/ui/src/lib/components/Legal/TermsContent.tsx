@@ -1,4 +1,4 @@
-const TermsContent = () => {
+export const TermsContent = () => {
   return (
     <>
       <p>

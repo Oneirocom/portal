@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-const EulaContent = () => {
+export const EulaContent = () => {
   return (
     <>
       <p>
@@ -127,5 +127,3 @@ const EulaContent = () => {
     </>
   );
 };
-
-export default EulaContent;

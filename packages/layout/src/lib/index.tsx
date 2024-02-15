@@ -19,3 +19,4 @@ export const PortalLayout: FC<AccountLayoutProps> = ({ children }) => {
 }
 
 export * from './SubLayouts'
+export * from './LegalLayout'
