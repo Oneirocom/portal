@@ -51,3 +51,20 @@ export const makeWizardPromotion = async (userId: string) => {
     },
   })
 }
+
+export const makeBalancePromotion = async (userId: string, amount: number) => {
+  await prisma.promotion.create({
+    data: {
+      name: 'Balance',
+      description: 'Balance credits.',
+      type: PromotionType.ADMIN,
+      amount: new Decimal(amount),
+      validFrom: new Date(),
+      validUntil: new Date(new Date().setDate(new Date().getDate() + 30)),
+      isUsed: false,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      userId,
+    },
+  })
+}
