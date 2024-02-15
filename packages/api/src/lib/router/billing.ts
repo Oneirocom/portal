@@ -54,10 +54,35 @@ export const billingRouter = createTRPCRouter({
 
   getBudget: protectedProcedure.query(async ({ ctx }) => {
     const budget = await prisma.budget.findFirst({
-      where: { userId: ctx.auth.userId },
+      where: {
+        userId: ctx.auth.userId,
+      },
     })
 
-    return budget
+    if (!budget) {
+      throw new Error('Budget not found')
+    }
+
+    const promotions = await prisma.promotion.findMany({
+      where: {
+        userId: ctx.auth.userId,
+        validUntil: {
+          gte: new Date(),
+        },
+        isUsed: false,
+      },
+    })
+
+    const promoCredit = promotions.reduce(
+      (acc, promo) => acc + promo.amount.toNumber(),
+      0
+    )
+
+    const data = {
+      total_budget: budget.balance.toNumber() + promoCredit,
+    }
+
+    return data
   }),
 
   getPromotions: protectedProcedure.query(async ({ ctx }) => {

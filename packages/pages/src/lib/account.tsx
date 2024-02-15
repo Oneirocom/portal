@@ -179,7 +179,7 @@ export const AccountPage = () => {
           <Card>
             <p className="text-center text-3xl font-medium">
               {budget
-                ? `$${(Number(budget.balance) / 100).toFixed(2)}`
+                ? `$${(Number(budget.total_budget) / 100).toFixed(2)}`
                 : '$0.00'}
             </p>
             <p className="text-center text-ds-secondary-p dark:text-ds-secondary-m text-base font-normal ">
