@@ -115,7 +115,6 @@ export const SubscribePage = (props: SubscribePageProps) => {
 
   return (
     <div className="mx-4 lg:mx-20 font-montserrat text-ds-dark-3 dark:text-ds-light-1">
-      {JSON.stringify(props)}
       {/* Header */}
       <div className="text-left lg:text-center mx-auto max-w-7xl pb-4 lg:pb-10 pt-0 sm:pt-10 lg:px-8">
         <div className="mx-auto max-w-2xl hidden lg:block">
