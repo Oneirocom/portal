@@ -282,7 +282,7 @@ export class StripeService {
           amount: amount.toString(),
           balance: 'true',
         },
-        success_url: successUrl,
+        success_url: `${this.getAppURL()}/account`,
         cancel_url: `${this.getAppURL()}/account`,
       })
 
