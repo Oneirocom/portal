@@ -253,6 +253,46 @@ export class StripeService {
     }
   }
 
+  async createBalanceCheckout({
+    amount,
+    customer,
+    successUrl,
+  }: {
+    amount: number
+    customer: string
+    successUrl: string
+  }): Promise<Stripe.Response<Stripe.Checkout.Session>> {
+    try {
+      const price = await this.createCustomPrice(amount)
+
+      const session = await this.stripe.checkout.sessions.create({
+        mode: 'payment',
+        payment_method_types: ['card'],
+        billing_address_collection: 'required',
+        customer,
+        customer_update: { address: 'auto' },
+        line_items: [
+          {
+            price: price.id,
+            quantity: 1,
+          },
+        ],
+        metadata: {
+          userId: customer,
+          amount: amount.toString(),
+          balance: 'true',
+        },
+        success_url: successUrl,
+        cancel_url: `${this.getAppURL()}/account`,
+      })
+
+      return session
+    } catch (error) {
+      console.error('Error creating balance checkout:', error)
+      throw error
+    }
+  }
+
   async createPortal(customerId: string): Promise<string> {
     console.log('Creating portal session')
     const portalSession = await this.stripe.billingPortal.sessions.create({
