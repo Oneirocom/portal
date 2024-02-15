@@ -4,14 +4,19 @@ import {
   UserCircleIcon,
   ArrowRightOnRectangleIcon,
 } from '@heroicons/react/24/outline'
-import { LoginIcon, DarkIcon, LightIcon, DashboardIcon } from '../Icons'
 import { useTheme } from 'next-themes'
 import { useEffect } from 'react'
 import clsx from 'clsx'
 import { useRouter } from 'next/router'
 import DropDown from './DropDown'
 import { dropDownMenuItemsType, navProps } from './types'
-import { Switch } from '@magickml/client-ui'
+import {
+  Switch,
+  LoginIcon,
+  DarkIcon,
+  LightIcon,
+  DashboardIcon,
+} from '@magickml/client-ui'
 import { useClerk } from '@clerk/nextjs'
 
 export const DropDownUserMenu = () => {

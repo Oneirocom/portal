@@ -3,7 +3,6 @@ import { useAtomValue } from 'jotai'
 import { api } from '@magickml/portal-api-client'
 import { useState, useEffect } from 'react'
 import toast from 'react-hot-toast'
-import { MagickDialog } from '../../Dialog'
 import { EllipsisVerticalIcon } from '@heroicons/react/20/solid'
 import Link from 'next/link'
 import {
@@ -16,6 +15,7 @@ import {
   Label,
   Checkbox,
   Textarea,
+  MagickDialog
 } from '@magickml/client-ui'
 
 import { convertFileToBase64 } from '@magickml/portal-utils-shared'

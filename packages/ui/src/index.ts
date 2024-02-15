@@ -1,4 +1,3 @@
-export * from './lib/components/Icons'
 export * from './lib/components/motion'
 export * from './lib/components/MobileNavBar'
 export * from './lib/components/Dialog'

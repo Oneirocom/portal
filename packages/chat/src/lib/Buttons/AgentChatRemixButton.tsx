@@ -1,4 +1,4 @@
-import { MagickDialog, MagickUnauthorizedDialog } from '@magickml/portal-ui'
+import { MagickDialog, MagickUnauthorizedDialog } from '@magickml/client-ui'
 import { Button, Input, Label } from '@magickml/client-ui'
 import { useRouter } from 'next/router'
 import { FunctionComponent, useState } from 'react'

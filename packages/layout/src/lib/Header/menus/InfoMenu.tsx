@@ -1,13 +1,15 @@
 import { AiOutlineInfoCircle } from 'react-icons/ai'
 import { useRouter } from 'next/router'
 import {
+  dropDownMenuItemsType,
+  navProps,
+} from '@magickml/portal-ui'
+import {
   DocsIcon,
   FaqIcon,
   TutorialIcon,
   DiscordIcon,
-  dropDownMenuItemsType,
-  navProps,
-} from '@magickml/portal-ui'
+} from '@magickml/client-ui'
 import { InfoCircledIcon } from '@radix-ui/react-icons'
 import SheetPopover from './SheetPopover'
 import { useState } from 'react'

@@ -1,6 +1,5 @@
 import clsx from 'clsx'
-import { MagickUnauthorizedDialog } from '@magickml/portal-ui'
-import { Button } from '@magickml/client-ui'
+import { MagickUnauthorizedDialog,Button } from '@magickml/client-ui'
 import { useRouter } from 'next/router'
 import { FunctionComponent, useState } from 'react'
 import { AiFillHeart } from 'react-icons/ai'

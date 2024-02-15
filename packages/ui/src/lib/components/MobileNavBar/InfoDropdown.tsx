@@ -2,7 +2,7 @@ import { AiOutlineInfoCircle } from 'react-icons/ai'
 import { useRouter } from 'next/router'
 import DropDown from './DropDown'
 import { dropDownMenuItemsType, navProps } from './types'
-import { TutorialIcon, DocsIcon, DiscordIcon, FaqIcon } from '../Icons'
+import { TutorialIcon, DocsIcon, DiscordIcon, FaqIcon } from '@magickml/client-ui'
 import { InfoCircledIcon } from '@radix-ui/react-icons'
 
 export const DropDownInfoMenu = () => {

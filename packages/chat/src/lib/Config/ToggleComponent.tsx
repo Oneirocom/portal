@@ -1,6 +1,6 @@
 import AgentTitle from './AgentTitle'
 import ConfigToggle from './ConfigToggle'
-import { InfoIcon } from '@magickml/portal-ui'
+import { InfoIcon } from '@magickml/client-ui'
 
 type Title = 'Make Public' | 'Enable Remixing' | 'Open in Editor'
 

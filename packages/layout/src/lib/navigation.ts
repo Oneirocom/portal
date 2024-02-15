@@ -3,7 +3,7 @@ import {
   ExploreIcon,
   HomeIcon,
   ProjectIcon,
-} from '@magickml/portal-ui'
+} from '@magickml/client-ui'
 import { Role } from '@magickml/portal-config'
 
 export type Route = {

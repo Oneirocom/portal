@@ -24,7 +24,7 @@ import {
   buttonVariants,
   Label,
 } from '@magickml/client-ui'
-import { MagickDialog } from '@magickml/portal-ui'
+import { MagickDialog } from '@magickml/client-ui'
 import ConfigSwitches from './Settings/Config/ConfigSwitches'
 import clsx from 'clsx'
 import DiscordConfig from './Settings/Config/DiscordConfig'

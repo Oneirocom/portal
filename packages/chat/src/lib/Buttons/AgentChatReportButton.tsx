@@ -2,8 +2,7 @@
 import { AiOutlineWarning } from 'react-icons/ai'
 // import { api } from '@magickml/portal-api-client'
 import { useState } from 'react'
-import { Checkbox, Textarea, Button } from '@magickml/client-ui'
-import { MagickDialog } from '@magickml/portal-ui'
+import { Checkbox, Textarea, Button ,MagickDialog} from '@magickml/client-ui'
 
 const AgentChatReportButton = ({
   publicAgentId,
