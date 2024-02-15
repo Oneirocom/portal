@@ -18,6 +18,10 @@ export const portalEndpoint = async (
   const user = await getFullUser(userId)
 
   try {
+    if (!user.customer) {
+      throw new Error('Stripe customer not found')
+    }
+
     const portalUrl = await stripeService.createPortal(user.customer)
     console.log('portalUrl', portalUrl)
     res.status(200).json({ url: portalUrl })
