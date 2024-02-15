@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { api } from '@magickml/portal-api-client'
 import { toast } from 'react-hot-toast'
-import { MagickDialog } from './MagickDialog'
+import { MagickDialog } from '@magickml/client-ui'
 import { Input, Label, formInputStyles } from '@magickml/client-ui'
 interface CreateProjectDialogProps {
   state: [boolean, React.Dispatch<React.SetStateAction<boolean>>]

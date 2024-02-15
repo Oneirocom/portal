@@ -3,10 +3,10 @@ import { api } from '@magickml/portal-api-client'
 import { useScreenWidth } from '@magickml/portal-hooks'
 import {
   ProjectGrid,
-  ProjectIcon,
   ProjectGridPagination,
   CreateProjectDialog,
 } from '@magickml/portal-ui'
+import { ProjectIcon } from '@magickml/client-ui'
 import { MainLayout, PortalLayout } from '@magickml/portal-layout'
 
 export const ProjectsPage = () => {
