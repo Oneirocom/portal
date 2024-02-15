@@ -12,7 +12,7 @@ const withTM = require('next-transpile-modules')([
  **/
 const nextConfig = {
   nx: {
-    svgr: false,
+    svgr: true,
   },
   images: {
     remotePatterns: [
