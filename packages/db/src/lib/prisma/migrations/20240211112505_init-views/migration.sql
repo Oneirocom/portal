@@ -40,19 +40,3 @@ FROM public.spells;
 CREATE OR REPLACE VIEW portal.documents AS
 SELECT ad.*
 FROM public.documents ad;
-
-CREATE OR REPLACE VIEW portal.customers AS
-SELECT *
-FROM stripe.customers;
-
-CREATE OR REPLACE VIEW portal.subscriptions AS
-SELECT *
-FROM stripe.subscriptions;
-
-CREATE OR REPLACE VIEW portal.products AS
-SELECT *
-FROM stripe.products;
-
-CREATE OR REPLACE VIEW portal.prices AS
-SELECT *
-FROM stripe.prices;
