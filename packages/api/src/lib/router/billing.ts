@@ -34,6 +34,10 @@ export const billingRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const user = await getFullUser(ctx.auth.userId)
 
+      if (!user.customer) {
+        throw new Error('Stripe customer not found')
+      }
+
       let checkoutSession: Stripe.Response<Stripe.Checkout.Session>
       try {
         if (input.amount) {
