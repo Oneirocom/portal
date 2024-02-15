@@ -1,10 +1,7 @@
 import { clerkClient } from '@clerk/nextjs'
 
 export const getFullUser = async (userId: string) => {
-  console.log('GETTING USER', userId)
   const user = await clerkClient.users.getUser(userId)
-
-  console.log('USER FOUND', user)
 
   if (!user) {
     throw new Error('User not found')
