@@ -248,7 +248,15 @@ export const budgetRouter = createTRPCRouter({
       }
 
       // const user = await clerkClient.users.getUser(project.owner)
-      const user = await getFullUser(project.owner)
+      const { user } = await getFullUser(project.owner)
+
+      if (!user) {
+        return {
+          status: 'error',
+          user: null,
+          message: 'User not found',
+        }
+      }
 
       const wallet = await prisma.budget.findUnique({
         where: {
@@ -295,19 +303,19 @@ export const budgetRouter = createTRPCRouter({
       return {
         status: 'success',
         user: {
-          id: user.user.id,
-          email: user.user.emailAddresses[0].emailAddress,
-          name: user.user.username,
+          id: user.id,
+          email: user.emailAddresses[0].emailAddress,
+          name: user.username,
           balance: userBalance,
           promoCredit: promoCredit || 0,
           introCredit: introCredit || 0,
-          hasSubscription: (user.user.publicMetadata.subscription as
+          hasSubscription: (user.publicMetadata.subscription as
             | string
             | undefined)
             ? true
             : false,
           subscriptionName:
-            (user.user.publicMetadata.subscription as string | undefined) ??
+            (user.publicMetadata.subscription as string | undefined) ??
             'Neophyte',
         },
       }
