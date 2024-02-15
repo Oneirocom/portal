@@ -6,7 +6,7 @@ import clsx from 'clsx'
 import { useState } from 'react'
 import { z } from 'zod'
 import { api } from '@magickml/portal-api-client'
-import { PriceKeys, capitalizeFirst } from '@magickml/portal-utils-shared'
+import { capitalizeFirst } from '@magickml/portal-utils-shared'
 import { useUser } from '@clerk/nextjs'
 import axios from 'axios'
 
