@@ -1,6 +1,10 @@
 import Stripe from 'stripe'
 import { clerkClient } from '@clerk/nextjs'
-import { makeWizardPromotion, makeApprenticePromotion } from './promotions'
+import {
+  makeWizardPromotion,
+  makeApprenticePromotion,
+  makeBalancePromotion,
+} from './promotions'
 import { PortalSubscriptions } from '@magickml/portal-utils-shared'
 import { buffer } from 'micro'
 import { NextApiRequest } from 'next'
@@ -68,7 +72,9 @@ class StripeEventHandler {
   async handleCheckoutSessionCompleted(event: Stripe.Event) {
     const session = event.data.object as Stripe.Checkout.Session
     const userId = session?.metadata?.userId as string | undefined
+    const isBalance = session?.metadata?.balance === 'true' ? true : false
     const subscriptionName = session?.metadata?.subscriptionName as string
+    const amount = session?.metadata?.amount as string
 
     if (!userId || !subscriptionName) {
       console.error(
@@ -77,35 +83,41 @@ class StripeEventHandler {
       return
     }
 
-    // add promotion
-    switch (subscriptionName.toUpperCase() as PortalSubscriptions) {
-      case 'APPRENTICE':
-        await makeApprenticePromotion(userId)
-        break
-      case 'WIZARD':
-        await makeWizardPromotion(userId)
-        break
-      default:
-        console.log(
-          'BIG WARNING: Unhandled subscription:',
-          subscriptionName,
+    if (isBalance) {
+      const parsedAmount = parseFloat(amount)
+
+      await makeBalancePromotion(userId, parsedAmount)
+    } else {
+      // add promotion
+      switch (subscriptionName.toUpperCase() as PortalSubscriptions) {
+        case 'APPRENTICE':
+          await makeApprenticePromotion(userId)
+          break
+        case 'WIZARD':
+          await makeWizardPromotion(userId)
+          break
+        default:
+          console.log(
+            'BIG WARNING: Unhandled subscription:',
+            subscriptionName,
+            'in handleCheckoutSessionCompleted'
+          )
+          break
+      }
+
+      try {
+        await clerkClient.users.updateUserMetadata(userId, {
+          publicMetadata: {
+            subscription: subscriptionName.toUpperCase(),
+          },
+        })
+      } catch (error) {
+        console.error(
+          'BIG WARNING: Error updating user metadata:',
+          error,
           'in handleCheckoutSessionCompleted'
         )
-        break
-    }
-
-    try {
-      await clerkClient.users.updateUserMetadata(userId, {
-        publicMetadata: {
-          subscription: subscriptionName.toUpperCase(),
-        },
-      })
-    } catch (error) {
-      console.error(
-        'BIG WARNING: Error updating user metadata:',
-        error,
-        'in handleCheckoutSessionCompleted'
-      )
+      }
     }
   }
 }
