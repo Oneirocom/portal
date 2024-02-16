@@ -24,6 +24,11 @@ const authTheme: Theme = {
       size: 'sm',
       className: 'font-bold',
     }),
+    socialButtonsIconButton: buttonVariants({
+      variant: 'portal-neutral',
+      size: 'sm',
+      className: 'hover:bg-ds-primary',
+    }),
     socialButtonsBlockButtonText: 'text-ds-white font-montserrat font-semibold',
     socialButtonsBlockButtonArrow: 'text-ds-primary',
     formHeaderSubtitle: 'text-ds-neutral font-montserrat',
