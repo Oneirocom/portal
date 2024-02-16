@@ -81,12 +81,10 @@ export const agentsRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      const project = await prisma.project.create({
-        data: {
-          owner: ctx.auth.userId,
-          name: input.name,
-          description: `created from template ${input.templateId}`,
-        },
+      const project = await app.service('projects').create({
+        owner: ctx.auth.userId,
+        name: input.name,
+        description: `created from template ${input.templateId}`,
       })
 
       const template = await prisma.template.findUnique({
@@ -105,7 +103,7 @@ export const agentsRouter = createTRPCRouter({
       const spellInput = {
         id: uuidv4(),
         projectId: project.id,
-        name: input.name,
+        name: input.name + ' spell',
         graph: template.graph,
         type: 'behave',
       }
