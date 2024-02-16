@@ -20,7 +20,8 @@ import { v4 as uuidv4 } from 'uuid'
 const app = feathers()
 
 // Connect to a different URL
-const restClient = rest(process.env.IDE_SERVER_URL)
+const ideServerUrl = process.env.IDE_SERVER_URL || 'http://localhost:3030'
+const restClient = rest(ideServerUrl)
 
 app.configure(
   restClient.axios(
@@ -108,8 +109,10 @@ export const agentsRouter = createTRPCRouter({
         graph: template.graph,
         type: 'behave',
       }
+      console.log('MAKING SPELL', spellInput)
       // const agent = await app.service('agents').patch(agentId, updateData)
       const spell = await app.service('spells').create(spellInput)
+      console.log('SPELL MADE', spell)
       return { spell, project: project.id }
     }),
 
