@@ -3,6 +3,7 @@ import posthog from 'posthog-js'
 import { Maintenance } from '@magickml/portal-ui'
 import { type AppConfig } from '@magickml/providers'
 import dynamic from 'next/dynamic'
+import { useTheme } from 'next-themes'
 
 const MagickIDE = dynamic(
   () => import('client/editor').then(mod => mod.MagickIDE),
@@ -11,6 +12,7 @@ const MagickIDE = dynamic(
 
 export const Editor = (props: AppConfig): React.ReactElement | null => {
   const [cookie, setCookie] = useState<boolean | null>(null)
+  const { theme } = useTheme()
 
   useEffect(() => {
     setCookie(!posthog.has_opted_out_capturing())
@@ -18,7 +20,11 @@ export const Editor = (props: AppConfig): React.ReactElement | null => {
 
   if (!props || !props.apiUrl || !props.token) return null
 
-  console.log('EDITOR PROPS', props)
+  useEffect(() => {
+    if (theme !== 'dark') {
+      document.documentElement.classList.add('dark')
+    }
+  }, [theme])
 
   return (
     <>
