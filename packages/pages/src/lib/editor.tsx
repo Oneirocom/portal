@@ -18,13 +18,13 @@ export const Editor = (props: AppConfig): React.ReactElement | null => {
     setCookie(!posthog.has_opted_out_capturing())
   }, [])
 
-  if (!props || !props.apiUrl || !props.token) return null
-
   useEffect(() => {
     if (theme !== 'dark') {
       document.documentElement.classList.add('dark')
     }
   }, [theme])
+
+  if (!props || !props.apiUrl || !props.token) return null
 
   return (
     <>
