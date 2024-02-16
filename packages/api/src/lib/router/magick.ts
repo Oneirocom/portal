@@ -247,7 +247,6 @@ export const budgetRouter = createTRPCRouter({
         }
       }
 
-      // const user = await clerkClient.users.getUser(project.owner)
       const { user } = await getFullUser(project.owner)
 
       if (!user) {
