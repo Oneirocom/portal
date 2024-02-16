@@ -11,12 +11,13 @@ export const clerkWebhook = async (
   if (req.method !== 'POST') {
     return res.status(405)
   }
+
   // You can find this in the Clerk Dashboard -> Webhooks -> choose the webhook
   const CLERK_WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET
 
   if (!CLERK_WEBHOOK_SECRET) {
     throw new Error(
-      'Please add WEBHOOK_SECRET from Clerk Dashboard to .env or .env.local'
+      'Please add CLERK_WEBHOOK_SECRET from Clerk Dashboard to .env or .env.local'
     )
   }
 
