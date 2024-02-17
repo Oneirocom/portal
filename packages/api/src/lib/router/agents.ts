@@ -69,12 +69,30 @@ export const agentsRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      const project = await app.service('projects').create({
-        owner: ctx.auth.userId,
-        name: input.name,
-        description: `created from template ${input.templateId}`,
+      const { name } = input
+
+      // note here that we may want to pass the template to the project create service
+      // this will run through the template and create all assets etc.
+      // This could be a lot if there are a lot of assets in the template.
+
+      // create the main project in the portal DB
+      const project = await prisma.project.create({
+        data: {
+          name,
+          description: `created from template ${input.templateId}`,
+          owner: ctx.auth.userId,
+          updatedAt: new Date().toISOString(),
+          createdAt: new Date().toISOString(),
+        },
       })
 
+      // initialize the project in the IDE for now.
+      await app.service('projects').create({
+        name: input.name,
+        projectId: project.id,
+      })
+
+      // find the template
       const template = await prisma.template.findUnique({
         where: {
           id: input.templateId,
@@ -88,6 +106,7 @@ export const agentsRouter = createTRPCRouter({
         throw new Error('Template not found')
       }
 
+      // make the spell
       const spellInput = {
         id: uuidv4(),
         projectId: project.id,
