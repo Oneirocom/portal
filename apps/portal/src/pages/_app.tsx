@@ -11,6 +11,7 @@ import '../styles/globals.css'
 import 'node_modules/latex.js/dist/css/katex.css'
 import '../../../../../../packages/client/stylesheets/src/behaveFlow.css'
 import '../../../../../../packages/client/stylesheets/src/dockview.css'
+import '../../../../../../packages/client/stylesheets/src/flowOverrides.css'
 
 // import "styles/sheetOverrides.css";
 // import "driver.js/dist/driver.css";
