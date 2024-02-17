@@ -172,7 +172,7 @@ export class ClerkEventService {
       }
 
       // Delete user
-      await stripeService.deleteCustomer(userId)
+      // await stripeService.deleteCustomer(userId)
 
       console.log('USER DELETED', userId)
     } catch (error) {
