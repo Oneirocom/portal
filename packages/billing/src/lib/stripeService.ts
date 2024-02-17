@@ -345,6 +345,23 @@ export class StripeService {
     return stripe.id
   }
 
+  async deleteCustomer(userId: string): Promise<void> {
+    const customerData = await this.stripe.customers.search({
+      query: `metadata['userId']:'${userId}'`,
+    })
+
+    const customer = customerData.data[0]
+
+    if (!customer) throw new Error('Stripe customer not found')
+
+    try {
+      await this.stripe.customers.del(customer.id)
+    } catch (error) {
+      console.error('Error deleting customer:', error)
+      throw error
+    }
+  }
+
   async getClientSubscription(
     userId: string
   ): Promise<{ subscriptionId: string; productName: string } | false> {
