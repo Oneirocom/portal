@@ -1,10 +1,7 @@
 import { z } from 'zod'
-import { feathers } from '@feathersjs/feathers'
-import rest from '@feathersjs/rest-client'
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc'
 import { hasAccess, prepareToken } from '../utils/shared'
 import { prisma } from '@magickml/portal-db'
-import axios from 'axios'
 import {
   trackServerEvent,
   paginateItems,
@@ -16,20 +13,11 @@ import {
   PrivateEventTypes,
 } from '@magickml/portal-utils-shared'
 import { v4 as uuidv4 } from 'uuid'
+import { makeClient } from 'ideClient'
 
-const app = feathers()
-
-// Connect to a different URL
 const ideServerUrl = process.env.IDE_SERVER_URL || 'http://localhost:3030'
-const restClient = rest(ideServerUrl)
 
-app.configure(
-  restClient.axios(
-    axios.create({
-      headers: { 'x-api-key': process.env.AGENT_API_KEY },
-    })
-  )
-)
+const app = makeClient(ideServerUrl)
 
 export const agentsRouter = createTRPCRouter({
   getAgent: publicProcedure
