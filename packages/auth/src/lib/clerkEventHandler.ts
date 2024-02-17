@@ -13,6 +13,13 @@ import {
 import { stripeService } from '@magickml/portal-billing'
 import { Roles } from '@magickml/portal-config'
 import { PortalSubscriptions } from '@magickml/portal-utils-shared'
+import { prisma as prismaPortal } from '@magickml/portal-db'
+import { prismaCore as prismaServer } from '@magickml/server-db'
+import { makeClient } from 'ideClient'
+
+const ideServerUrl = process.env.IDE_SERVER_URL || 'http://localhost:3030'
+
+const app = makeClient(ideServerUrl)
 
 export class ClerkEventService {
   private useLogs = process.env.CLERK_WEBHOOK_LOGGING === 'true'
@@ -126,7 +133,52 @@ export class ClerkEventService {
   }
 
   private async handleUserDeleted(event: UserWebhookEvent) {
-    this.log('User deleted', event.data.id)
+    const userId = event.data.id
+
+    if (!userId) {
+      this.log('User deleted', 'No user ID found in payload.')
+      return
+    }
+
+    try {
+      const projects = await prismaPortal.project.findMany({
+        where: {
+          owner: userId,
+        },
+      })
+
+      // Delete all agents and projects
+      // agent deletion should cascade to all related data
+      if (projects.length > 0) {
+        for (const project of projects) {
+          const agents = await prismaServer.agents.findMany({
+            where: {
+              projectId: project.id,
+            },
+          })
+
+          for (const agent of agents) {
+            // turn off all agents first just in case we cant delete
+            await app.service('agents').patch(agent.id, { enabled: false })
+            await app.service('agents').remove(agent.id)
+          }
+
+          await prismaPortal.project.delete({
+            where: {
+              id: project.id,
+            },
+          })
+        }
+      }
+
+      // Delete user
+      await stripeService.deleteCustomer(userId)
+
+      console.log('USER DELETED', userId)
+    } catch (error) {
+      console.log('Error deleting user in hook', error)
+      this.log('User deleted', `Error deleting user: ${error}`)
+    }
   }
 
   // SESSION EVENTS
