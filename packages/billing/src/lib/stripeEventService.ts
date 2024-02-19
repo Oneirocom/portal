@@ -73,13 +73,6 @@ class StripeEventHandler {
     const subscriptionName = session?.metadata?.subscriptionName as string
     const amount = session?.metadata?.amount as string
 
-    if (!userId || !subscriptionName) {
-      console.error(
-        'BIG WARNING: Missing userId or subscriptionName in handleCheckoutSessionCompleted'
-      )
-      return
-    }
-
     if (isBalance) {
       const parsedAmount = parseFloat(amount)
 
@@ -102,6 +95,12 @@ class StripeEventHandler {
         )
       }
     } else {
+      if (!userId || !subscriptionName) {
+        console.error(
+          'BIG WARNING: Missing userId or subscriptionName in handleCheckoutSessionCompleted'
+        )
+        return
+      }
       // add promotion
       switch (subscriptionName.toUpperCase() as PortalSubscriptions) {
         case 'APPRENTICE':
