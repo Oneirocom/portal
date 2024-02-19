@@ -1,6 +1,15 @@
 import { toast } from 'react-hot-toast'
 import { MainLayout, PortalLayout } from '@magickml/portal-layout'
-import { Input, Progress, Button } from '@magickml/client-ui'
+import {
+  Input,
+  Progress,
+  Button,
+  TooltipProvider,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+  InfoIcon,
+} from '@magickml/client-ui'
 import { useRouter } from 'next/router'
 import clsx from 'clsx'
 import { useState } from 'react'
@@ -22,6 +31,8 @@ export const AccountPage = () => {
   const subscription = user.user?.publicMetadata.subscription as
     | string
     | undefined
+
+  const isWizard = subscription?.toUpperCase() === 'WIZARD'
 
   const router = useRouter()
   const [inputValue, setInputValue] = useState<string>('5.00')
@@ -45,6 +56,11 @@ export const AccountPage = () => {
     })
 
   const handleAddBalance = async () => {
+    if (!isWizard) {
+      toast.error('Only Wizard subscription users can add balance')
+      return
+    }
+
     const parsedValue = parseFloat(inputValue)
     if (isNaN(parsedValue)) {
       setError('Invalid amount')
@@ -92,7 +108,7 @@ export const AccountPage = () => {
   const { data: promotions } = api.billing.getPromotions.useQuery()
 
   const introPromotion = promotions?.find(
-    promotion => promotion.type === 'INTRO'
+    promotion => promotion.type === 'INTRO' && !promotion.isUsed
   )
 
   const introCredits = introPromotion
@@ -101,11 +117,10 @@ export const AccountPage = () => {
 
   const introAmount = (introCredits / 100) * 2
 
-
   return (
     <div className="flex flex-col font-montserrat justify-center items-start">
       {/* Header */}
-      
+
       <div className="self-stretch justify-center items-center gap-5 inline-flex p-4 lg:p-10">
         <h1 className="grow shrink basis-0 text-2xl font-bold font-montAlt">
           Account
@@ -142,44 +157,67 @@ export const AccountPage = () => {
           </Card>
 
           <Card>
-            <p className="text-center text-3xl font-medium inline-flex items-center gap-x-2">
-              <span>
-                <svg
-                  width="22"
-                  height="20"
-                  viewBox="0 0 22 20"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <g id="auto_awesome">
-                    <g id="Vector">
-                      <path
-                        d="M17.2762 7.49998L18.3897 5.20831L20.8394 4.16665L18.3897 3.12498L17.2762 0.833313L16.1627 3.12498L13.713 4.16665L16.1627 5.20831L17.2762 7.49998Z"
-                        fill="currentColor"
-                      />
-                      <path
-                        d="M17.2762 12.5L16.1627 14.7916L13.713 15.8333L16.1627 16.875L17.2762 19.1666L18.3897 16.875L20.8394 15.8333L18.3897 14.7916L17.2762 12.5Z"
-                        fill="currentColor"
-                      />
-                      <path
-                        d="M10.5951 7.91665L8.36814 3.33331L6.14112 7.91665L1.2417 9.99998L6.14112 12.0833L8.36814 16.6666L10.5951 12.0833L15.4946 9.99998L10.5951 7.91665ZM9.25003 10.825L8.36814 12.6416L7.48624 10.825L5.54429 9.99998L7.48624 9.17498L8.36814 7.35831L9.25003 9.17498L11.192 9.99998L9.25003 10.825Z"
-                        fill="currentColor"
-                      />
+            <div className="inline-flex items-center gap-x-2">
+              <p className="text-center text-3xl font-medium inline-flex items-center gap-x-2">
+                <span>
+                  <svg
+                    width="22"
+                    height="20"
+                    viewBox="0 0 22 20"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <g id="auto_awesome">
+                      <g id="Vector">
+                        <path
+                          d="M17.2762 7.49998L18.3897 5.20831L20.8394 4.16665L18.3897 3.12498L17.2762 0.833313L16.1627 3.12498L13.713 4.16665L16.1627 5.20831L17.2762 7.49998Z"
+                          fill="currentColor"
+                        />
+                        <path
+                          d="M17.2762 12.5L16.1627 14.7916L13.713 15.8333L16.1627 16.875L17.2762 19.1666L18.3897 16.875L20.8394 15.8333L18.3897 14.7916L17.2762 12.5Z"
+                          fill="currentColor"
+                        />
+                        <path
+                          d="M10.5951 7.91665L8.36814 3.33331L6.14112 7.91665L1.2417 9.99998L6.14112 12.0833L8.36814 16.6666L10.5951 12.0833L15.4946 9.99998L10.5951 7.91665ZM9.25003 10.825L8.36814 12.6416L7.48624 10.825L5.54429 9.99998L7.48624 9.17498L8.36814 7.35831L9.25003 9.17498L11.192 9.99998L9.25003 10.825Z"
+                          fill="currentColor"
+                        />
+                      </g>
                     </g>
-                  </g>
-                </svg>
-              </span>
-              Free Trial Magick Power
-            </p>
-            <Progress value={introCredits} max={100} />
+                  </svg>
+                </span>
+                {`Magick Power (MP)`}
+              </p>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className="inline-flex items-center justify-center gap-x-1">
+                      <InfoIcon />
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent className="">
+                    <h3 className="text-lg font-semibold prose-h3:prose-sm">
+                      {`Magick Power (MP)`}
+                    </h3>
+                    <p className="prose-p:prose-sm">
+                      {`Magick Power (MP) is your monthly balance from your subscription.`}
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+            <Progress
+              value={Number(budget?.promotional_balance || 0) * 100 || 0}
+            />
             <p className="text-center text-ds-secondary-p dark:text-ds-secondary-m text-base font-normal">
-              {`${Number(introAmount.toFixed(2)) * 100} / 200`}
+              {`${Number(budget?.promotional_balance || 0) * 100 || 0} MP / ${
+                isWizard ? '1000' : '200'
+              } MP`}
             </p>
           </Card>
 
           <Card>
             <p className="text-center text-3xl font-medium">
-              {budget ? `$${Number(budget.total_budget).toFixed(2)}` : '$0.00'}
+              {budget ? `$${Number(budget.balance).toFixed(2)}` : '$0.00'}
             </p>
             <p className="text-center text-ds-secondary-p dark:text-ds-secondary-m text-base font-normal ">
               Balance remaining
