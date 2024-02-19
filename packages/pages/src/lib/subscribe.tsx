@@ -12,8 +12,15 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import toast from 'react-hot-toast'
 import { api } from '@magickml/portal-api-client'
-import { useSession } from '@clerk/nextjs'
+import { useUser } from '@clerk/nextjs'
 import { CheckoutKey, SubscribePageProps } from '@magickml/portal-types'
+import axios from 'axios'
+import clsx from 'clsx'
+
+enum BADGE {
+  BEST_VALUE = 'BEST VALUE',
+  ACTIVE = 'ACTIVE',
+}
 
 type SubscriptionTooltip = {
   title: string
@@ -82,7 +89,10 @@ const subscriptionOptions: SubscriptionOption[] = [
 
 export const SubscribePage = (props: SubscribePageProps) => {
   const router = useRouter()
-  const { isSignedIn } = useSession()
+  const { user, isSignedIn } = useUser()
+  const subscription = user?.publicMetadata.subscription as string | undefined
+  const isWizard = subscription?.toUpperCase() === 'WIZARD'
+  const isApprentice = subscription?.toUpperCase() === 'APPRENTICE'
   const { mutateAsync: createCheckout } =
     api.billing.createCheckout.useMutation({
       onSuccess: data => {
@@ -95,6 +105,21 @@ export const SubscribePage = (props: SubscribePageProps) => {
       },
     })
 
+  const createPortal = async () => {
+    try {
+      const response = await axios.get('/api/billing/portal')
+      const portalUrl = response.data.url
+      if (portalUrl) {
+        window.location.href = portalUrl
+      } else {
+        throw new Error('No portal URL returned')
+      }
+    } catch (error) {
+      console.error(error)
+      toast.error('Error accessing billing portal')
+    }
+  }
+
   const handleCheckout = async ({
     price,
     name,
@@ -106,11 +131,32 @@ export const SubscribePage = (props: SubscribePageProps) => {
       router.push('/sign-in')
       return
     }
+    if (isWizard || isApprentice) {
+      await createPortal()
+      return
+    }
     try {
       await createCheckout({ price, name })
     } catch (error: any) {
       toast.error(error?.message || 'Error processing checkout')
     }
+  }
+
+  // const isBestOrActive = (option: SubscriptionOption) =>
+  //   option.isBestValue || option.key === subscription?.toUpperCase()
+
+  const isBestOrActive = (option: SubscriptionOption) => {
+    if (!isWizard && !isApprentice) {
+      if (option.isBestValue) {
+        return BADGE.BEST_VALUE
+      }
+      return false
+    }
+
+    if (option.key === subscription?.toUpperCase()) {
+      return BADGE.ACTIVE
+    }
+    return false
   }
 
   return (
@@ -139,15 +185,18 @@ export const SubscribePage = (props: SubscribePageProps) => {
         {subscriptionOptions.map(option => (
           <div
             key={option.id}
-            className="max-w-[288px] w-full mx-auto flex flex-col p-6 rounded-lg shadow-lg relative
-            bg-ds-card border border-ds-secondary-p dark:border-ds-secondary-m"
+            className={clsx(
+              option.key === subscription?.toUpperCase() &&
+                '!border-ds-primary',
+              'max-w-[288px] w-full mx-auto flex flex-col p-6 rounded-lg shadow-lg relative bg-ds-card border border-ds-secondary-p dark:border-ds-secondary-m'
+            )}
           >
-            {option.isBestValue && (
+            {isBestOrActive(option) && (
               <Badge
                 className="w-28 h-9 inline-flex justify-center absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 
               text-center bg-ds-primary-m text-black text-sm font-normal font-montserrat"
               >
-                BEST VALUE
+                {isBestOrActive(option)}
               </Badge>
             )}
             <Image
