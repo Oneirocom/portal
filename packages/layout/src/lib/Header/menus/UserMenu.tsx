@@ -21,7 +21,6 @@ import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import clsx from 'clsx'
 import { useClerk, useUser } from '@clerk/nextjs'
-import { MP } from '../MP'
 
 export const UserMenu = () => {
   const [popoverOpen, setPopoverOpen] = useState(false)
