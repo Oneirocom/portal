@@ -1,7 +1,7 @@
 import Stripe from 'stripe'
 import { prisma } from '@magickml/portal-db'
 import { makeTrialPromotion } from './promotions'
-import { PriceKeys, ProductKeys } from '@magickml/portal-utils-shared'
+import { PriceKeys } from '@magickml/portal-utils-shared'
 import { clerkClient } from '@clerk/nextjs'
 import { StripeEventHandler } from './stripeEventService'
 import { NextApiRequest } from 'next'
@@ -57,10 +57,16 @@ export class StripeService {
 
   private async createCustomPrice(amount: number): Promise<Stripe.Price> {
     return await this.stripe.prices.create({
-      // Convert the amount from dollars to cents
-      unit_amount: amount * 100, // Correct conversion to cents
+      unit_amount: amount * 100,
       currency: 'usd',
-      product: ProductKeys.Balance,
+      product_data: {
+        name: 'Add to Balance',
+        unit_label: 'USD',
+        metadata: {
+          amount: amount.toString(),
+          balance: 'true',
+        },
+      },
     })
   }
 
@@ -294,12 +300,10 @@ export class StripeService {
   }
 
   async createPortal(customerId: string): Promise<string> {
-    console.log('Creating portal session')
     const portalSession = await this.stripe.billingPortal.sessions.create({
       customer: customerId,
       return_url: this.getAppURL() + '/account',
     })
-    console.log('Portal session created:', portalSession.url)
     return portalSession.url
   }
 

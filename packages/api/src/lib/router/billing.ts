@@ -32,7 +32,6 @@ export const billingRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      console.log('createCheckout', input)
       const user = await getFullUser(ctx.auth.userId)
 
       if (!user.customer) {
@@ -65,7 +64,7 @@ export const billingRouter = createTRPCRouter({
 
         return { checkoutSession }
       } catch (error) {
-        console.error('Error in createSubCheckout:', error)
+        console.error('Error in createCheckout:', error)
         throw error
       }
     }),
