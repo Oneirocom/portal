@@ -6,7 +6,7 @@ import {
   ProjectGridPagination,
   CreateProjectDialog,
 } from '@magickml/portal-ui'
-import { ProjectIcon } from '@magickml/client-ui'
+import { ProjectIcon } from '@magickml/icons'
 import { MainLayout, PortalLayout } from '@magickml/portal-layout'
 
 export const ProjectsPage = () => {
