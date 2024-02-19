@@ -1,13 +1,10 @@
 import Stripe from 'stripe'
 import { clerkClient } from '@clerk/nextjs'
-import {
-  makeWizardPromotion,
-  makeApprenticePromotion,
-  makeBalancePromotion,
-} from './promotions'
+import { makeWizardPromotion, makeApprenticePromotion } from './promotions'
 import { PortalSubscriptions } from '@magickml/portal-utils-shared'
 import { buffer } from 'micro'
 import { NextApiRequest } from 'next'
+import { prisma } from '@magickml/portal-db'
 
 class StripeEventHandler {
   private stripe: Stripe
@@ -86,7 +83,24 @@ class StripeEventHandler {
     if (isBalance) {
       const parsedAmount = parseFloat(amount)
 
-      await makeBalancePromotion(userId, parsedAmount)
+      try {
+        await prisma.budget.update({
+          where: {
+            userId: userId,
+          },
+          data: {
+            balance: {
+              increment: parsedAmount,
+            },
+          },
+        })
+      } catch (error) {
+        console.error(
+          'BIG WARNING: Error updating user balance:',
+          error,
+          'in handleCheckoutSessionCompleted'
+        )
+      }
     } else {
       // add promotion
       switch (subscriptionName.toUpperCase() as PortalSubscriptions) {
