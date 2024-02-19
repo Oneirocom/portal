@@ -15,7 +15,7 @@ export default authMiddleware({
     '/api/auth/sync',
     '/api/billing/sync',
     '/api/magick(.*)',
-    '404',
+    '/subscribe',
   ],
 })
 
