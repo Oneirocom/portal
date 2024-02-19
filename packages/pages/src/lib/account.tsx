@@ -105,6 +105,15 @@ export const AccountPage = () => {
 
   const { data: budget } = api.billing.getBudget.useQuery()
 
+  const getProgressValue = () => {
+    const maxMP = isWizard ? 1000 : 200 // Maximum MP based on subscription
+    const currentMP = Number(budget?.promotional_balance || 0) * 100 // Current MP
+    const percentage = (currentMP / maxMP) * 100 // Calculate percentage of the max MP
+
+    if (isNaN(percentage) || percentage < 0) return 0 // Ensure value is not NaN or negative
+    return percentage > 100 ? 100 : percentage // Cap the value at 100%
+  }
+
   return (
     <div className="flex flex-col font-montserrat justify-center items-start">
       {/* Header */}
@@ -193,9 +202,7 @@ export const AccountPage = () => {
                 </Tooltip>
               </TooltipProvider>
             </div>
-            <Progress
-              value={Number(budget?.promotional_balance || 0) * 100 || 0}
-            />
+            <Progress value={getProgressValue()} />
             <p className="text-center text-ds-secondary-p dark:text-ds-secondary-m text-base font-normal">
               {`${Number(budget?.promotional_balance || 0) * 100 || 0} MP / ${
                 isWizard ? '1000' : '200'
