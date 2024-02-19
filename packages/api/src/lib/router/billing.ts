@@ -90,13 +90,16 @@ export const billingRouter = createTRPCRouter({
       },
     })
 
+    console.log('promotions:', promotions)
+
     const promoCredit = promotions.reduce(
       (acc, promo) => acc + promo.amount.toNumber(),
       0
     )
 
     const data = {
-      total_budget: budget.balance.toNumber() + promoCredit,
+      balance: budget.balance.toNumber(),
+      promotional_balance: promoCredit,
     }
 
     return data
