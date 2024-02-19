@@ -105,18 +105,6 @@ export const AccountPage = () => {
 
   const { data: budget } = api.billing.getBudget.useQuery()
 
-  const { data: promotions } = api.billing.getPromotions.useQuery()
-
-  const introPromotion = promotions?.find(
-    promotion => promotion.type === 'INTRO' && !promotion.isUsed
-  )
-
-  const introCredits = introPromotion
-    ? (parseFloat(introPromotion.amount.toString()) / 2) * 100
-    : 0
-
-  const introAmount = (introCredits / 100) * 2
-
   return (
     <div className="flex flex-col font-montserrat justify-center items-start">
       {/* Header */}
