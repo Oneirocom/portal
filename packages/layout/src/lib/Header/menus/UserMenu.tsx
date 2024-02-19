@@ -210,7 +210,7 @@ export const UserMenu = () => {
             <h2 className="pt-4 text-base font-bold text-center">
               {user.username}
             </h2>
-            <MP />
+            {/* <MP /> */}
           </div>
         )}
 
