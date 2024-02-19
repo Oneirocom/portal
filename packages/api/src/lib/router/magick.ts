@@ -286,12 +286,13 @@ export const budgetRouter = createTRPCRouter({
       let promoCredit = 0
 
       if (promotions && promotions.length > 0) {
-        introCredit = promotions
-          .filter(promo => promo.type === 'INTRO')[0]
-          .amount.toNumber()
+        const introPromotion = promotions.filter(
+          promo => promo.type === 'INTRO'
+        )[0]
+        introCredit = introPromotion?.amount.toNumber() || 0
 
         promoCredit = promotions.reduce(
-          (acc, promo) => acc + promo.amount.toNumber(),
+          (acc, promo) => acc + (promo?.amount || 0).toNumber(),
           0
         )
       }
