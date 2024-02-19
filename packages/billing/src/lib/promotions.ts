@@ -19,12 +19,14 @@ export const makeTrialPromotion = async (userId: string) => {
 }
 
 export const makeApprenticePromotion = async (userId: string) => {
+  // this create an empty credit promotion but if we ever decide to add a price to the apprentice subscription
+  // we can change the amount here
   await prisma.promotion.create({
     data: {
       name: 'Apprentice',
       description: 'Apprentice subscription credits.',
       type: PromotionType.ADMIN,
-      amount: new Decimal(10),
+      amount: new Decimal(0),
       validFrom: new Date(),
       validUntil: new Date(new Date().setDate(new Date().getDate() + 30)),
       isUsed: false,
@@ -41,7 +43,7 @@ export const makeWizardPromotion = async (userId: string) => {
       name: 'Wizard',
       description: 'Wizard subscription credits.',
       type: PromotionType.ADMIN,
-      amount: new Decimal(25),
+      amount: new Decimal(10),
       validFrom: new Date(),
       validUntil: new Date(new Date().setDate(new Date().getDate() + 30)),
       isUsed: false,
