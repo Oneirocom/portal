@@ -101,9 +101,11 @@ export const AccountPage = () => {
 
   const introAmount = (introCredits / 100) * 2
 
+
   return (
     <div className="flex flex-col font-montserrat justify-center items-start">
       {/* Header */}
+      
       <div className="self-stretch justify-center items-center gap-5 inline-flex p-4 lg:p-10">
         <h1 className="grow shrink basis-0 text-2xl font-bold font-montAlt">
           Account
