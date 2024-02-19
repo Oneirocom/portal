@@ -65,26 +65,32 @@ export const clerkAppearance: ClerkOptions['appearance'] = {
   createOrganization: authTheme,
   userProfile: {
     elements: {
-      // ...authTheme.elements,
       rootBox: 'w-full h-full',
-      card: 'w-full bg-ds-background shadow-none !p-0 !m-0',
-      headerTitle,
-      headerSubtitle:
-        'text-ds-primary-p dark:text-ds-primary-m font-montserrat font-semibold',
-      accordionTriggerButton:
-        'text-ds-black dark:text-ds-white shadow-none  font-montserrat font-semibold',
-      profileSectionPrimaryButton:
-        'bg-ds-neutral text-ds-white font-montserrat font-semibold',
-      navbarButton:
-        'bg-ds-neutral active:bg-ds-primary data-[active=true]:bg-ds-primary mt-2 text-ds-black font-montserrat font-semibold shadow-none',
-      navbarButtons__active: 'bg-ds-primary',
-      badge: 'bg-ds-primary text-ds-black font-montserrat font-medium text-xs',
-      profileSectionTitleText: commonText,
-      profileSectionContent: commonText,
-      // profileSectionContent__activeDevices: "h-40",
-      // activeDeviceListItem: "focus:outline-none",
-      // activeDeviceListItem__current: "outline outline-ds-primary",
-      // accordionTriggerButton: "focus:outline-none focus:ring-0 focus:border-0",
+      card: 'w-full shadow-none !p-0 !m-0',
     },
-  },
+  }
+  // userProfile: {
+  //   elements: {
+  //     // ...authTheme.elements,
+  //     rootBox: 'w-full h-full',
+  //     card: 'w-full bg-ds-background shadow-none !p-0 !m-0',
+  //     headerTitle,
+  //     headerSubtitle:
+  //       'text-ds-primary-p dark:text-ds-primary-m font-montserrat font-semibold',
+  //     accordionTriggerButton:
+  //       'text-ds-black dark:text-ds-white shadow-none  font-montserrat font-semibold',
+  //     profileSectionPrimaryButton:
+  //       'bg-ds-neutral text-ds-white font-montserrat font-semibold',
+  //     navbarButton:
+  //       'bg-ds-neutral active:bg-ds-primary data-[active=true]:bg-ds-primary mt-2 text-ds-black font-montserrat font-semibold shadow-none',
+  //     navbarButtons__active: 'bg-ds-primary',
+  //     badge: 'bg-ds-primary text-ds-black font-montserrat font-medium text-xs',
+  //     profileSectionTitleText: commonText,
+  //     profileSectionContent: commonText,
+  //     // profileSectionContent__activeDevices: "h-40",
+  //     // activeDeviceListItem: "focus:outline-none",
+  //     // activeDeviceListItem__current: "outline outline-ds-primary",
+  //     // accordionTriggerButton: "focus:outline-none focus:ring-0 focus:border-0",
+  //   },
+  // },
 }

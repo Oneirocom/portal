@@ -32,6 +32,7 @@ export const billingRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      console.log('createCheckout', input)
       const user = await getFullUser(ctx.auth.userId)
 
       if (!user.customer) {
@@ -89,8 +90,6 @@ export const billingRouter = createTRPCRouter({
         isUsed: false,
       },
     })
-
-    console.log('promotions:', promotions)
 
     const promoCredit = promotions.reduce(
       (acc, promo) => acc + promo.amount.toNumber(),
