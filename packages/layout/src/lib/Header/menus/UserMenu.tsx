@@ -2,7 +2,7 @@ import { api } from '@magickml/portal-api-client'
 import Cookies from 'js-cookie'
 import SheetPopover from './SheetPopover'
 import Link from 'next/link'
-import { AgentIcon, LightIcon, DarkIcon, LoginIcon } from '@magickml/client-ui'
+import { AgentIcon, LightIcon, DarkIcon, LoginIcon } from '@magickml/icons'
 import {
   Switch,
   Avatar,

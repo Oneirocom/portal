@@ -8,8 +8,8 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-  InfoIcon,
 } from '@magickml/client-ui'
+import { InfoIcon } from '@magickml/icons'
 import { useRouter } from 'next/router'
 import clsx from 'clsx'
 import { useState } from 'react'

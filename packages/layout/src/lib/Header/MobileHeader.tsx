@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { DropDownInfoMenu, DropDownUserMenu } from '@magickml/portal-ui'
-import { MagickIcon } from '@magickml/client-ui'
+import { MagickIcon } from '@magickml/icons'
 type MobileHeaderProps = {
   isPublic?: boolean
 }

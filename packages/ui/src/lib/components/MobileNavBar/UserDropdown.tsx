@@ -10,13 +10,8 @@ import clsx from 'clsx'
 import { useRouter } from 'next/router'
 import DropDown from './DropDown'
 import { dropDownMenuItemsType, navProps } from './types'
-import {
-  Switch,
-  LoginIcon,
-  DarkIcon,
-  LightIcon,
-  DashboardIcon,
-} from '@magickml/client-ui'
+import { Switch } from '@magickml/client-ui'
+import { LoginIcon, DarkIcon, LightIcon, DashboardIcon } from '@magickml/icons'
 import { useClerk } from '@clerk/nextjs'
 
 export const DropDownUserMenu = () => {

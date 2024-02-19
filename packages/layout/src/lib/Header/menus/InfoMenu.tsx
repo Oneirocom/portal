@@ -9,7 +9,7 @@ import {
   FaqIcon,
   TutorialIcon,
   DiscordIcon,
-} from '@magickml/client-ui'
+} from '@magickml/icons'
 import { InfoCircledIcon } from '@radix-ui/react-icons'
 import SheetPopover from './SheetPopover'
 import { useState } from 'react'
