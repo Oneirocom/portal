@@ -52,9 +52,6 @@ export const CreateAgentPage = () => {
         <title>Create an Agent | MagickML</title>
       </Head>
       <h1 className="text-3xl font-semibold">Create an Agent</h1>
-      <p className="text-lg font-medium text-ds-secondary-p dark:text-ds-secondary-m">
-        {`Choose from a selection of our Official Magick Starter Agents or other Community Agents that you would like to customize and make your own!`}
-      </p>
       <h3 className="text-2xl font-montAlt text-ds-secondary-p dark:text-ds-secondary-m">
         Select an Official Magick Starter Agents to start from:
       </h3>
