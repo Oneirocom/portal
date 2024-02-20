@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client-portal'
+import { PrismaClient } from '../prisma/client-portal'
 import blankSpell from './templates/blank.spell.json'
 
 const prisma = new PrismaClient()
