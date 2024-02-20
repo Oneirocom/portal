@@ -18,5 +18,6 @@ export const validateBudgetRequest = (
     return false
   }
 
+  console.log('request validated', req.method, req.url)
   return true
 }
