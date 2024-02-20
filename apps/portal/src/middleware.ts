@@ -14,8 +14,14 @@ export default authMiddleware({
     '/api',
     '/api/auth/sync',
     '/api/billing/sync',
-    '/api/magick(.*)',
     '/subscribe',
+  ],
+  ignoredRoutes: [
+    '/api/magick',
+    '/api/magick/budget/set_budget',
+    '/api/magick/budget/get_budget',
+    '/api/magick/user',
+    '/api/magick/user(.*)',
   ],
 })
 

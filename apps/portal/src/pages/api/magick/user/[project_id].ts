@@ -15,7 +15,6 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  console.log('req', req)
   validateBudgetRequest(req, res, 'GET')
   // Validate request query
   const result = QuerySchema.safeParse(req.query)
