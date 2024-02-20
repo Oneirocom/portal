@@ -12,7 +12,10 @@
         "tsConfig": "portal/cloud/packages/db/tsconfig.lib.json",
         "packageJson": "portal/cloud/packages/db/package.json",
         "main": "portal/cloud/packages/db/src/index.ts",
-        "assets": ["portal/cloud/packages/db/*.md"]
+        "assets": [
+          "portal/cloud/packages/db/*.md",
+          "portal/cloud/packages/db/src/lib/prisma/client-portal/**/*"
+        ]
       }
     },
     "lint": {
