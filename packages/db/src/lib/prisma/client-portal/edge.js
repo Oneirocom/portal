@@ -543,7 +543,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/Users/parzival/workspace/oneirocom/magickML/portal/cloud/packages/db/src/lib/prisma/client-portal",
+      "value": "/home/coffee/Desktop/magick/portal/cloud/packages/db/src/lib/prisma/client-portal",
       "fromEnvVar": null
     },
     "config": {
@@ -553,7 +553,7 @@ const config = {
     "binaryTargets": [
       {
         "fromEnvVar": null,
-        "value": "darwin-arm64",
+        "value": "debian-openssl-3.0.x",
         "native": true
       }
     ],
