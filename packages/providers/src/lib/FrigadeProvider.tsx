@@ -1,35 +1,36 @@
-import { FrigadeProvider as FrigadeProviderOG, useUser } from '@frigade/react'
+import {
+  FrigadeProvider as FrigadeProviderOG,
+  useUser as useFrigadeUser,
+} from '@frigade/react'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
-import { useAtomValue } from 'jotai'
-import { anonymousUserIdAtom } from './AnonymousProvider'
-import { useSession } from '@clerk/nextjs'
+import { useUser } from '@clerk/nextjs'
+import { v4 as uuidv4 } from 'uuid'
 
 type Props = {
   children: React.ReactNode
 }
 
 export const FrigadeProvider = ({ children }: Props) => {
-  const { session, isSignedIn } = useSession()
+  const { user, isSignedIn, isLoaded } = useUser()
   const router = useRouter()
-  const anonymousId = useAtomValue(anonymousUserIdAtom)
-  const frigadeUser = useUser()
+  const { userId, setUserId } = useFrigadeUser()
 
-  // Set or reset the user ID based on the authentication status
   useEffect(() => {
-    if (isSignedIn) {
-      frigadeUser.setUserId(session.user.id)
-    } else if (anonymousId) {
-      frigadeUser.setUserId(anonymousId)
-    } else {
-      frigadeUser.setUserId('anonymous')
+    if (!isLoaded) {
+      return
     }
-  }, [isSignedIn, session, anonymousId, frigadeUser])
+    if (isSignedIn) {
+      setUserId(user.id)
+    } else if (!userId) {
+      setUserId(uuidv4())
+    }
+  }, [isSignedIn, isLoaded, user, userId, setUserId])
 
   return (
     <FrigadeProviderOG
       publicApiKey={process.env.NEXT_PUBLIC_FRIGADE_KEY || ''}
-      userId={session?.user?.id ?? (anonymousId || 'anonymous')}
+      userId={isSignedIn ? user.id : undefined}
       config={{
         navigate: (url, target): void => {
           if (target === '_blank') {
@@ -55,6 +56,7 @@ export const FrigadeProvider = ({ children }: Props) => {
         },
       }}
     >
+      <p className="absolute top-0 right-4">{userId}</p>
       {children}
     </FrigadeProviderOG>
   )

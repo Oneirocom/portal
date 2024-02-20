@@ -31,6 +31,7 @@ import { useEffect } from 'react'
 import { ClerkProvider } from '@clerk/nextjs'
 import { clerkAppearance } from '../styles/clerk'
 import dynamic from 'next/dynamic'
+import { FrigadeProvider } from '@magickml/portal-providers'
 
 const PostHogProvider = dynamic(
   () =>
@@ -91,35 +92,37 @@ const App = ({
         <FrigadeProvider>
           <CustomPosthogProvider> */}
       <PostHogProvider>
-        <main
-          className={clsx(
-            montserrat.className,
-            `${monteserratAlternates.variable} font-sans h-screen`
-          )}
-        >
-          <Head>
-            <meta
-              title="Maintenance | MagickML"
-              name="viewport"
-              content="initial-scale=1, width=device-width"
-            />
-          </Head>
-          <NextThemeProvider attribute="class">
-            {process.env.NEXT_PUBLIC_MAINTENANCE_MODE === 'true' ? (
-              <Maintenance mode="cloud" />
-            ) : (
-              getLayout(<Component {...pageProps} />)
+        <FrigadeProvider>
+          <main
+            className={clsx(
+              montserrat.className,
+              `${monteserratAlternates.variable} font-sans h-screen`
             )}
+          >
+            <Head>
+              <meta
+                title="Maintenance | MagickML"
+                name="viewport"
+                content="initial-scale=1, width=device-width"
+              />
+            </Head>
+            <NextThemeProvider attribute="class">
+              {process.env.NEXT_PUBLIC_MAINTENANCE_MODE === 'true' ? (
+                <Maintenance mode="cloud" />
+              ) : (
+                getLayout(<Component {...pageProps} />)
+              )}
 
-            <StyledToaster />
-          </NextThemeProvider>
-        </main>
-        {process.env.NEXT_PUBLIC_DEV_TOOLS === 'true' && (
-          <ReactQueryDevtools initialIsOpen={false} />
-        )}
-        {/* </CustomPosthogProvider>
+              <StyledToaster />
+            </NextThemeProvider>
+          </main>
+          {process.env.NEXT_PUBLIC_DEV_TOOLS === 'true' && (
+            <ReactQueryDevtools initialIsOpen={false} />
+          )}
+          {/* </CustomPosthogProvider>
         </FrigadeProvider>
       </AnonymousUserProvider> */}
+        </FrigadeProvider>
       </PostHogProvider>
     </ClerkProvider>
   )
