@@ -22,7 +22,6 @@ import { Montserrat, Montserrat_Alternates } from 'next/font/google'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { api } from '@magickml/portal-api-client'
 
-// posthog
 import { StyledToaster } from '@magickml/portal-ui'
 
 import clsx from 'clsx'
@@ -31,25 +30,13 @@ import { useEffect } from 'react'
 
 import { ClerkProvider } from '@clerk/nextjs'
 import { clerkAppearance } from '../styles/clerk'
+import dynamic from 'next/dynamic'
 
-// import dynamic from 'next/dynamic'
-// const AnonymousUserProvider = dynamic(
-//   () => import("@magickml/portal-providers"),
-//   {
-//     ssr: false,
-//   }
-// )
-
-// const CustomPosthogProvider = dynamic(
-//   () => import('@magickml/portal-providers'),
-//   {
-//     ssr: false,
-//   }
-// )
-
-// const FrigadeProvider = dynamic(() => import('providers/FrigadeProvider'), {
-//   ssr: false,
-// })
+const PostHogProvider = dynamic(
+  () =>
+    import('@magickml/portal-providers').then(mod => mod.CustomPosthogProvider),
+  { ssr: false }
+)
 
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -103,35 +90,37 @@ const App = ({
       {/* <AnonymousUserProvider>
         <FrigadeProvider>
           <CustomPosthogProvider> */}
-      <main
-        className={clsx(
-          montserrat.className,
-          `${monteserratAlternates.variable} font-sans h-screen`
-        )}
-      >
-        <Head>
-          <meta
-            title="Maintenance | MagickML"
-            name="viewport"
-            content="initial-scale=1, width=device-width"
-          />
-        </Head>
-        <NextThemeProvider attribute="class">
-          {process.env.NEXT_PUBLIC_MAINTENANCE_MODE === 'true' ? (
-            <Maintenance mode="cloud" />
-          ) : (
-            getLayout(<Component {...pageProps} />)
+      <PostHogProvider>
+        <main
+          className={clsx(
+            montserrat.className,
+            `${monteserratAlternates.variable} font-sans h-screen`
           )}
+        >
+          <Head>
+            <meta
+              title="Maintenance | MagickML"
+              name="viewport"
+              content="initial-scale=1, width=device-width"
+            />
+          </Head>
+          <NextThemeProvider attribute="class">
+            {process.env.NEXT_PUBLIC_MAINTENANCE_MODE === 'true' ? (
+              <Maintenance mode="cloud" />
+            ) : (
+              getLayout(<Component {...pageProps} />)
+            )}
 
-          <StyledToaster />
-        </NextThemeProvider>
-      </main>
-      {process.env.NEXT_PUBLIC_DEV_TOOLS === 'true' && (
-        <ReactQueryDevtools initialIsOpen={false} />
-      )}
-      {/* </CustomPosthogProvider>
+            <StyledToaster />
+          </NextThemeProvider>
+        </main>
+        {process.env.NEXT_PUBLIC_DEV_TOOLS === 'true' && (
+          <ReactQueryDevtools initialIsOpen={false} />
+        )}
+        {/* </CustomPosthogProvider>
         </FrigadeProvider>
       </AnonymousUserProvider> */}
+      </PostHogProvider>
     </ClerkProvider>
   )
 }
