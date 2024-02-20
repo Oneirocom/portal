@@ -7,8 +7,8 @@ const RequestSchema = z.object({
   project_name: z.string(),
 })
 
-export default async function (req: NextApiRequest, res: NextApiResponse) {
-    validateBudgetRequest(req, res, 'POST')
+async function handler(req: NextApiRequest, res: NextApiResponse) {
+  validateBudgetRequest(req, res, 'POST')
 
   // Validate request body
   const result = RequestSchema.safeParse(req.body)
@@ -76,3 +76,5 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
     return res.status(500).json({ status: 'error', message: error.message })
   }
 }
+
+export default handler

@@ -11,10 +11,7 @@ const QuerySchema = z.object({
   project_id: z.string(),
 })
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   validateBudgetRequest(req, res, 'GET')
   // Validate request query
   const result = QuerySchema.safeParse(req.query)
@@ -97,3 +94,5 @@ export default async function handler(
     return res.status(500).json({ status: 'error', message: error.message })
   }
 }
+
+export default handler
