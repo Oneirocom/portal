@@ -119,7 +119,6 @@ export const PortalHeader = () => {
                   )}
                   id={`header-link-${item.name}`}
                 >
-                  {/* @ts-ignore */}
                   <item.Iicon
                     className={clsx(
                       'relative w-[32px] h-[32px] overflow-hidden flex-shrink-0 object-cover mx-2 color-transition',

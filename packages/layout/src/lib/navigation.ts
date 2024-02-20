@@ -6,11 +6,19 @@ import {
 } from '@magickml/icons'
 import { Role } from '@magickml/portal-config'
 
+
+interface IconProps {
+  className?: string;
+  width?: number;
+  height?: number;
+}
+
 export type Route = {
   name: string
   href: string
   icon: string
   enabled: boolean | string
+  Iicon: React.FC<IconProps>
 }
 
 // Role-based route configuration
