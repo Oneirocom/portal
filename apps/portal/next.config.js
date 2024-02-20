@@ -1,5 +1,7 @@
 //@ts-check
 
+const { PrismaPlugin } = require('@prisma/nextjs-monorepo-workaround-plugin')
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { composePlugins, withNx } = require('@nx/next')
 const withTM = require('next-transpile-modules')([
@@ -35,7 +37,11 @@ const nextConfig = {
     ],
   },
   reactStrictMode: false,
-  webpack: config => {
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      config.plugins = [...config.plugins, new PrismaPlugin()]
+    }
+
     config.module.rules.push({
       test: /\.svg$/i,
       issuer: /\.[jt]sx?$/,
