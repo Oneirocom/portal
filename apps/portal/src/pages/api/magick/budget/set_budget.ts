@@ -1,33 +1,18 @@
-// Next.js API endpoint for setting budget information for a project
 import { NextApiRequest, NextApiResponse } from 'next'
-import { z } from 'zod'
 import { prisma } from '@magickml/portal-db'
 import { validateBudgetRequest } from '@magickml/portal-utils-server'
 
-// Zod schema for request body
-const RequestSchema = z.object({
-  project_name: z.string(),
-  user_dict: z.object({
-    total_budget: z.number(),
-    duration: z.number(),
-    created_at: z.number(),
-    last_updated_at: z.number(),
-    current_cost: z.number().optional(),
-    model_cost: z.record(z.number()).optional(),
-  }),
-})
+const cl = (message: any) => {
+  if (process.env.BUDGET_LOGGING === 'true') {
+    console.log(message)
+  }
+}
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
-  // Validate request method
   validateBudgetRequest(req, res, 'POST')
 
-  // Validate request body
-  const result = RequestSchema.safeParse(req.body)
-  if (!result.success) {
-    return res.status(400).json({ status: 'error', message: 'Invalid request' })
-  }
-
-  const { project_name, user_dict } = result.data
+  const { project_name, user_dict } = req.body
+  cl('Received request:' + JSON.stringify(req.body))
 
   try {
     const project = await prisma.project.findFirst({
@@ -37,7 +22,10 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     })
 
     if (!project) {
-      throw new Error('Project not found')
+      cl('Project not found:' + project_name)
+      return res
+        .status(404)
+        .json({ status: 'error', message: 'Project not found' })
     }
 
     const wallet = await prisma.budget.findUnique({
@@ -47,15 +35,20 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     })
 
     if (!wallet) {
-      throw new Error('Wallet not found')
+      cl('Wallet not found for user:' + project.owner)
+      return res
+        .status(404)
+        .json({ status: 'error', message: 'Wallet not found' })
     }
 
-    const currentCost = user_dict.current_cost || 0
-    const modelCost = user_dict.model_cost || {}
+    cl('Found wallet:' + JSON.stringify(wallet))
+
+    const currentCost = user_dict[project_name]?.current_cost || 0
+
     const markUp = 1.2
     const newCharge = currentCost * markUp
+    cl('Calculating new charge:' + newCharge)
 
-    // Apply promotions and update their remaining amounts
     let remainingCharge = newCharge
     const promotions = await prisma.promotion.findMany({
       where: {
@@ -65,49 +58,62 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         },
         isUsed: false,
       },
+      orderBy: {
+        validUntil: 'asc',
+      },
     })
+
+    cl('Found promotions:' + JSON.stringify(promotions))
 
     for (const promo of promotions) {
       if (remainingCharge <= 0) break
-      let promoAmount = promo.amount.toNumber()
 
+      const promoAmount = parseFloat(promo.amount.toString())
       if (promoAmount <= remainingCharge) {
-        // Full promotion amount is used
         remainingCharge -= promoAmount
         await prisma.promotion.update({
           where: { id: promo.id },
-          data: { isUsed: true },
+          data: { isUsed: true, amount: 0 },
         })
+        cl(
+          `Fully used promotion ${promo.id}, remaining charge:` +
+            remainingCharge
+        )
       } else {
-        // Only part of the promotion is used
-        promoAmount -= remainingCharge
+        const updatedPromoAmount = promoAmount - remainingCharge
         remainingCharge = 0
         await prisma.promotion.update({
           where: { id: promo.id },
-          data: { amount: promoAmount },
+          data: { amount: updatedPromoAmount },
         })
+        cl(
+          `Partially used promotion ${promo.id}, remaining promotion amount:` +
+            updatedPromoAmount
+        )
       }
     }
 
-    const effectiveCharge = Math.max(0, remainingCharge)
-    const newUserBalance = wallet.balance.toNumber() - effectiveCharge
-
-    // Update the budget
-    await prisma.budget.update({
-      where: {
-        userId: project.owner,
-      },
-      data: {
-        balance: newUserBalance,
-        currentCost: currentCost,
-        modelCost: modelCost,
-      },
-    })
+    if (remainingCharge > 0) {
+      const newUserBalance =
+        parseFloat(wallet.balance.toString()) - remainingCharge
+      await prisma.budget.update({
+        where: {
+          userId: project.owner,
+        },
+        data: {
+          balance: newUserBalance,
+        },
+      })
+      cl('Updated wallet with new balance:' + newUserBalance)
+    } else {
+      cl('No need to update wallet balance, promotions covered the charge')
+    }
 
     return res
       .status(200)
-      .json({ status: 'success', message: 'Budget updated successfully' })
+      .json({ status: 'success', message: 'Budget processed successfully' })
   } catch (error: any) {
+    console.error('Error processing request:', error.message)
     return res.status(500).json({ status: 'error', message: error.message })
   }
 }
