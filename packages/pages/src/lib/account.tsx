@@ -18,6 +18,7 @@ import { api } from '@magickml/portal-api-client'
 import { capitalizeFirst } from '@magickml/portal-utils-shared'
 import { useUser } from '@clerk/nextjs'
 import axios from 'axios'
+import { SubscriptionNames } from 'servicesShared'
 
 const amountSchema = z.object({
   amount: z
@@ -32,7 +33,7 @@ export const AccountPage = () => {
     | string
     | undefined
 
-  const isWizard = subscription?.toUpperCase() === 'WIZARD'
+  const isWizard = subscription?.toUpperCase() === SubscriptionNames.Wizard
 
   const router = useRouter()
   const [inputValue, setInputValue] = useState<string>('5.00')
@@ -204,9 +205,9 @@ export const AccountPage = () => {
             </div>
             <Progress value={getProgressValue()} />
             <p className="text-center text-ds-secondary-p dark:text-ds-secondary-m text-base font-normal">
-              {`${Number(budget?.promotional_balance || 0) * 100 || 0} MP / ${
-                isWizard ? '1000' : '200'
-              } MP`}
+              {`${
+                Number(budget?.promotional_balance.toFixed(0) || 0) * 100
+              } MP / ${isWizard ? '1000' : '200 Free Trial'} MP`}
             </p>
           </Card>
 

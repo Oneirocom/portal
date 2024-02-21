@@ -21,6 +21,7 @@ import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import clsx from 'clsx'
 import { useClerk, useUser } from '@clerk/nextjs'
+import { MP } from '../MP'
 
 export const UserMenu = () => {
   const [popoverOpen, setPopoverOpen] = useState(false)
@@ -202,14 +203,14 @@ export const UserMenu = () => {
         {isSignedIn && (
           <div className="flex flex-col items-center justify-center w-full">
             <UserAvatar
-              className="w-48 h-48"
+              className="w-32 h-32"
               imagePath={user.imageUrl}
               username={user.username}
             />
             <h2 className="pt-4 text-base font-bold text-center">
               {user.username}
             </h2>
-            {/* <MP /> */}
+            <MP />
           </div>
         )}
 
