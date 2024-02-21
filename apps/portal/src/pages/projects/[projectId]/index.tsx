@@ -21,47 +21,57 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
     }
   }
 
-  // check if project exists
-  const project = await prisma.project.findUnique({
-    where: {
-      id: projectId as string,
-    },
-    select: {
-      id: true,
-    },
-  })
+  try {
+    // check if project exists
+    const project = await prisma.project.findUnique({
+      where: {
+        id: projectId as string,
+      },
+      select: {
+        id: true,
+      },
+    })
 
-  if (!project) {
+    if (!project) {
+      return {
+        redirect: {
+          destination: '/projects',
+          permanent: false,
+        },
+      }
+    }
+
+    const token = await prepareToken({
+      user: auth,
+      projectId: projectId as string,
+    })
+
+    // update the projects last active date
+    await prisma.project.update({
+      where: {
+        id: projectId as string,
+      },
+      data: {
+        lastActive: new Date(),
+      },
+    })
+
+    return {
+      props: {
+        token,
+        projectId,
+        userId: auth.userId,
+        email: '',
+        apiUrl,
+      },
+    }
+  } catch (error) {
+    console.error('Error in getServerSideProps:', error)
     return {
       redirect: {
-        destination: '/projects',
+        destination: '/error',
         permanent: false,
       },
     }
-  }
-
-  const token = await prepareToken({
-    user: auth,
-    projectId: projectId as string,
-  })
-
-  // update the projects last active date
-  await prisma.project.update({
-    where: {
-      id: projectId as string,
-    },
-    data: {
-      lastActive: new Date(),
-    },
-  })
-
-  return {
-    props: {
-      token,
-      projectId,
-      userId: auth.userId,
-      email: '',
-      apiUrl,
-    },
   }
 }
