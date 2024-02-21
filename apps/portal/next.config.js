@@ -17,7 +17,7 @@ const nextConfig = {
     svgr: true,
   },
   experimental: {
-    instrumentationHook: true,
+    instrumentationHook: false,
   },
   images: {
     remotePatterns: [
