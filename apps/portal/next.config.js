@@ -16,6 +16,9 @@ const nextConfig = {
   nx: {
     svgr: true,
   },
+  experimental: {
+    instrumentationHook: true,
+  },
   images: {
     remotePatterns: [
       { protocol: 'https', hostname: 'replicate.delivery' },
