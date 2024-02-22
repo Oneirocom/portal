@@ -12,7 +12,6 @@ import {
   PublicEventTypes,
   PrivateEventTypes,
 } from '@magickml/portal-utils-shared'
-import { v4 as uuidv4 } from 'uuid'
 import { makeClient } from 'ideClient'
 import { createFromTemplate } from '@magickml/portal-templates'
 
