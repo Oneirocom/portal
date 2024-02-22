@@ -10,7 +10,9 @@ type Props = {
 }
 
 export const CustomPosthogProvider = ({ children }: Props) => {
+  // get sessionId from query params
   const router = useRouter()
+  const { sessionId: webflowSessionId } = router.query
   const { isSignedIn, session } = useSession()
   const [showBanner, setShowBanner] = useState(false)
 
@@ -28,6 +30,13 @@ export const CustomPosthogProvider = ({ children }: Props) => {
     }
   }, [])
 
+  useEffect(() => {
+    if (webflowSessionId) {
+      // savw webflow id to localstorage
+      posthog.alias(webflowSessionId as string)
+    }
+  }, [webflowSessionId])
+
   // Track page views with PostHog
   useEffect(() => {
     const handleRouteChange = () => posthog.capture('$pageview')
@@ -40,8 +49,8 @@ export const CustomPosthogProvider = ({ children }: Props) => {
 
   // Set identity
   useEffect(() => {
-    if (isSignedIn) {
-      posthog.identify(session.user.id || undefined)
+    if (isSignedIn && session?.user?.id) {
+      posthog.identify(session.user.id)
     } else {
       posthog.reset()
     }
