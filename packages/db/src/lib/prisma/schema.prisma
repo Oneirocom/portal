@@ -33,7 +33,8 @@ model Template {
     name        String
     description String?
     image       String?
-    graph       Json
+    graph       Json?
+    spells      String[]  @default([])
     createdAt   DateTime? @default(now())
     deletedAt   DateTime?
     updatedAt   DateTime? @updatedAt

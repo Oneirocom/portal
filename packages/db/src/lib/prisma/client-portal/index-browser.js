@@ -125,6 +125,7 @@ exports.Prisma.TemplateScalarFieldEnum = {
   description: 'description',
   image: 'image',
   graph: 'graph',
+  spells: 'spells',
   createdAt: 'createdAt',
   deletedAt: 'deletedAt',
   updatedAt: 'updatedAt'
@@ -359,10 +360,6 @@ exports.Prisma.SortOrder = {
   desc: 'desc'
 };
 
-exports.Prisma.JsonNullValueInput = {
-  JsonNull: Prisma.JsonNull
-};
-
 exports.Prisma.NullableJsonNullValueInput = {
   DbNull: Prisma.DbNull,
   JsonNull: Prisma.JsonNull
@@ -396,7 +393,8 @@ exports.Prisma.TemplateOrderByRelevanceFieldEnum = {
   id: 'id',
   name: 'name',
   description: 'description',
-  image: 'image'
+  image: 'image',
+  spells: 'spells'
 };
 
 exports.Prisma.PublicAgentOrderByRelevanceFieldEnum = {

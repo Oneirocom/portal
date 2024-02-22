@@ -12,8 +12,8 @@ import {
   PublicEventTypes,
   PrivateEventTypes,
 } from '@magickml/portal-utils-shared'
-import { v4 as uuidv4 } from 'uuid'
 import { makeClient } from 'ideClient'
+import { createFromTemplate } from '@magickml/portal-templates'
 
 const ideServerUrl = process.env.IDE_SERVER_URL || 'http://localhost:3030'
 
@@ -69,56 +69,15 @@ export const agentsRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      const { name } = input
-
-      // note here that we may want to pass the template to the project create service
-      // this will run through the template and create all assets etc.
-      // This could be a lot if there are a lot of assets in the template.
-
-      // create the main project in the portal DB
-      const project = await prisma.project.create({
-        data: {
-          name,
-          description: `created from template ${input.templateId}`,
-          owner: ctx.auth.userId,
-          updatedAt: new Date().toISOString(),
-          createdAt: new Date().toISOString(),
-        },
+      const { name, templateId } = input
+      const agent = await createFromTemplate({
+        projectName: name,
+        templateId,
+        agentName: name,
+        owner: ctx.auth.userId,
       })
 
-      // initialize the project in the IDE for now.
-      await app.service('projects').create({
-        name: input.name,
-        projectId: project.id,
-      })
-
-      // find the template
-      const template = await prisma.template.findUnique({
-        where: {
-          id: input.templateId,
-        },
-        select: {
-          graph: true,
-        },
-      })
-
-      if (!template) {
-        throw new Error('Template not found')
-      }
-
-      // make the spell
-      const spellInput = {
-        id: uuidv4(),
-        projectId: project.id,
-        name: input.name + ' spell',
-        graph: template.graph,
-        type: 'behave',
-      }
-      console.log('MAKING SPELL', spellInput)
-      // const agent = await app.service('agents').patch(agentId, updateData)
-      const spell = await app.service('spells').create(spellInput)
-      console.log('SPELL MADE', spell)
-      return { spell, project: project.id }
+      return agent
     }),
 
   // delete a single agent
