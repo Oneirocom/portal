@@ -1,5 +1,9 @@
 import { type Prisma, prisma } from '@magickml/portal-db'
-import { blankTemplate, babyAGITemplate } from './templates'
+import {
+  blankTemplate,
+  babyAGITemplate,
+  slackDiscordTemplate,
+} from './templates'
 import { makeClient } from 'ideClient'
 import { ideServerUrl } from './constants'
 import { v4 as uuidv4 } from 'uuid'
@@ -9,6 +13,7 @@ const app = makeClient(ideServerUrl)
 export const baseTemplates: Prisma.TemplateCreateInput[] = [
   blankTemplate,
   babyAGITemplate,
+  slackDiscordTemplate,
 ]
 
 export const createBaseTemplates = async () => {
