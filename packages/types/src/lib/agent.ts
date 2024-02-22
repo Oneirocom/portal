@@ -49,6 +49,8 @@ export type Agent = {
   isPublic?: boolean
   publicAgentId?: string
   remixable?: boolean
+  isDraft?: boolean
+  draftAgentId?: string
 }
 
 export type AgentMessages = {

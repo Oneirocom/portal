@@ -111,24 +111,50 @@ export const agentsRouter = createTRPCRouter({
         image: z.string().optional().nullable(),
         data: z.any().optional().nullable(),
         agentId: z.string(),
+        updateDraft: z.boolean().optional(),
       })
     )
     .mutation(async ({ input, ctx }) => {
-      const a = await prisma.agents.findUnique({
-        where: {
-          id: input.agentId,
-        },
-        select: {
-          projectId: true,
-        },
+      const agent = await prisma.agents.findUnique({
+        where: { id: input.agentId },
       })
 
-      if (!a?.projectId) {
-        throw new Error('Agent not found')
+      const performUpdate = async (agentId: string) => {
+        if (input.image) {
+          const response = await app
+            .service('agentImage')
+            .create({ agentId, image: input.image })
+          if (response.ETag && response.VersionId) {
+            input.image = `/agents/${agentId}/avatar.jpg?versionId=${response.VersionId}`
+          } else {
+            throw new Error('Image upload failed!')
+          }
+        }
+
+        const updateData = {
+          name: input.name,
+          description: input.description,
+          publicVariables: input.publicVariables,
+          variables: input.variables,
+          image: input.image,
+          data: input.data,
+        }
+
+        await app.service('agents').patch(agentId, updateData)
+
+        trackServerEvent(
+          PrivateEventTypes.AGENT_PRIVATE_UPDATE,
+          ctx.auth.user?.emailAddresses[0].emailAddress ?? '',
+          agentId
+        )
+      }
+
+      if (!agent?.projectId) {
+        throw new Error('Agent project not found')
       }
 
       const access = await hasAccess({
-        projectId: a.projectId,
+        projectId: agent.projectId,
         user: ctx.auth,
       })
 
@@ -136,45 +162,17 @@ export const agentsRouter = createTRPCRouter({
         throw new Error('No access to the specified workspace')
       }
 
-      const image = input.image
-      const agentId = input.agentId
+      // // Update the draft agent if updateDraft is true
+      // if (input.updateDraft && agent?.draftAqentId) {
+      //   await performUpdate(agent.draftAgentId)
+      // }
 
-      // Handle the base64 image data
-      if (image) {
-        const response = await app
-          .service('agentImage')
-          .create({ agentId, image })
+      // Always update the original agent
+      await performUpdate(input.agentId)
 
-        if (response.ETag && response.VersionId) {
-          input.image = `/agents/${agentId}/avatar.jpg?versionId=${response.VersionId}`
-        } else throw new Error('Image upload failed!')
-      }
-
-      // Validate fields so we don't accidentally update something we shouldn't
-      const fields: (keyof typeof input)[] = [
-        'name',
-        'data',
-        'variables',
-        'publicVariables',
-        'image',
-      ]
-
-      const updateData = fields.reduce((acc, field) => {
-        if (input[field]) {
-          acc[field] = input[field]
-        }
-        return acc
-      }, {} as Partial<typeof input>)
-
-      const agent = await app.service('agents').patch(agentId, updateData)
-
-      trackServerEvent(
-        PrivateEventTypes.AGENT_PRIVATE_UPDATE,
-        ctx.auth.user?.emailAddresses[0].emailAddress ?? '',
-        input.agentId
-      )
-
-      return agent
+      // Assuming performUpdate does not return the updated agent,
+      // you may need to fetch the updated agent to return it
+      return await app.service('agents').get(input.agentId)
     }),
 
   makePublic: protectedProcedure

@@ -1,327 +1,329 @@
 generator client {
-    provider        = "prisma-client-js"
-    output          = "./client-portal"
-    previewFeatures = ["fullTextSearch", "multiSchema", "postgresqlExtensions", "views"]
-    name            = "prisma"
+  provider        = "prisma-client-js"
+  output          = "./client-portal"
+  previewFeatures = ["fullTextSearch", "multiSchema", "postgresqlExtensions", "views"]
+  name            = "prisma"
 }
 
 datasource db {
-    provider          = "postgresql"
-    url               = env("PORTAL_DATABASE_URL")
-    shadowDatabaseUrl = env("PORTAL_SHADOW_DATABASE_URL")
-    extensions        = [uuid_ossp(map: "uuid-ossp"), vector]
-    schemas           = ["portal"]
+  provider          = "postgresql"
+  url               = env("PORTAL_DATABASE_URL")
+  shadowDatabaseUrl = env("PORTAL_SHADOW_DATABASE_URL")
+  extensions        = [uuid_ossp(map: "uuid-ossp"), vector]
+  schemas           = ["portal"]
 }
 
 model Project {
-    id          String    @id @default(cuid())
-    owner       String
-    name        String
-    description String?
-    createdAt   DateTime? @default(now())
-    deletedAt   DateTime?
-    updatedAt   DateTime? @updatedAt
-    image       String?
-    lastActive  DateTime?
+  id          String    @id @default(cuid())
+  owner       String
+  name        String
+  description String?
+  createdAt   DateTime? @default(now())
+  deletedAt   DateTime?
+  updatedAt   DateTime? @updatedAt
+  image       String?
+  lastActive  DateTime?
 
-    @@map("projects")
-    @@schema("portal")
+  @@map("projects")
+  @@schema("portal")
 }
 
 model Template {
-    id          String    @id @default(cuid())
-    name        String
-    description String?
-    image       String?
-    graph       Json?
-    spells      String[]  @default([])
-    createdAt   DateTime? @default(now())
-    deletedAt   DateTime?
-    updatedAt   DateTime? @updatedAt
+  id          String    @id @default(cuid())
+  name        String
+  description String?
+  image       String?
+  graph       Json?
+  spells      String[]  @default([])
+  createdAt   DateTime? @default(now())
+  deletedAt   DateTime?
+  updatedAt   DateTime? @updatedAt
 
-    @@map("templates")
-    @@schema("portal")
+  @@map("templates")
+  @@schema("portal")
 }
 
 model PublicAgent {
-    id          String     @id @default(cuid())
-    agentId     String     @unique
-    userId      String
-    madePublic  DateTime   @default(now())
-    deletedAt   DateTime?
-    description String     @default("")
-    remixable   Boolean    @default(false)
-    isTemplate  Boolean    @default(false)
-    featured    Boolean    @default(false)
-    comments    Comments[]
-    likes       Likes[]
-    Reports     Reports[]
+  id          String     @id @default(cuid())
+  agentId     String     @unique
+  userId      String
+  madePublic  DateTime   @default(now())
+  deletedAt   DateTime?
+  description String     @default("")
+  remixable   Boolean    @default(false)
+  isTemplate  Boolean    @default(false)
+  featured    Boolean    @default(false)
+  comments    Comments[]
+  likes       Likes[]
+  Reports     Reports[]
 
-    @@map("publicAgents")
-    @@schema("portal")
+  @@map("publicAgents")
+  @@schema("portal")
 }
 
 model Reports {
-    id            String      @id @default(cuid())
-    publicAgentId String
-    createdAt     DateTime    @default(now())
-    message       String
-    publicAgent   PublicAgent @relation(fields: [publicAgentId], references: [id], onDelete: Cascade)
+  id            String      @id @default(cuid())
+  publicAgentId String
+  createdAt     DateTime    @default(now())
+  message       String
+  publicAgent   PublicAgent @relation(fields: [publicAgentId], references: [id], onDelete: Cascade)
 
-    @@map("reports")
-    @@schema("portal")
+  @@map("reports")
+  @@schema("portal")
 }
 
 model Likes {
-    id            String      @id @default(cuid())
-    userId        String
-    publicAgentId String
-    createdAt     DateTime    @default(now())
-    updatedAt     DateTime?   @updatedAt
-    publicAgent   PublicAgent @relation(fields: [publicAgentId], references: [id], onDelete: Cascade)
+  id            String      @id @default(cuid())
+  userId        String
+  publicAgentId String
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime?   @updatedAt
+  publicAgent   PublicAgent @relation(fields: [publicAgentId], references: [id], onDelete: Cascade)
 
-    @@unique([userId, publicAgentId])
-    @@map("likes")
-    @@schema("portal")
+  @@unique([userId, publicAgentId])
+  @@map("likes")
+  @@schema("portal")
 }
 
 model Comments {
-    id            String      @id @default(cuid())
-    userId        String
-    publicAgentId String
-    content       String
-    createdAt     DateTime    @default(now())
-    updatedAt     DateTime?   @updatedAt
-    deletedAt     DateTime?
-    publicAgent   PublicAgent @relation(fields: [publicAgentId], references: [id], onDelete: Cascade)
+  id            String      @id @default(cuid())
+  userId        String
+  publicAgentId String
+  content       String
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime?   @updatedAt
+  deletedAt     DateTime?
+  publicAgent   PublicAgent @relation(fields: [publicAgentId], references: [id], onDelete: Cascade)
 
-    @@map("comments")
-    @@schema("portal")
+  @@map("comments")
+  @@schema("portal")
 }
 
 model AnonymousUser {
-    id           String    @id @default(cuid())
-    createdAt    DateTime  @default(now())
-    anonymousId  String    @unique
-    fingerprint  String
-    lastAccessed DateTime?
+  id           String    @id @default(cuid())
+  createdAt    DateTime  @default(now())
+  anonymousId  String    @unique
+  fingerprint  String
+  lastAccessed DateTime?
 
-    @@schema("portal")
+  @@schema("portal")
 }
 
 model Budget {
-    id          String    @id @default(cuid())
-    userId      String    @unique
-    balance     Decimal   @default(0)
-    currentCost Decimal?  @default(0)
-    modelCost   Json?     @default("{}")
-    createdAt   DateTime  @default(now())
-    updatedAt   DateTime? @updatedAt
+  id          String    @id @default(cuid())
+  userId      String    @unique
+  balance     Decimal   @default(0)
+  currentCost Decimal?  @default(0)
+  modelCost   Json?     @default("{}")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime? @updatedAt
 
-    @@map("budget")
-    @@schema("portal")
+  @@map("budget")
+  @@schema("portal")
 }
 
 model Promotion {
-    id          String        @id @default(cuid())
-    name        String
-    userId      String
-    type        PromotionType
-    amount      Decimal
-    description String?
-    validFrom   DateTime
-    validUntil  DateTime
-    isUsed      Boolean       @default(false)
-    createdAt   DateTime      @default(now())
-    updatedAt   DateTime?     @updatedAt
+  id          String        @id @default(cuid())
+  name        String
+  userId      String
+  type        PromotionType
+  amount      Decimal
+  description String?
+  validFrom   DateTime
+  validUntil  DateTime
+  isUsed      Boolean       @default(false)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime?     @updatedAt
 
-    @@map("promotions")
-    @@schema("portal")
+  @@map("promotions")
+  @@schema("portal")
 }
 
 view agents {
-    id                    String    @unique @db.Uuid
-    rootSpell             Json?
-    publicVariables       String?
-    secrets               String?
-    name                  String?
-    enabled               Boolean?
-    updatedAt             String?
-    pingedAt              String?
-    projectId             String?
-    data                  Json?
-    runState              String?
-    image                 String?
-    rootSpellId           String?   @db.Uuid
-    default               Boolean?
-    createdAt             DateTime? @db.Timestamptz(6)
-    currentSpellReleaseId String?   @db.Uuid
-    embedModel            String?   @db.VarChar(255)
-    version               String?   @db.VarChar(255)
-    embeddingProvider     String?   @db.VarChar(255)
-    embeddingModel        String?   @db.VarChar(255)
-    publicAgentId         String?
-    description           String?
-    remixable             Boolean?
-    featured              Boolean?
-    isTemplate            Boolean?
-    isPublic              Boolean?
-    creatorId             String?
-    creatorName           String?
-    creatorImage          String?
-    likesCount            Int?
-    commentsCount         BigInt?
+  id                    String    @unique @db.Uuid
+  rootSpell             Json?
+  publicVariables       String?
+  secrets               String?
+  name                  String?
+  enabled               Boolean?
+  updatedAt             String?
+  pingedAt              String?
+  projectId             String?
+  data                  Json?
+  runState              String?
+  image                 String?
+  rootSpellId           String?   @db.Uuid
+  default               Boolean?
+  createdAt             DateTime? @db.Timestamptz(6)
+  currentSpellReleaseId String?   @db.Uuid
+  embedModel            String?   @db.VarChar(255)
+  version               String?   @db.VarChar(255)
+  embeddingProvider     String?   @db.VarChar(255)
+  embeddingModel        String?   @db.VarChar(255)
+  publicAgentId         String?
+  description           String?
+  remixable             Boolean?
+  featured              Boolean?
+  isTemplate            Boolean?
+  isPublic              Boolean?
+  creatorId             String?
+  creatorName           String?
+  creatorImage          String?
+  likesCount            Int?
+  commentsCount         BigInt?
+  isDraft               Boolean?
+  draftAgentId          String?
 
-    @@schema("portal")
+  @@schema("portal")
 }
 
 view spells {
-    id             String  @unique @db.Uuid
-    name           String?
-    projectId      String?
-    graph          Json?
-    createdAt      String?
-    updatedAt      String?
-    type           String? @db.VarChar(255)
-    spellReleaseId String? @db.Uuid
+  id             String  @unique @db.Uuid
+  name           String?
+  projectId      String?
+  graph          Json?
+  createdAt      String?
+  updatedAt      String?
+  type           String? @db.VarChar(255)
+  spellReleaseId String? @db.Uuid
 
-    @@schema("portal")
+  @@schema("portal")
 }
 
 view documents {
-    id        String  @unique @db.Uuid
-    type      String?
-    projectId String?
-    date      String?
-    metadata  Json?
+  id        String  @unique @db.Uuid
+  type      String?
+  projectId String?
+  date      String?
+  metadata  Json?
 
-    @@schema("portal")
+  @@schema("portal")
 }
 
 view customers {
-    id                    String    @id @unique
-    object                String?
-    address               Json?
-    description           String?
-    email                 String?
-    metadata              Json?
-    name                  String?
-    phone                 String?
-    shipping              Json?
-    balance               Int?
-    created               Int?
-    currency              String?
-    default_source        String?
-    delinquent            Boolean?
-    discount              Json?
-    invoice_prefix        String?
-    invoice_settings      Json?
-    livemode              Boolean?
-    next_invoice_sequence Int?
-    preferred_locales     Json?
-    tax_exempt            String?
-    updated_at            DateTime? @db.Timestamptz(6)
-    deleted               Boolean?
+  id                    String    @id @unique
+  object                String?
+  address               Json?
+  description           String?
+  email                 String?
+  metadata              Json?
+  name                  String?
+  phone                 String?
+  shipping              Json?
+  balance               Int?
+  created               Int?
+  currency              String?
+  default_source        String?
+  delinquent            Boolean?
+  discount              Json?
+  invoice_prefix        String?
+  invoice_settings      Json?
+  livemode              Boolean?
+  next_invoice_sequence Int?
+  preferred_locales     Json?
+  tax_exempt            String?
+  updated_at            DateTime? @db.Timestamptz(6)
+  deleted               Boolean?
 
-    @@schema("portal")
+  @@schema("portal")
 }
 
 view subscriptions {
-    id                                String                              @id @unique
-    object                            String?
-    cancel_at_period_end              Boolean?
-    current_period_end                Int?
-    current_period_start              Int?
-    default_payment_method            String?
-    items                             Json?
-    metadata                          Json?
-    pending_setup_intent              String?
-    pending_update                    Json?
-    status                            Unsupported("subscription_status")?
-    application_fee_percent           Float?
-    billing_cycle_anchor              Int?
-    billing_thresholds                Json?
-    cancel_at                         Int?
-    canceled_at                       Int?
-    collection_method                 String?
-    created                           Int?
-    days_until_due                    Int?
-    default_source                    String?
-    default_tax_rates                 Json?
-    discount                          Json?
-    ended_at                          Int?
-    livemode                          Boolean?
-    next_pending_invoice_item_invoice Int?
-    pause_collection                  Json?
-    pending_invoice_item_interval     Json?
-    start_date                        Int?
-    transfer_data                     Json?
-    trial_end                         Json?
-    trial_start                       Json?
-    schedule                          String?
-    customer                          String?
-    latest_invoice                    String?
-    plan                              String?
-    updated_at                        DateTime?                           @db.Timestamptz(6)
+  id                                String                              @id @unique
+  object                            String?
+  cancel_at_period_end              Boolean?
+  current_period_end                Int?
+  current_period_start              Int?
+  default_payment_method            String?
+  items                             Json?
+  metadata                          Json?
+  pending_setup_intent              String?
+  pending_update                    Json?
+  status                            Unsupported("subscription_status")?
+  application_fee_percent           Float?
+  billing_cycle_anchor              Int?
+  billing_thresholds                Json?
+  cancel_at                         Int?
+  canceled_at                       Int?
+  collection_method                 String?
+  created                           Int?
+  days_until_due                    Int?
+  default_source                    String?
+  default_tax_rates                 Json?
+  discount                          Json?
+  ended_at                          Int?
+  livemode                          Boolean?
+  next_pending_invoice_item_invoice Int?
+  pause_collection                  Json?
+  pending_invoice_item_interval     Json?
+  start_date                        Int?
+  transfer_data                     Json?
+  trial_end                         Json?
+  trial_start                       Json?
+  schedule                          String?
+  customer                          String?
+  latest_invoice                    String?
+  plan                              String?
+  updated_at                        DateTime?                           @db.Timestamptz(6)
 
-    @@schema("portal")
+  @@schema("portal")
 }
 
 view products {
-    id                   String    @id @unique
-    object               String?
-    active               Boolean?
-    description          String?
-    metadata             Json?
-    name                 String?
-    created              Int?
-    images               Json?
-    livemode             Boolean?
-    package_dimensions   Json?
-    shippable            Boolean?
-    statement_descriptor String?
-    unit_label           String?
-    updated              Int?
-    url                  String?
-    updated_at           DateTime? @db.Timestamptz(6)
+  id                   String    @id @unique
+  object               String?
+  active               Boolean?
+  description          String?
+  metadata             Json?
+  name                 String?
+  created              Int?
+  images               Json?
+  livemode             Boolean?
+  package_dimensions   Json?
+  shippable            Boolean?
+  statement_descriptor String?
+  unit_label           String?
+  updated              Int?
+  url                  String?
+  updated_at           DateTime? @db.Timestamptz(6)
 
-    @@schema("portal")
+  @@schema("portal")
 }
 
 view prices {
-    id                  String                        @id @unique
-    object              String?
-    active              Boolean?
-    currency            String?
-    metadata            Json?
-    nickname            String?
-    recurring           Json?
-    type                Unsupported("pricing_type")?
-    unit_amount         Int?
-    billing_scheme      String?
-    created             Int?
-    livemode            Boolean?
-    lookup_key          String?
-    tiers_mode          Unsupported("pricing_tiers")?
-    transform_quantity  Json?
-    unit_amount_decimal String?
-    product             String?
-    updated_at          DateTime?                     @db.Timestamptz(6)
+  id                  String                        @id @unique
+  object              String?
+  active              Boolean?
+  currency            String?
+  metadata            Json?
+  nickname            String?
+  recurring           Json?
+  type                Unsupported("pricing_type")?
+  unit_amount         Int?
+  billing_scheme      String?
+  created             Int?
+  livemode            Boolean?
+  lookup_key          String?
+  tiers_mode          Unsupported("pricing_tiers")?
+  transform_quantity  Json?
+  unit_amount_decimal String?
+  product             String?
+  updated_at          DateTime?                     @db.Timestamptz(6)
 
-    @@schema("portal")
+  @@schema("portal")
 }
 
 enum PromotionType {
-    INTRO
-    ADMIN
+  INTRO
+  ADMIN
 
-    @@schema("portal")
+  @@schema("portal")
 }
 
 enum SubscriptionType {
-    FREE
-    STANDARD
-    PREMIUM
+  FREE
+  STANDARD
+  PREMIUM
 
-    @@schema("portal")
+  @@schema("portal")
 }
