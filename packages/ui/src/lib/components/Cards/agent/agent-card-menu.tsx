@@ -15,7 +15,7 @@ import {
   Label,
   Checkbox,
   Textarea,
-  MagickDialog
+  MagickDialog,
 } from '@magickml/client-ui'
 
 import { convertFileToBase64 } from '@magickml/portal-utils-shared'
@@ -72,9 +72,11 @@ export const AgentCardMenu: React.FunctionComponent<AgentCardMenuProps> = ({
       toast.error('Please enter a new name for the agent.')
       return
     }
+    //TODO: update draft agent name as well with project id
     await updateAgent({
       agentId,
       name: renameValue,
+      updateDraft: true,
     })
   }
 
@@ -220,6 +222,7 @@ export const AgentCardMenu: React.FunctionComponent<AgentCardMenuProps> = ({
     await updateAgent({
       image: base64,
       agentId: agentId ?? '',
+      updateDraft: true,
     })
       .then(data => {
         setImageFile(null)
