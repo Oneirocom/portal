@@ -13,8 +13,8 @@ import {
 import { stripeService } from '@magickml/portal-billing'
 import { Roles } from '@magickml/portal-config'
 import { PortalSubscriptions } from '@magickml/portal-utils-shared'
-import { prisma as prismaPortal } from '@magickml/portal-db'
-import { prismaCore as prismaServer } from '@magickml/server-db'
+import { prismaPortal } from '@magickml/portal-db'
+import { prismaCore } from '@magickml/server-db'
 import { makeClient } from 'ideClient'
 
 const ideServerUrl = process.env.IDE_SERVER_URL || 'http://localhost:3030'
@@ -151,7 +151,7 @@ export class ClerkEventService {
       // agent deletion should cascade to all related data
       if (projects.length > 0) {
         for (const project of projects) {
-          const agents = await prismaServer.agents.findMany({
+          const agents = await prismaCore.agents.findMany({
             where: {
               projectId: project.id,
             },
