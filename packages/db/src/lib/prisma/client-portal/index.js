@@ -542,7 +542,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/home/coffee/Desktop/magick/portal/cloud/packages/db/src/lib/prisma/client-portal",
+      "value": "/home/coffee/Desktop/m/portal/cloud/packages/db/src/lib/prisma/client-portal",
       "fromEnvVar": null
     },
     "config": {

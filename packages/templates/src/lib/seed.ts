@@ -15,7 +15,14 @@ export const baseTemplates: Prisma.TemplateCreateInput[] = [
 const prisma = new PrismaClient()
 
 async function main() {
-  console.log(await prisma.template.createMany({ data: baseTemplates }))
+  for (const template of baseTemplates) {
+    const { id, ...rest } = template
+    await prisma.template.upsert({
+      where: { id },
+      update: rest,
+      create: template,
+    })
+  }
 }
 
 main()
