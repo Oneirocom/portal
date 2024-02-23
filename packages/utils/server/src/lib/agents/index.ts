@@ -1,4 +1,5 @@
 import { prisma } from '@magickml/portal-db'
+import { prismaCore } from '@magickml/server-db'
 import { Session } from 'next-auth'
 import { Graph, PublicVariable, AgentDataOld } from '@magickml/portal-types'
 import { extractPublicVariablesV2 } from '@magickml/portal-utils-shared'
@@ -11,40 +12,105 @@ export const getAgentDataSSR = async (
   session: Session | null,
   agentId: string
 ) => {
-  const data = await prisma.agents.findUnique({
+  const agent = await prismaCore.agents.findUnique({
     where: {
       id: agentId,
     },
     select: {
-      creatorId: true,
-      isPublic: true,
-      enabled: true,
       id: true,
-      name: true,
-      description: true,
-      image: true,
       rootSpellId: true,
+      publicVariables: true,
+      secrets: true,
+      name: true,
+      enabled: true,
+      updatedAt: true,
+      pingedAt: true,
       projectId: true,
+      data: true,
+      runState: true,
+      image: true,
+      default: true,
+      createdAt: true,
+      currentSpellReleaseId: true,
+      embedModel: true,
+      version: true,
+      embeddingProvider: true,
+      embeddingModel: true,
     },
   })
 
-  if (!data || !data.rootSpellId) return null
+  if (!agent || !agent.rootSpellId) return null
+
+  const publicAgent = await prisma.publicAgent.findUnique({
+    where: {
+      agentId: agentId,
+    },
+    select: {
+      id: true,
+      description: true,
+      remixable: true,
+      featured: true,
+      isTemplate: true,
+      deletedAt: true,
+    },
+  })
+
+  const isPublic = !!publicAgent && publicAgent.deletedAt === null
+
+  const project = await prisma.project.findUnique({
+    where: {
+      id: agent.projectId,
+    },
+    select: {
+      owner: true,
+      name: true,
+      image: true,
+    },
+  })
+
+  const creatorId = project?.owner
+  const creatorName = project?.name
+  const creatorImage = project?.image
+
+  const likesCount = await prisma.likes.count({
+    where: {
+      publicAgentId: publicAgent?.id,
+    },
+  })
+
+  const commentsCount = await prisma.comments.count({
+    where: {
+      publicAgentId: publicAgent?.id,
+      deletedAt: null,
+    },
+  })
 
   const status = {
-    isPublic: data?.isPublic ?? false,
-    isCreator: data?.creatorId === session?.user.id,
-    isEnabled: data?.enabled ?? false,
+    isPublic,
+    isCreator: creatorId === session?.user.id,
+    isEnabled: agent.enabled,
   }
 
   return {
-    data,
+    agent,
+    publicAgent: {
+      ...publicAgent,
+      isPublic,
+      likesCount,
+      commentsCount,
+    },
+    project: {
+      creatorId,
+      creatorName,
+      creatorImage,
+    },
     status,
     meta: {
-      title: `${data.name} | MagickML`,
-      description: data.description,
-      url: `${process.env.NEXT_PUBLIC_APP_URL}/agents/${data.id}`,
-      image: data.image
-        ? `${process.env.NEXT_PUBLIC_BUCKET_PREFIX}${data.image}`
+      title: `${agent.name} | MagickML`,
+      description: publicAgent?.description,
+      url: `${process.env.NEXT_PUBLIC_APP_URL}/agents/${agent.id}`,
+      image: agent.image
+        ? `${process.env.NEXT_PUBLIC_BUCKET_PREFIX}${agent.image}`
         : `${process.env.NEXT_PUBLIC_APP_URL}/images/banner.png`,
     },
   }
@@ -56,93 +122,108 @@ interface GetAgentDataParams {
 }
 
 export const getAgentData = async (params: GetAgentDataParams) => {
-  const data = await prisma.agents.findUnique({
+  // Use prismaCore to query the agents table directly instead of using the removed view
+  const agent = await prismaCore.agents.findUnique({
     where: {
       id: params.agentId,
     },
     select: {
-      creatorId: true,
-      isPublic: true,
+      // Selections adapted from the original view
       id: true,
-      version: true,
+      rootSpellId: true,
       publicVariables: true,
+      secrets: true,
       name: true,
       enabled: true,
       updatedAt: true,
+      pingedAt: true,
       projectId: true,
-      publicAgentId: true,
-      description: true,
-      remixable: true,
-      creatorName: true,
-      creatorImage: true,
-      image: true,
       data: true,
-      rootSpellId: true,
-      isTemplate: true,
+      runState: true,
+      image: true,
+      default: true,
+      createdAt: true,
+      currentSpellReleaseId: true,
+      embedModel: true,
+      version: true,
+      embeddingProvider: true,
+      embeddingModel: true,
     },
   })
 
-  if (!data) return null
+  if (!agent) return null
 
-  if (!data.rootSpellId) return null
-
-  // get spell from rootSpellId
-  const rootSpell = await prisma.spells.findUnique({
+  // Additional logic based on the original view's operations
+  const publicAgent = await prisma.publicAgent.findUnique({
     where: {
-      id: data.rootSpellId,
+      agentId: params.agentId,
     },
     select: {
       id: true,
-      graph: true,
-      name: true,
+      description: true,
+      remixable: true,
+      featured: true,
+      isTemplate: true,
+      deletedAt: true,
     },
   })
 
-  if (!rootSpell || !rootSpell.graph) return null
+  const isPublic = !!publicAgent && publicAgent.deletedAt === null
 
-  // extract publicVariables. Force type which we know is a graph structure from Rete
-  const spellPublicVariables = extractPublicVariablesV2(
-    rootSpell.graph as unknown as Graph
-  )
-
-  const agentPublicVaribales = data.publicVariables
-    ? JSON.parse(data.publicVariables)
-    : {}
-
-  // set keys from spellPublicVariables to agentPublicVariables
-  // fallback values to spellPublicVariables
-  const publicVariables = Object.keys(spellPublicVariables).reduce(
-    (acc, key) => {
-      return {
-        ...acc,
-        [key]: agentPublicVaribales[key] ?? spellPublicVariables[key],
-      }
+  const project = await prisma.project.findUnique({
+    where: {
+      id: agent.projectId,
     },
-    {}
-  )
+    select: {
+      owner: true,
+      name: true,
+      image: true,
+    },
+  })
 
-  // we need to make sure that thew spell is the source of truth for public variables at all times
-  data.publicVariables = JSON.stringify(publicVariables)
+  const creatorId = project?.owner
+  const creatorName = project?.name
+  const creatorImage = project?.image
 
-  if (!params.auth.user) {
-    throw new Error('User not found')
-  }
+  const likesCount = await prisma.likes.count({
+    where: {
+      publicAgentId: publicAgent?.id,
+    },
+  })
+
+  const commentsCount = await prisma.comments.count({
+    where: {
+      publicAgentId: publicAgent?.id,
+      deletedAt: null,
+    },
+  })
+
   const status = {
-    isPublic: data?.isPublic ?? false,
-    isCreator: data?.creatorId === params.auth?.user.id,
-    isEnabled: data?.enabled ?? false,
+    isPublic,
+    isCreator: creatorId === params.auth?.user.id,
+    isEnabled: agent.enabled,
   }
 
   return {
-    data,
+    agent,
+    publicAgent: {
+      ...publicAgent,
+      isPublic,
+      likesCount,
+      commentsCount,
+    },
+    project: {
+      creatorId,
+      creatorName,
+      creatorImage,
+    },
     status,
-    rootSpell,
     meta: {
-      title: `${data.name} | MagickML`,
-      description: data.description,
-      url: `${process.env.NEXT_PUBLIC_APP_URL}/agents/${data.id}`,
-      image: data.image
-        ? `${process.env.NEXT_PUBLIC_BUCKET_PREFIX}${data.image}`
+      title: `${agent.name} | MagickML`,
+      description: publicAgent?.description,
+      url: `${process.env.NEXT_PUBLIC_APP_URL}/agents/${agent.id}`,
+      image: agent.image
+        ? `${process.env.NEXT_PUBLIC_BUCKET_PREFIX}${agent.image}`
         : `${process.env.NEXT_PUBLIC_APP_URL}/images/banner.png`,
     },
   }
@@ -168,12 +249,23 @@ export async function getInfiniteAgents({
     throw 'error'
   }
 
-  return await prisma.agents.findMany({
+  const projects = await prisma.project.findMany({
+    where: {
+      owner: userId,
+    },
+    select: {
+      id: true,
+    },
+  })
+
+  const agent = await prismaCore.agents.findMany({
     take: limit + 1, // add 1 to check for next page
     cursor: cursor ? { id: cursor } : undefined,
     orderBy: { updatedAt: 'desc' },
     where: {
-      creatorId: userId,
+      projectId: {
+        in: projects.map(p => p.id),
+      },
       currentSpellReleaseId: {
         not: null,
       },
@@ -182,10 +274,30 @@ export async function getInfiniteAgents({
       name: true,
       image: true,
       id: true,
-      publicAgentId: true,
-      description: true,
       projectId: true,
     },
+  })
+
+  const publicAgents = await prisma.publicAgent.findMany({
+    where: {
+      agentId: {
+        in: agent.map(a => a.id),
+      },
+    },
+    select: {
+      id: true,
+      description: true,
+      agentId: true,
+    },
+  })
+
+  return agent.map(a => {
+    const publicAgent = publicAgents.find(pa => pa.agentId === a.id)
+    return {
+      ...a,
+      publicAgentId: publicAgent?.id,
+      description: publicAgent?.description,
+    }
   })
 }
 

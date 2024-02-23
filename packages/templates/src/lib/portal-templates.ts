@@ -1,3 +1,4 @@
+import { prismaCore } from '@magickml/server-db'
 import { type Prisma, prisma } from '@magickml/portal-db'
 import {
   blankTemplate,
@@ -38,7 +39,7 @@ export interface CreateFromAgentInput {
 }
 
 export const createFromAgent = async (input: CreateFromAgentInput) => {
-  const agent = await prisma.agents.findUnique({
+  const agent = await prismaCore.agents.findUnique({
     where: { id: input.agentId },
     select: { projectId: true },
   })
@@ -47,7 +48,7 @@ export const createFromAgent = async (input: CreateFromAgentInput) => {
     throw new Error('Agent not found')
   }
 
-  const spells = await prisma.spells.findMany({
+  const spells = await prismaCore.spells.findMany({
     where: { projectId: agent.projectId },
   })
 

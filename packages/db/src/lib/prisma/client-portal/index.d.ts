@@ -58,6 +58,7 @@ export type Budget = $Result.DefaultSelection<Prisma.$BudgetPayload>
  * 
  */
 export type Promotion = $Result.DefaultSelection<Prisma.$PromotionPayload>
+<<<<<<< HEAD
 /**
  * Model agents
  * 
@@ -73,6 +74,8 @@ export type spells = $Result.DefaultSelection<Prisma.$spellsPayload>
  * 
  */
 export type documents = $Result.DefaultSelection<Prisma.$documentsPayload>
+=======
+>>>>>>> eafcc71 (drop views)
 
 /**
  * Enums
@@ -302,6 +305,7 @@ export class PrismaClient<
     * ```
     */
   get promotion(): Prisma.PromotionDelegate<ExtArgs>;
+<<<<<<< HEAD
 
   /**
    * `prisma.agents`: Exposes CRUD operations for the **agents** model.
@@ -332,6 +336,8 @@ export class PrismaClient<
     * ```
     */
   get documents(): Prisma.documentsDelegate<ExtArgs>;
+=======
+>>>>>>> eafcc71 (drop views)
 }
 
 export namespace Prisma {
@@ -810,10 +816,14 @@ export namespace Prisma {
     Comments: 'Comments',
     AnonymousUser: 'AnonymousUser',
     Budget: 'Budget',
+<<<<<<< HEAD
     Promotion: 'Promotion',
     agents: 'agents',
     spells: 'spells',
     documents: 'documents'
+=======
+    Promotion: 'Promotion'
+>>>>>>> eafcc71 (drop views)
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -830,7 +840,11 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     meta: {
+<<<<<<< HEAD
       modelProps: 'project' | 'template' | 'publicAgent' | 'reports' | 'likes' | 'comments' | 'anonymousUser' | 'budget' | 'promotion' | 'agents' | 'spells' | 'documents'
+=======
+      modelProps: 'project' | 'template' | 'publicAgent' | 'reports' | 'likes' | 'comments' | 'anonymousUser' | 'budget' | 'promotion'
+>>>>>>> eafcc71 (drop views)
       txIsolationLevel: Prisma.TransactionIsolationLevel
     },
     model: {
@@ -1428,6 +1442,7 @@ export namespace Prisma {
           }
         }
       }
+<<<<<<< HEAD
       agents: {
         payload: Prisma.$agentsPayload<ExtArgs>
         fields: Prisma.agentsFieldRefs
@@ -1626,6 +1641,8 @@ export namespace Prisma {
           }
         }
       }
+=======
+>>>>>>> eafcc71 (drop views)
     }
   } & {
     other: {
@@ -10217,6 +10234,7 @@ export namespace Prisma {
 
 
   /**
+<<<<<<< HEAD
    * Model agents
    */
 
@@ -13190,6 +13208,8 @@ export namespace Prisma {
 
 
   /**
+=======
+>>>>>>> eafcc71 (drop views)
    * Enums
    */
 
@@ -13323,6 +13343,7 @@ export namespace Prisma {
   export type PromotionScalarFieldEnum = (typeof PromotionScalarFieldEnum)[keyof typeof PromotionScalarFieldEnum]
 
 
+<<<<<<< HEAD
   export const AgentsScalarFieldEnum: {
     id: 'id',
     rootSpell: 'rootSpell',
@@ -13387,6 +13408,8 @@ export namespace Prisma {
   export type DocumentsScalarFieldEnum = (typeof DocumentsScalarFieldEnum)[keyof typeof DocumentsScalarFieldEnum]
 
 
+=======
+>>>>>>> eafcc71 (drop views)
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -13515,6 +13538,7 @@ export namespace Prisma {
   export type PromotionOrderByRelevanceFieldEnum = (typeof PromotionOrderByRelevanceFieldEnum)[keyof typeof PromotionOrderByRelevanceFieldEnum]
 
 
+<<<<<<< HEAD
   export const agentsOrderByRelevanceFieldEnum: {
     id: 'id',
     publicVariables: 'publicVariables',
@@ -13565,6 +13589,8 @@ export namespace Prisma {
   export type documentsOrderByRelevanceFieldEnum = (typeof documentsOrderByRelevanceFieldEnum)[keyof typeof documentsOrderByRelevanceFieldEnum]
 
 
+=======
+>>>>>>> eafcc71 (drop views)
   /**
    * Field references 
    */
@@ -13651,34 +13677,6 @@ export namespace Prisma {
    * Reference to a field of type 'Int[]'
    */
   export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'BigInt'
-   */
-  export type BigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt'>
-    
-
-
-  /**
-   * Reference to a field of type 'BigInt[]'
-   */
-  export type ListBigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'Float'
-   */
-  export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
-    
-
-
-  /**
-   * Reference to a field of type 'Float[]'
-   */
-  export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
   /**
    * Deep Input Types
@@ -14290,6 +14288,7 @@ export namespace Prisma {
     updatedAt?: DateTimeNullableWithAggregatesFilter<"Promotion"> | Date | string | null
   }
 
+<<<<<<< HEAD
   export type agentsWhereInput = {
     AND?: agentsWhereInput | agentsWhereInput[]
     OR?: agentsWhereInput[]
@@ -14606,6 +14605,8 @@ export namespace Prisma {
     metadata?: JsonNullableWithAggregatesFilter<"documents">
   }
 
+=======
+>>>>>>> eafcc71 (drop views)
   export type ProjectCreateInput = {
     id?: string
     owner: string
@@ -15266,6 +15267,7 @@ export namespace Prisma {
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
+<<<<<<< HEAD
   export type agentsCreateInput = {
     id: string
     rootSpell?: NullableJsonNullValueInput | InputJsonValue
@@ -15651,6 +15653,8 @@ export namespace Prisma {
     metadata?: NullableJsonNullValueInput | InputJsonValue
   }
 
+=======
+>>>>>>> eafcc71 (drop views)
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -16300,6 +16304,7 @@ export namespace Prisma {
     _max?: NestedEnumPromotionTypeFilter<$PrismaModel>
   }
 
+<<<<<<< HEAD
   export type UuidFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -16610,6 +16615,8 @@ export namespace Prisma {
     date?: SortOrder
   }
 
+=======
+>>>>>>> eafcc71 (drop views)
   export type StringFieldUpdateOperationsInput = {
     set?: string
   }
@@ -16827,6 +16834,7 @@ export namespace Prisma {
     set?: $Enums.PromotionType
   }
 
+<<<<<<< HEAD
   export type NullableBoolFieldUpdateOperationsInput = {
     set?: boolean | null
   }
@@ -16847,6 +16855,8 @@ export namespace Prisma {
     divide?: bigint | number
   }
 
+=======
+>>>>>>> eafcc71 (drop views)
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -17091,6 +17101,7 @@ export namespace Prisma {
     _max?: NestedEnumPromotionTypeFilter<$PrismaModel>
   }
 
+<<<<<<< HEAD
   export type NestedUuidFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -17212,6 +17223,8 @@ export namespace Prisma {
     _max?: NestedBigIntNullableFilter<$PrismaModel>
   }
 
+=======
+>>>>>>> eafcc71 (drop views)
   export type CommentsCreateWithoutPublicAgentInput = {
     id?: string
     userId: string
@@ -17717,6 +17730,7 @@ export namespace Prisma {
      * @deprecated Use PromotionDefaultArgs instead
      */
     export type PromotionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = PromotionDefaultArgs<ExtArgs>
+<<<<<<< HEAD
     /**
      * @deprecated Use agentsDefaultArgs instead
      */
@@ -17729,6 +17743,8 @@ export namespace Prisma {
      * @deprecated Use documentsDefaultArgs instead
      */
     export type documentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = documentsDefaultArgs<ExtArgs>
+=======
+>>>>>>> eafcc71 (drop views)
 
   /**
    * Batch Payload for updateMany & deleteMany & createMany

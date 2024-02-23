@@ -200,6 +200,7 @@ exports.Prisma.PromotionScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+<<<<<<< HEAD
 exports.Prisma.AgentsScalarFieldEnum = {
   id: 'id',
   rootSpell: 'rootSpell',
@@ -255,6 +256,8 @@ exports.Prisma.DocumentsScalarFieldEnum = {
   metadata: 'metadata'
 };
 
+=======
+>>>>>>> eafcc71 (drop views)
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -340,6 +343,7 @@ exports.Prisma.PromotionOrderByRelevanceFieldEnum = {
   userId: 'userId',
   description: 'description'
 };
+<<<<<<< HEAD
 
 exports.Prisma.agentsOrderByRelevanceFieldEnum = {
   id: 'id',
@@ -381,6 +385,8 @@ exports.Prisma.documentsOrderByRelevanceFieldEnum = {
   projectId: 'projectId',
   date: 'date'
 };
+=======
+>>>>>>> eafcc71 (drop views)
 exports.PromotionType = exports.$Enums.PromotionType = {
   INTRO: 'INTRO',
   ADMIN: 'ADMIN'
@@ -395,10 +401,14 @@ exports.Prisma.ModelName = {
   Comments: 'Comments',
   AnonymousUser: 'AnonymousUser',
   Budget: 'Budget',
+<<<<<<< HEAD
   Promotion: 'Promotion',
   agents: 'agents',
   spells: 'spells',
   documents: 'documents'
+=======
+  Promotion: 'Promotion'
+>>>>>>> eafcc71 (drop views)
 };
 
 /**

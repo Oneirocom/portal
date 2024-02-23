@@ -7,7 +7,7 @@ import {
   PublicEventTypes,
 } from '@magickml/portal-utils-shared'
 import { encode } from 'next-auth/jwt'
-import { prisma } from '@magickml/portal-db'
+import { prismaCore } from '@magickml/server-db'
 
 export const chatRouter = createTRPCRouter({
   privateChat: protectedProcedure
@@ -22,7 +22,7 @@ export const chatRouter = createTRPCRouter({
     )
     .mutation(async ({ input, ctx }) => {
       // get projectId from agentId
-      const project = await prisma.agents.findUnique({
+      const project = await prismaCore.agents.findUnique({
         where: { id: input.agentId },
         select: {
           projectId: true,
@@ -119,7 +119,7 @@ export const chatRouter = createTRPCRouter({
     .input(z.object({ agentId: z.string() }))
     .mutation(async ({ input, ctx }) => {
       if (ctx.auth.userId) {
-        const agent = await prisma.agents.findUnique({
+        const agent = await prismaCore.agents.findUnique({
           where: { id: input.agentId },
           select: {
             projectId: true,

@@ -139,6 +139,7 @@ model Promotion {
   @@schema("portal")
 }
 
+<<<<<<< HEAD
 view agents {
   id                    String    @unique @db.Uuid
   rootSpell             Json?
@@ -200,6 +201,8 @@ view documents {
   @@schema("portal")
 }
 
+=======
+>>>>>>> eafcc71 (drop views)
 enum PromotionType {
   INTRO
   ADMIN

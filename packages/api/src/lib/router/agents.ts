@@ -2,6 +2,7 @@ import { z } from 'zod'
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc'
 import { hasAccess, prepareToken } from '../utils/shared'
 import { prisma } from '@magickml/portal-db'
+import { prismaCore } from '@magickml/server-db'
 import {
   trackServerEvent,
   paginateItems,
@@ -115,7 +116,7 @@ export const agentsRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      const agent = await prisma.agents.findUnique({
+      const agent = await prismaCore.agents.findUnique({
         where: { id: input.agentId },
       })
 
@@ -194,7 +195,7 @@ export const agentsRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      const a = await prisma.agents.findUnique({
+      const a = await prismaCore.agents.findUnique({
         where: {
           id: input.agentId,
         },
@@ -271,7 +272,7 @@ export const agentsRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      const a = await prisma.agents.findUnique({
+      const a = await prismaCore.agents.findUnique({
         where: {
           id: input.agentId,
         },
@@ -322,7 +323,7 @@ export const agentsRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      const a = await prisma.agents.findUnique({
+      const a = await prismaCore.agents.findUnique({
         where: {
           id: input.agentId,
         },
@@ -368,7 +369,7 @@ export const agentsRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      const a = await prisma.agents.findUnique({
+      const a = await prismaCore.agents.findUnique({
         where: {
           id: input.agentId,
         },
