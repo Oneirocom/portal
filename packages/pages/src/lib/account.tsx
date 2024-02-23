@@ -9,6 +9,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@magickml/client-ui'
+import { TransactionsTable, transactionsColumns } from '@magickml/portal-ui'
 import { InfoIcon } from '@magickml/icons'
 import { useRouter } from 'next/router'
 import clsx from 'clsx'
@@ -32,8 +33,11 @@ export const AccountPage = () => {
   const subscription = user.user?.publicMetadata.subscription as
     | string
     | undefined
+  const role = user.user?.publicMetadata.role as string | undefined
 
   const isWizard = subscription?.toUpperCase() === SubscriptionNames.Wizard
+
+  const isTester = role === 'TESTER' || role === 'ADMIN'
 
   const router = useRouter()
   const [inputValue, setInputValue] = useState<string>('5.00')
@@ -114,6 +118,26 @@ export const AccountPage = () => {
     if (isNaN(percentage) || percentage < 0) return 0 // Ensure value is not NaN or negative
     return percentage > 100 ? 100 : percentage // Cap the value at 100%
   }
+
+  const { data, isFetchingNextPage, fetchNextPage, hasNextPage, isLoading } =
+    api.billing.getTransactions.useInfiniteQuery(
+      {},
+      {
+        getNextPageParam: lastPage => lastPage.nextCursor,
+        refetchInterval: 1000 * 60 * 1, // 1 minute
+        enabled: isTester,
+      }
+    )
+
+  const loadMoreButton = (
+    <button
+      onClick={() => fetchNextPage()}
+      disabled={!hasNextPage || isFetchingNextPage}
+      className="w-full p-4 bg-ds-neutral text-ds-white rounded-lg border border-neutral-700 justify-center items-center gap-1 flex"
+    >
+      {isFetchingNextPage ? 'Loading more...' : 'Load More'}
+    </button>
+  )
 
   return (
     <div className="flex flex-col font-montserrat justify-center items-start">
@@ -276,6 +300,22 @@ export const AccountPage = () => {
           </div>
         </div>
       </div>
+
+      {/* Transactions */}
+
+      {isTester && data && data?.pages?.length > 0 && (
+        <div className="flex flex-col gap-y-2 p-4 lg:p-10 border-none border-ds-neutral w-full">
+          <h3 className="text-2xl font-montAlt font-medium">Transactions</h3>
+          <p className="font-montAlt pb-2">
+            View your transaction history and usage.
+          </p>
+          <TransactionsTable
+            columns={transactionsColumns}
+            data={data?.pages[0].items}
+          />
+          {hasNextPage && loadMoreButton}
+        </div>
+      )}
     </div>
   )
 }
