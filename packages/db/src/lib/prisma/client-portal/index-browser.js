@@ -231,7 +231,9 @@ exports.Prisma.AgentsScalarFieldEnum = {
   creatorName: 'creatorName',
   creatorImage: 'creatorImage',
   likesCount: 'likesCount',
-  commentsCount: 'commentsCount'
+  commentsCount: 'commentsCount',
+  isDraft: 'isDraft',
+  draftAgentId: 'draftAgentId'
 };
 
 exports.Prisma.SpellsScalarFieldEnum = {
@@ -461,7 +463,8 @@ exports.Prisma.agentsOrderByRelevanceFieldEnum = {
   description: 'description',
   creatorId: 'creatorId',
   creatorName: 'creatorName',
-  creatorImage: 'creatorImage'
+  creatorImage: 'creatorImage',
+  draftAgentId: 'draftAgentId'
 };
 
 exports.Prisma.spellsOrderByRelevanceFieldEnum = {
