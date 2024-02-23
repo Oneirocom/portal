@@ -1,4 +1,4 @@
-import { prisma } from '@magickml/portal-db'
+import { prismaPortal } from '@magickml/portal-db'
 import { prismaCore } from '@magickml/server-db'
 import { Session } from 'next-auth'
 import {
@@ -45,7 +45,7 @@ export const getAgentDataSSR = async (
 
   if (!agent || !agent.rootSpellId || !agent?.projectId) return null
 
-  const publicAgent = await prisma.publicAgent.findUnique({
+  const publicAgent = await prismaPortal.publicAgent.findUnique({
     where: {
       agentId: agentId,
     },
@@ -61,7 +61,7 @@ export const getAgentDataSSR = async (
 
   const isPublic = !!publicAgent && publicAgent.deletedAt === null
 
-  const project = await prisma.project.findUnique({
+  const project = await prismaPortal.project.findUnique({
     where: {
       id: agent.projectId,
     },
@@ -76,13 +76,13 @@ export const getAgentDataSSR = async (
   const creatorName = project?.name
   const creatorImage = project?.image
 
-  const likesCount = await prisma.likes.count({
+  const likesCount = await prismaPortal.likes.count({
     where: {
       publicAgentId: publicAgent?.id,
     },
   })
 
-  const commentsCount = await prisma.comments.count({
+  const commentsCount = await prismaPortal.comments.count({
     where: {
       publicAgentId: publicAgent?.id,
       deletedAt: null,
@@ -158,7 +158,7 @@ export const getAgentData = async (params: GetAgentDataParams) => {
   if (!agent || !agent.projectId) return null
 
   // Additional logic based on the original view's operations
-  const publicAgent = await prisma.publicAgent.findUnique({
+  const publicAgent = await prismaPortal.publicAgent.findUnique({
     where: {
       agentId: params.agentId,
     },
@@ -174,7 +174,7 @@ export const getAgentData = async (params: GetAgentDataParams) => {
 
   const isPublic = !!publicAgent && publicAgent.deletedAt === null
 
-  const project = await prisma.project.findUnique({
+  const project = await prismaPortal.project.findUnique({
     where: {
       id: agent.projectId,
     },
@@ -189,13 +189,13 @@ export const getAgentData = async (params: GetAgentDataParams) => {
   const creatorName = project?.name
   const creatorImage = project?.image
 
-  const likesCount = await prisma.likes.count({
+  const likesCount = await prismaPortal.likes.count({
     where: {
       publicAgentId: publicAgent?.id,
     },
   })
 
-  const commentsCount = await prisma.comments.count({
+  const commentsCount = await prismaPortal.comments.count({
     where: {
       publicAgentId: publicAgent?.id,
       deletedAt: null,
@@ -253,7 +253,7 @@ export async function getInfiniteAgents({
     throw 'error'
   }
 
-  const projects = await prisma.project.findMany({
+  const projects = await prismaPortal.project.findMany({
     where: {
       owner: userId,
     },
@@ -262,6 +262,13 @@ export async function getInfiniteAgents({
     },
   })
 
+  if (projects.length === 0) {
+    console.log('no projects')
+    return []
+  }
+  console.log('projects', projects.length)
+
+  console.log('getting agents')
   const agent = await prismaCore.agents.findMany({
     take: limit + 1, // add 1 to check for next page
     cursor: cursor ? { id: cursor } : undefined,
@@ -282,7 +289,14 @@ export async function getInfiniteAgents({
     },
   })
 
-  const publicAgents = await prisma.publicAgent.findMany({
+  console.log('got agents', agent.length)
+
+  if (agent.length === 0) {
+    console.log('no agents')
+    return []
+  }
+
+  const publicAgents = await prismaPortal.publicAgent.findMany({
     where: {
       agentId: {
         in: agent.map(a => a.id),

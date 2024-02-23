@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { z } from 'zod'
-import { prisma } from '@magickml/portal-db'
+import { prismaPortal } from '@magickml/portal-db'
 import {
   getFullUser,
   validateBudgetRequest,
@@ -22,7 +22,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { project_id } = result.data
 
   try {
-    const project = await prisma.project.findFirst({
+    const project = await prismaPortal.project.findFirst({
       where: {
         id: project_id,
       },
@@ -48,14 +48,14 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
     const { user } = userResult
 
-    const wallet = await prisma.budget.findUnique({
+    const wallet = await prismaPortal.budget.findUnique({
       where: {
         userId: project.owner,
       },
     })
 
     if (!wallet) {
-      await prisma.budget.create({
+      await prismaPortal.budget.create({
         data: {
           userId: project.owner,
         },
@@ -63,7 +63,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     }
 
     // Retrieve promotions and calculate total promotional credit
-    const promotions = await prisma.promotion.findMany({
+    const promotions = await prismaPortal.promotion.findMany({
       where: {
         userId: project.owner,
         validUntil: {

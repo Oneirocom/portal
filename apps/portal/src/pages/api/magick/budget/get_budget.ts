@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { z } from 'zod'
-import { prisma } from '@magickml/portal-db'
+import { prismaPortal } from '@magickml/portal-db'
 import { validateBudgetRequest } from '@magickml/portal-utils-server'
 
 const RequestSchema = z.object({
@@ -19,7 +19,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { project_name } = result.data
 
   try {
-    const project = await prisma.project.findFirst({
+    const project = await prismaPortal.project.findFirst({
       where: {
         id: project_name,
       },
@@ -33,7 +33,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       throw new Error('Project not found')
     }
 
-    const budget = await prisma.budget.findFirst({
+    const budget = await prismaPortal.budget.findFirst({
       where: {
         userId: project.owner,
       },
@@ -45,7 +45,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         .json({ status: 'error', message: 'Budget not found' })
     }
 
-    const promotions = await prisma.promotion.findMany({
+    const promotions = await prismaPortal.promotion.findMany({
       where: {
         userId: project.owner,
         validUntil: {

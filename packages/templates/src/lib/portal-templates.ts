@@ -1,5 +1,5 @@
 import { prismaCore } from '@magickml/server-db'
-import { type Prisma, prisma } from '@magickml/portal-db'
+import { type Prisma, prismaPortal } from '@magickml/portal-db'
 import {
   blankTemplate,
   babyAGITemplate,
@@ -20,7 +20,7 @@ export const baseTemplates: Prisma.TemplateCreateInput[] = [
 export const createBaseTemplates = async () => {
   for (const template of baseTemplates) {
     const { id, ...rest } = template
-    await prisma.template.upsert({
+    await prismaPortal.template.upsert({
       where: { id },
       update: rest,
       create: template,
@@ -29,7 +29,7 @@ export const createBaseTemplates = async () => {
 }
 
 export const createTemplate = async (template: Prisma.TemplateCreateInput) => {
-  return prisma.template.create({ data: template })
+  return prismaPortal.template.create({ data: template })
 }
 
 export interface CreateFromAgentInput {
@@ -58,7 +58,7 @@ export const createFromAgent = async (input: CreateFromAgentInput) => {
     spells: spells.map(spell => JSON.stringify(spell)),
   }
 
-  return prisma.template.createMany({ data: [template] })
+  return prismaPortal.template.createMany({ data: [template] })
 }
 
 interface CreateFromTemplateInput {
@@ -69,7 +69,7 @@ interface CreateFromTemplateInput {
 }
 export const createFromTemplate = async (input: CreateFromTemplateInput) => {
   const { projectName, agentName, templateId, owner } = input
-  const template = await prisma.template.findUnique({
+  const template = await prismaPortal.template.findUnique({
     where: { id: templateId },
   })
 
@@ -77,7 +77,7 @@ export const createFromTemplate = async (input: CreateFromTemplateInput) => {
     throw new Error('Template not found')
   }
 
-  const project = await prisma.project.create({
+  const project = await prismaPortal.project.create({
     data: {
       name: projectName,
       description: `project for ${agentName}`,

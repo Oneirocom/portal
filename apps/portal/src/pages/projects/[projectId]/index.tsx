@@ -1,6 +1,6 @@
 import { GetServerSidePropsContext } from 'next'
 import { prepareToken } from '@magickml/portal-api'
-import { prisma } from '@magickml/portal-db'
+import { prismaPortal } from '@magickml/portal-db'
 import { Editor } from '@magickml/portal-pages'
 import { getAuth } from '@clerk/nextjs/server'
 
@@ -23,7 +23,7 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
 
   try {
     // check if project exists
-    const project = await prisma.project.findUnique({
+    const project = await prismaPortal.project.findUnique({
       where: {
         id: projectId as string,
       },
@@ -47,7 +47,7 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
     })
 
     // update the projects last active date
-    await prisma.project.update({
+    await prismaPortal.project.update({
       where: {
         id: projectId as string,
       },

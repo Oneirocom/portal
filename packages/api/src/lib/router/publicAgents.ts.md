@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc'
 import { prepareToken } from '../utils/shared'
-import { prisma } from '@magickml/portal-db'
+import { prismaPortal } from '@magickml/portal-db'
 import { createAgent, createSpell } from '@magickml/portal-utils-server'
 import { trackServerEvent } from '@magickml/portal-utils-server'
 import { PublicEventTypes } from '@magickml/portal-utils-shared'

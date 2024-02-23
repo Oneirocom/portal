@@ -1,5 +1,5 @@
 import { encode } from 'next-auth/jwt'
-import { prisma } from '@magickml/portal-db'
+import { prismaPortal } from '@magickml/portal-db'
 import { type SignedInAuthObject } from '@clerk/clerk-sdk-node'
 
 interface PrepareTokenParams {
@@ -41,7 +41,7 @@ interface HasAccessParams {
 }
 
 export async function hasAccess(params: HasAccessParams): Promise<boolean> {
-  return !!(await prisma.project.findFirst({
+  return !!(await prismaPortal.project.findFirst({
     where: {
       id: params.projectId,
       owner: params.user.orgId || params.user.userId,

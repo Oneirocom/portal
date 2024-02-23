@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc'
 import { hasAccess, prepareToken } from '../utils/shared'
-import { prisma } from '@magickml/portal-db'
+import { prismaPortal } from '@magickml/portal-db'
 import { prismaCore } from '@magickml/server-db'
 import {
   trackServerEvent,
@@ -218,7 +218,7 @@ export const agentsRouter = createTRPCRouter({
       }
 
       // check if agent is public
-      const deployed = await prisma.publicAgent.findUnique({
+      const deployed = await prismaPortal.publicAgent.findUnique({
         where: {
           agentId: input.agentId,
         },
@@ -231,7 +231,7 @@ export const agentsRouter = createTRPCRouter({
 
       // if the agent exists and deletedAt is not null, restore the agent
       if (deployed && deployed.deletedAt !== null) {
-        const agent = await prisma.publicAgent.update({
+        const agent = await prismaPortal.publicAgent.update({
           where: {
             agentId: input.agentId,
           },
@@ -245,7 +245,7 @@ export const agentsRouter = createTRPCRouter({
       }
 
       // if the agent does not exist, create it
-      const newPublicAgent = await prisma.publicAgent.create({
+      const newPublicAgent = await prismaPortal.publicAgent.create({
         data: {
           agentId: input.agentId,
           userId: ctx.auth.userId,
@@ -294,7 +294,7 @@ export const agentsRouter = createTRPCRouter({
         throw new Error('User is not a member of the specified workspace')
       }
 
-      const agent = await prisma.publicAgent.update({
+      const agent = await prismaPortal.publicAgent.update({
         where: {
           agentId: input.agentId,
         },
@@ -345,7 +345,7 @@ export const agentsRouter = createTRPCRouter({
         throw new Error('User is not a member of the specified workspace')
       }
 
-      const agent = await prisma.publicAgent.update({
+      const agent = await prismaPortal.publicAgent.update({
         where: {
           agentId: input.agentId,
         },
@@ -391,7 +391,7 @@ export const agentsRouter = createTRPCRouter({
         throw new Error('User is not a member of the specified workspace')
       }
 
-      const deployed = await prisma.publicAgent.findUnique({
+      const deployed = await prismaPortal.publicAgent.findUnique({
         where: {
           agentId: input.agentId,
         },
@@ -399,7 +399,7 @@ export const agentsRouter = createTRPCRouter({
 
       // If the agent exists and deletedAt is null, set deletedAt to now
       if (deployed && deployed.deletedAt === null) {
-        const agent = await prisma.publicAgent.update({
+        const agent = await prismaPortal.publicAgent.update({
           where: {
             agentId: input.agentId,
           },
@@ -424,23 +424,21 @@ export const agentsRouter = createTRPCRouter({
     .input(
       z.object({ limit: z.number().optional(), cursor: z.string().optional() })
     )
-    .query(async opts => {
-      const { input } = opts
+    .query(async ({ ctx, input }) => {
       const limit = input.limit ?? 10
       const { cursor } = input
 
       const fetchedItems = await getInfiniteAgents({
         limit,
         cursor,
-        userId: opts.ctx.auth.userId,
+        userId: ctx.auth.userId,
       })
-      const result = paginateItems(fetchedItems, limit)
 
-      return result
+      return paginateItems(fetchedItems, limit)
     }),
 
   getTemplates: publicProcedure.query(async () => {
-    return await prisma.template.findMany({
+    return await prismaPortal.template.findMany({
       where: {
         deletedAt: null,
       },

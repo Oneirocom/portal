@@ -1,7 +1,7 @@
 import { createTRPCRouter, protectedProcedure } from '../trpc'
 import { stripeService } from '@magickml/portal-billing'
 import { z } from 'zod'
-import { prisma } from '@magickml/portal-db'
+import { prismaPortal } from '@magickml/portal-db'
 import { getFullUser } from '@magickml/portal-utils-server'
 import type Stripe from 'stripe'
 
@@ -53,7 +53,7 @@ export const billingRouter = createTRPCRouter({
     }),
 
   getBudget: protectedProcedure.query(async ({ ctx }) => {
-    const budget = await prisma.budget.findFirst({
+    const budget = await prismaPortal.budget.findFirst({
       where: {
         userId: ctx.auth.userId,
       },
@@ -63,7 +63,7 @@ export const billingRouter = createTRPCRouter({
       throw new Error('Budget not found')
     }
 
-    const promotions = await prisma.promotion.findMany({
+    const promotions = await prismaPortal.promotion.findMany({
       where: {
         userId: ctx.auth.userId,
         validUntil: {
@@ -87,7 +87,7 @@ export const billingRouter = createTRPCRouter({
   }),
 
   getPromotions: protectedProcedure.query(async ({ ctx }) => {
-    const promotions = await prisma.promotion.findMany({
+    const promotions = await prismaPortal.promotion.findMany({
       where: {
         userId: ctx.auth.userId,
         isUsed: false,

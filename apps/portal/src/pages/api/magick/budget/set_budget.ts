@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { prisma } from '@magickml/portal-db'
+import { prismaPortal } from '@magickml/portal-db'
 import { validateBudgetRequest } from '@magickml/portal-utils-server'
 
 const cl = (message: any) => {
@@ -15,7 +15,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   cl('Received request:' + JSON.stringify(req.body))
 
   try {
-    const project = await prisma.project.findFirst({
+    const project = await prismaPortal.project.findFirst({
       where: {
         id: project_name,
       },
@@ -28,7 +28,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         .json({ status: 'error', message: 'Project not found' })
     }
 
-    const wallet = await prisma.budget.findUnique({
+    const wallet = await prismaPortal.budget.findUnique({
       where: {
         userId: project.owner,
       },
@@ -50,7 +50,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     cl('Calculating new charge:' + newCharge)
 
     let remainingCharge = newCharge
-    const promotions = await prisma.promotion.findMany({
+    const promotions = await prismaPortal.promotion.findMany({
       where: {
         userId: project.owner,
         validUntil: {
@@ -71,7 +71,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       const promoAmount = parseFloat(promo.amount.toString())
       if (promoAmount <= remainingCharge) {
         remainingCharge -= promoAmount
-        await prisma.promotion.update({
+        await prismaPortal.promotion.update({
           where: { id: promo.id },
           data: { isUsed: true, amount: 0 },
         })
@@ -82,7 +82,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       } else {
         const updatedPromoAmount = promoAmount - remainingCharge
         remainingCharge = 0
-        await prisma.promotion.update({
+        await prismaPortal.promotion.update({
           where: { id: promo.id },
           data: { amount: updatedPromoAmount },
         })
@@ -96,7 +96,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (remainingCharge > 0) {
       const newUserBalance =
         parseFloat(wallet.balance.toString()) - remainingCharge
-      await prisma.budget.update({
+      await prismaPortal.budget.update({
         where: {
           userId: project.owner,
         },

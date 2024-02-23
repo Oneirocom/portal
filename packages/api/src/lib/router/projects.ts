@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { createTRPCRouter, protectedProcedure } from '../trpc'
-import { prisma } from '@magickml/portal-db'
+import { prismaPortal } from '@magickml/portal-db'
 import { hasAccess, prepareToken } from '../utils/shared'
 import { uploadImage } from '../utils/upload'
 import { v4 } from 'uuid'
@@ -27,7 +27,7 @@ export const projectsRouter = createTRPCRouter({
         filePath = `/projects/${id}/avatar.jpg?${imgResponse.VersionId}`
       }
 
-      const project = await prisma.project.create({
+      const project = await prismaPortal.project.create({
         data: {
           id,
           owner: ctx.auth.orgId || ctx.auth.userId,
@@ -49,7 +49,7 @@ export const projectsRouter = createTRPCRouter({
 
   // Get all projects for the current user
   getProjects: protectedProcedure.query(async ({ ctx }) => {
-    return await prisma.project.findMany({
+    return await prismaPortal.project.findMany({
       where: {
         owner: ctx.auth.orgId || ctx.auth.userId,
         deletedAt: null,
@@ -61,7 +61,7 @@ export const projectsRouter = createTRPCRouter({
   getProject: protectedProcedure
     .input(z.object({ projectId: z.string() }))
     .query(async ({ input, ctx }) => {
-      return await prisma.project.findFirst({
+      return await prismaPortal.project.findFirst({
         where: {
           id: input.projectId,
           deletedAt: null,
@@ -89,7 +89,7 @@ export const projectsRouter = createTRPCRouter({
         throw new Error('User is not a member of the specified workspace')
       }
 
-      return await prisma.project.update({
+      return await prismaPortal.project.update({
         where: { id: input.projectId },
         data: {
           name: input.name,
@@ -112,7 +112,7 @@ export const projectsRouter = createTRPCRouter({
       }
 
       // Proceed to soft delete the project by setting the deletedAt field
-      return await prisma.project.update({
+      return await prismaPortal.project.update({
         where: { id: input.projectId },
         data: { deletedAt: new Date() },
       })

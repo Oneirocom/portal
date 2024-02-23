@@ -1,5 +1,5 @@
 import Stripe from 'stripe'
-import { prisma } from '@magickml/portal-db'
+import { prismaPortal } from '@magickml/portal-db'
 import { makeTrialPromotion } from './promotions'
 import { PriceKeys } from '@magickml/portal-utils-shared'
 import { clerkClient } from '@clerk/nextjs'
@@ -238,7 +238,7 @@ export class StripeService {
 
   async createDefaultBudget(userId: string): Promise<void> {
     try {
-      await prisma.budget.create({
+      await prismaPortal.budget.create({
         data: {
           userId,
           balance: 0,
@@ -254,7 +254,7 @@ export class StripeService {
 
   async checkBudgetExists(userId: string): Promise<boolean> {
     try {
-      const budget = await prisma.budget.findFirst({ where: { userId } })
+      const budget = await prismaPortal.budget.findFirst({ where: { userId } })
       return Boolean(budget)
     } catch (error) {
       console.error('Error checking if wallet exists:', error)

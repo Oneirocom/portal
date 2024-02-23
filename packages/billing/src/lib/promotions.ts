@@ -1,8 +1,8 @@
-import { prisma, PromotionType } from '@magickml/portal-db'
+import { prismaPortal, PromotionType } from '@magickml/portal-db'
 import { Decimal } from '@prisma/client/runtime/library'
 
 export const makeTrialPromotion = async (userId: string) => {
-  await prisma.promotion.create({
+  await prismaPortal.promotion.create({
     data: {
       name: 'Trial',
       description: 'Get started for free with $2,00 in credits',
@@ -21,7 +21,7 @@ export const makeTrialPromotion = async (userId: string) => {
 export const makeApprenticePromotion = async (userId: string) => {
   // this create an empty credit promotion but if we ever decide to add a price to the apprentice subscription
   // we can change the amount here
-  await prisma.promotion.create({
+  await prismaPortal.promotion.create({
     data: {
       name: 'Apprentice',
       description: 'Apprentice subscription credits.',
@@ -38,7 +38,7 @@ export const makeApprenticePromotion = async (userId: string) => {
 }
 
 export const makeWizardPromotion = async (userId: string) => {
-  await prisma.promotion.create({
+  await prismaPortal.promotion.create({
     data: {
       name: 'Wizard',
       description: 'Wizard subscription credits.',
@@ -55,7 +55,7 @@ export const makeWizardPromotion = async (userId: string) => {
 }
 
 export const makeBalancePromotion = async (userId: string, amount: number) => {
-  await prisma.promotion.create({
+  await prismaPortal.promotion.create({
     data: {
       name: 'Balance',
       description: 'Balance credits.',

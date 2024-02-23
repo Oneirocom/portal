@@ -4,7 +4,7 @@ import { makeWizardPromotion, makeApprenticePromotion } from './promotions'
 import { PortalSubscriptions } from '@magickml/portal-utils-shared'
 import { buffer } from 'micro'
 import { NextApiRequest } from 'next'
-import { prisma } from '@magickml/portal-db'
+import { prismaPortal } from '@magickml/portal-db'
 
 class StripeEventHandler {
   private stripe: Stripe
@@ -77,7 +77,7 @@ class StripeEventHandler {
       const parsedAmount = parseFloat(amount)
 
       try {
-        await prisma.budget.update({
+        await prismaPortal.budget.update({
           where: {
             userId: userId,
           },

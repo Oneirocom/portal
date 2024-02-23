@@ -1,4 +1,4 @@
-// import { prisma } from '@magickml/portal-db'
+// import { prismaPortal } from '@magickml/portal-db'
 // import { prismaCore } from '@magickml/server-db'
 
 export type InfiniteAgentsOptions = {
