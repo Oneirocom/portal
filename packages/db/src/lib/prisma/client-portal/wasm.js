@@ -200,64 +200,6 @@ exports.Prisma.PromotionScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
-<<<<<<< HEAD
-exports.Prisma.AgentsScalarFieldEnum = {
-  id: 'id',
-  rootSpell: 'rootSpell',
-  publicVariables: 'publicVariables',
-  secrets: 'secrets',
-  name: 'name',
-  enabled: 'enabled',
-  updatedAt: 'updatedAt',
-  pingedAt: 'pingedAt',
-  projectId: 'projectId',
-  data: 'data',
-  runState: 'runState',
-  image: 'image',
-  rootSpellId: 'rootSpellId',
-  default: 'default',
-  createdAt: 'createdAt',
-  currentSpellReleaseId: 'currentSpellReleaseId',
-  embedModel: 'embedModel',
-  version: 'version',
-  embeddingProvider: 'embeddingProvider',
-  embeddingModel: 'embeddingModel',
-  isDraft: 'isDraft',
-  draftAgentId: 'draftAgentId',
-  publicAgentId: 'publicAgentId',
-  description: 'description',
-  remixable: 'remixable',
-  featured: 'featured',
-  isTemplate: 'isTemplate',
-  isPublic: 'isPublic',
-  creatorId: 'creatorId',
-  creatorName: 'creatorName',
-  creatorImage: 'creatorImage',
-  likesCount: 'likesCount',
-  commentsCount: 'commentsCount'
-};
-
-exports.Prisma.SpellsScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  projectId: 'projectId',
-  graph: 'graph',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  type: 'type',
-  spellReleaseId: 'spellReleaseId'
-};
-
-exports.Prisma.DocumentsScalarFieldEnum = {
-  id: 'id',
-  type: 'type',
-  projectId: 'projectId',
-  date: 'date',
-  metadata: 'metadata'
-};
-
-=======
->>>>>>> eafcc71 (drop views)
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -343,50 +285,6 @@ exports.Prisma.PromotionOrderByRelevanceFieldEnum = {
   userId: 'userId',
   description: 'description'
 };
-<<<<<<< HEAD
-
-exports.Prisma.agentsOrderByRelevanceFieldEnum = {
-  id: 'id',
-  publicVariables: 'publicVariables',
-  secrets: 'secrets',
-  name: 'name',
-  updatedAt: 'updatedAt',
-  pingedAt: 'pingedAt',
-  projectId: 'projectId',
-  runState: 'runState',
-  image: 'image',
-  rootSpellId: 'rootSpellId',
-  currentSpellReleaseId: 'currentSpellReleaseId',
-  embedModel: 'embedModel',
-  version: 'version',
-  embeddingProvider: 'embeddingProvider',
-  embeddingModel: 'embeddingModel',
-  draftAgentId: 'draftAgentId',
-  publicAgentId: 'publicAgentId',
-  description: 'description',
-  creatorId: 'creatorId',
-  creatorName: 'creatorName',
-  creatorImage: 'creatorImage'
-};
-
-exports.Prisma.spellsOrderByRelevanceFieldEnum = {
-  id: 'id',
-  name: 'name',
-  projectId: 'projectId',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  type: 'type',
-  spellReleaseId: 'spellReleaseId'
-};
-
-exports.Prisma.documentsOrderByRelevanceFieldEnum = {
-  id: 'id',
-  type: 'type',
-  projectId: 'projectId',
-  date: 'date'
-};
-=======
->>>>>>> eafcc71 (drop views)
 exports.PromotionType = exports.$Enums.PromotionType = {
   INTRO: 'INTRO',
   ADMIN: 'ADMIN'
@@ -401,14 +299,7 @@ exports.Prisma.ModelName = {
   Comments: 'Comments',
   AnonymousUser: 'AnonymousUser',
   Budget: 'Budget',
-<<<<<<< HEAD
-  Promotion: 'Promotion',
-  agents: 'agents',
-  spells: 'spells',
-  documents: 'documents'
-=======
   Promotion: 'Promotion'
->>>>>>> eafcc71 (drop views)
 };
 
 /**

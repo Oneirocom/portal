@@ -1,9 +1,5 @@
 {
-<<<<<<< HEAD
-  "name": "prisma-client-39127bb6710fbe1fd948deb2774d98230e15298fd3e9d42f73c03d44ab3f1de7",
-=======
-  "name": "prisma-client-252dc92673406c20e576047d6130266426e9d9a4a1aecaf044d04201712190a9",
->>>>>>> eafcc71 (drop views)
+  "name": "prisma-client-a49addae3962f3e376cbc38ee90473de5e01caa055dddf07c44ce8dd5aa07a1d",
   "main": "index.js",
   "types": "index.d.ts",
   "browser": "index-browser.js",
