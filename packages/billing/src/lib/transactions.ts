@@ -1,4 +1,5 @@
 import { prismaPortal, TransactionSource } from '@magickml/portal-db'
+export { TransactionSource, type Transaction } from '@magickml/portal-db'
 
 export async function recordTransaction(
   userId: string,
