@@ -1,7 +1,7 @@
 generator client {
   provider        = "prisma-client-js"
   output          = "./client-portal"
-  previewFeatures = ["fullTextSearch", "multiSchema", "postgresqlExtensions", "views"]
+  previewFeatures = ["fullTextSearch", "multiSchema", "postgresqlExtensions"]
   name            = "prisma"
 }
 
