@@ -119,36 +119,6 @@ export const agentsRouter = createTRPCRouter({
         where: { id: input.agentId },
       })
 
-      const performUpdate = async (agentId: string) => {
-        if (input.image) {
-          const response = await app
-            .service('agentImage')
-            .create({ agentId, image: input.image })
-          if (response.ETag && response.VersionId) {
-            input.image = `/agents/${agentId}/avatar.jpg?versionId=${response.VersionId}`
-          } else {
-            throw new Error('Image upload failed!')
-          }
-        }
-
-        const updateData = {
-          name: input.name,
-          description: input.description,
-          publicVariables: input.publicVariables,
-          variables: input.variables,
-          image: input.image,
-          data: input.data,
-        }
-
-        await app.service('agents').patch(agentId, updateData)
-
-        trackServerEvent(
-          PrivateEventTypes.AGENT_PRIVATE_UPDATE,
-          ctx.auth.user?.emailAddresses[0].emailAddress ?? '',
-          agentId
-        )
-      }
-
       if (!agent?.projectId) {
         throw new Error('Agent project not found')
       }
@@ -162,17 +132,57 @@ export const agentsRouter = createTRPCRouter({
         throw new Error('No access to the specified workspace')
       }
 
-      // // Update the draft agent if updateDraft is true
-      // if (input.updateDraft && agent?.draftAqentId) {
-      //   await performUpdate(agent.draftAgentId)
-      // }
+      // Define a function to handle image upload and return the image path
+      const uploadImageAndGetPath = async (agentId: string, image: string) => {
+        const response = await app
+          .service('agentImage')
+          .create({ agentId, image })
+        if (response.ETag && response.VersionId) {
+          return `/agents/${agentId}/avatar.jpg?versionId=${response.VersionId}`
+        } else {
+          throw new Error('Image upload failed!')
+        }
+      }
 
-      // Always update the original agent
+      // If an image is provided, upload it and get the path
+      if (input.image) {
+        input.image = await uploadImageAndGetPath(input.agentId, input.image)
+      }
+
+      const performUpdate = async (agentIdToUpdate: string) => {
+        const validFields = [
+          'name',
+          'description',
+          'publicVariables',
+          'variables',
+          'data',
+          'image',
+          'draftAgentId',
+        ]
+        const updateData = Object.entries(input)
+          .filter(
+            ([key, value]) => validFields.includes(key) && value !== undefined
+          )
+          .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {})
+
+        await app.service('agents').patch(agentIdToUpdate, updateData)
+
+        trackServerEvent(
+          PrivateEventTypes.AGENT_PRIVATE_UPDATE,
+          ctx.auth.user?.emailAddresses[0].emailAddress ?? '',
+          agentIdToUpdate
+        )
+      }
+
+      // Update the draft agent if updateDraft is true and a draft agent exists
+      if (input.updateDraft && agent.draftAgentId) {
+        await performUpdate(agent.draftAgentId)
+      }
+
+      // Always update the original (live) agent
       await performUpdate(input.agentId)
 
-      // Assuming performUpdate does not return the updated agent,
-      // you may need to fetch the updated agent to return it
-      return await app.service('agents').get(input.agentId)
+      return agent
     }),
 
   makePublic: protectedProcedure
