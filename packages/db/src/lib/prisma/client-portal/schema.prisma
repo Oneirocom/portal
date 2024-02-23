@@ -139,9 +139,24 @@ model Promotion {
   @@schema("portal")
 }
 
+model Transaction {
+  id        String            @id @default(cuid())
+  userId    String
+  projectId String?
+  agentId   String?
+  cost      Decimal
+  success   Boolean
+  source    TransactionSource
+  createdAt DateTime          @default(now())
+
+  @@map("transactions")
+  @@schema("portal")
+}
+
 enum PromotionType {
   INTRO
   ADMIN
+  SUBSCRIPTION
 
   @@schema("portal")
 }
@@ -150,6 +165,13 @@ enum SubscriptionType {
   FREE
   STANDARD
   PREMIUM
+
+  @@schema("portal")
+}
+
+enum TransactionSource {
+  PROMOTION
+  BUDGET
 
   @@schema("portal")
 }

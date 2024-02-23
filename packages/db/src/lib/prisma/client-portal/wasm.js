@@ -200,6 +200,17 @@ exports.Prisma.PromotionScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.TransactionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  projectId: 'projectId',
+  agentId: 'agentId',
+  cost: 'cost',
+  success: 'success',
+  source: 'source',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -285,9 +296,22 @@ exports.Prisma.PromotionOrderByRelevanceFieldEnum = {
   userId: 'userId',
   description: 'description'
 };
+
+exports.Prisma.TransactionOrderByRelevanceFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  projectId: 'projectId',
+  agentId: 'agentId'
+};
 exports.PromotionType = exports.$Enums.PromotionType = {
   INTRO: 'INTRO',
-  ADMIN: 'ADMIN'
+  ADMIN: 'ADMIN',
+  SUBSCRIPTION: 'SUBSCRIPTION'
+};
+
+exports.TransactionSource = exports.$Enums.TransactionSource = {
+  PROMOTION: 'PROMOTION',
+  BUDGET: 'BUDGET'
 };
 
 exports.Prisma.ModelName = {
@@ -299,7 +323,8 @@ exports.Prisma.ModelName = {
   Comments: 'Comments',
   AnonymousUser: 'AnonymousUser',
   Budget: 'Budget',
-  Promotion: 'Promotion'
+  Promotion: 'Promotion',
+  Transaction: 'Transaction'
 };
 
 /**
