@@ -19,6 +19,8 @@ SELECT
   aa.version,
   aa."embeddingProvider",
   aa."embeddingModel",
+  aa."isDraft",
+  aa."draftAgentId",
   pa.id AS "publicAgentId",
   pa.description,
   pa.remixable,

@@ -125,10 +125,10 @@ exports.Prisma.TemplateScalarFieldEnum = {
   description: 'description',
   image: 'image',
   graph: 'graph',
-  spells: 'spells',
   createdAt: 'createdAt',
   deletedAt: 'deletedAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  spells: 'spells'
 };
 
 exports.Prisma.PublicAgentScalarFieldEnum = {
@@ -221,6 +221,8 @@ exports.Prisma.AgentsScalarFieldEnum = {
   version: 'version',
   embeddingProvider: 'embeddingProvider',
   embeddingModel: 'embeddingModel',
+  isDraft: 'isDraft',
+  draftAgentId: 'draftAgentId',
   publicAgentId: 'publicAgentId',
   description: 'description',
   remixable: 'remixable',
@@ -231,9 +233,7 @@ exports.Prisma.AgentsScalarFieldEnum = {
   creatorName: 'creatorName',
   creatorImage: 'creatorImage',
   likesCount: 'likesCount',
-  commentsCount: 'commentsCount',
-  isDraft: 'isDraft',
-  draftAgentId: 'draftAgentId'
+  commentsCount: 'commentsCount'
 };
 
 exports.Prisma.SpellsScalarFieldEnum = {
@@ -253,108 +253,6 @@ exports.Prisma.DocumentsScalarFieldEnum = {
   projectId: 'projectId',
   date: 'date',
   metadata: 'metadata'
-};
-
-exports.Prisma.CustomersScalarFieldEnum = {
-  id: 'id',
-  object: 'object',
-  address: 'address',
-  description: 'description',
-  email: 'email',
-  metadata: 'metadata',
-  name: 'name',
-  phone: 'phone',
-  shipping: 'shipping',
-  balance: 'balance',
-  created: 'created',
-  currency: 'currency',
-  default_source: 'default_source',
-  delinquent: 'delinquent',
-  discount: 'discount',
-  invoice_prefix: 'invoice_prefix',
-  invoice_settings: 'invoice_settings',
-  livemode: 'livemode',
-  next_invoice_sequence: 'next_invoice_sequence',
-  preferred_locales: 'preferred_locales',
-  tax_exempt: 'tax_exempt',
-  updated_at: 'updated_at',
-  deleted: 'deleted'
-};
-
-exports.Prisma.SubscriptionsScalarFieldEnum = {
-  id: 'id',
-  object: 'object',
-  cancel_at_period_end: 'cancel_at_period_end',
-  current_period_end: 'current_period_end',
-  current_period_start: 'current_period_start',
-  default_payment_method: 'default_payment_method',
-  items: 'items',
-  metadata: 'metadata',
-  pending_setup_intent: 'pending_setup_intent',
-  pending_update: 'pending_update',
-  application_fee_percent: 'application_fee_percent',
-  billing_cycle_anchor: 'billing_cycle_anchor',
-  billing_thresholds: 'billing_thresholds',
-  cancel_at: 'cancel_at',
-  canceled_at: 'canceled_at',
-  collection_method: 'collection_method',
-  created: 'created',
-  days_until_due: 'days_until_due',
-  default_source: 'default_source',
-  default_tax_rates: 'default_tax_rates',
-  discount: 'discount',
-  ended_at: 'ended_at',
-  livemode: 'livemode',
-  next_pending_invoice_item_invoice: 'next_pending_invoice_item_invoice',
-  pause_collection: 'pause_collection',
-  pending_invoice_item_interval: 'pending_invoice_item_interval',
-  start_date: 'start_date',
-  transfer_data: 'transfer_data',
-  trial_end: 'trial_end',
-  trial_start: 'trial_start',
-  schedule: 'schedule',
-  customer: 'customer',
-  latest_invoice: 'latest_invoice',
-  plan: 'plan',
-  updated_at: 'updated_at'
-};
-
-exports.Prisma.ProductsScalarFieldEnum = {
-  id: 'id',
-  object: 'object',
-  active: 'active',
-  description: 'description',
-  metadata: 'metadata',
-  name: 'name',
-  created: 'created',
-  images: 'images',
-  livemode: 'livemode',
-  package_dimensions: 'package_dimensions',
-  shippable: 'shippable',
-  statement_descriptor: 'statement_descriptor',
-  unit_label: 'unit_label',
-  updated: 'updated',
-  url: 'url',
-  updated_at: 'updated_at'
-};
-
-exports.Prisma.PricesScalarFieldEnum = {
-  id: 'id',
-  object: 'object',
-  active: 'active',
-  currency: 'currency',
-  metadata: 'metadata',
-  nickname: 'nickname',
-  recurring: 'recurring',
-  unit_amount: 'unit_amount',
-  billing_scheme: 'billing_scheme',
-  created: 'created',
-  livemode: 'livemode',
-  lookup_key: 'lookup_key',
-  transform_quantity: 'transform_quantity',
-  unit_amount_decimal: 'unit_amount_decimal',
-  product: 'product',
-  updated_at: 'updated_at'
 };
 
 exports.Prisma.SortOrder = {
@@ -459,12 +357,12 @@ exports.Prisma.agentsOrderByRelevanceFieldEnum = {
   version: 'version',
   embeddingProvider: 'embeddingProvider',
   embeddingModel: 'embeddingModel',
+  draftAgentId: 'draftAgentId',
   publicAgentId: 'publicAgentId',
   description: 'description',
   creatorId: 'creatorId',
   creatorName: 'creatorName',
-  creatorImage: 'creatorImage',
-  draftAgentId: 'draftAgentId'
+  creatorImage: 'creatorImage'
 };
 
 exports.Prisma.spellsOrderByRelevanceFieldEnum = {
@@ -483,53 +381,6 @@ exports.Prisma.documentsOrderByRelevanceFieldEnum = {
   projectId: 'projectId',
   date: 'date'
 };
-
-exports.Prisma.customersOrderByRelevanceFieldEnum = {
-  id: 'id',
-  object: 'object',
-  description: 'description',
-  email: 'email',
-  name: 'name',
-  phone: 'phone',
-  currency: 'currency',
-  default_source: 'default_source',
-  invoice_prefix: 'invoice_prefix',
-  tax_exempt: 'tax_exempt'
-};
-
-exports.Prisma.subscriptionsOrderByRelevanceFieldEnum = {
-  id: 'id',
-  object: 'object',
-  default_payment_method: 'default_payment_method',
-  pending_setup_intent: 'pending_setup_intent',
-  collection_method: 'collection_method',
-  default_source: 'default_source',
-  schedule: 'schedule',
-  customer: 'customer',
-  latest_invoice: 'latest_invoice',
-  plan: 'plan'
-};
-
-exports.Prisma.productsOrderByRelevanceFieldEnum = {
-  id: 'id',
-  object: 'object',
-  description: 'description',
-  name: 'name',
-  statement_descriptor: 'statement_descriptor',
-  unit_label: 'unit_label',
-  url: 'url'
-};
-
-exports.Prisma.pricesOrderByRelevanceFieldEnum = {
-  id: 'id',
-  object: 'object',
-  currency: 'currency',
-  nickname: 'nickname',
-  billing_scheme: 'billing_scheme',
-  lookup_key: 'lookup_key',
-  unit_amount_decimal: 'unit_amount_decimal',
-  product: 'product'
-};
 exports.PromotionType = exports.$Enums.PromotionType = {
   INTRO: 'INTRO',
   ADMIN: 'ADMIN'
@@ -547,11 +398,7 @@ exports.Prisma.ModelName = {
   Promotion: 'Promotion',
   agents: 'agents',
   spells: 'spells',
-  documents: 'documents',
-  customers: 'customers',
-  subscriptions: 'subscriptions',
-  products: 'products',
-  prices: 'prices'
+  documents: 'documents'
 };
 
 /**

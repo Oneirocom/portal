@@ -34,10 +34,10 @@ model Template {
   description String?
   image       String?
   graph       Json?
-  spells      String[]  @default([])
   createdAt   DateTime? @default(now())
   deletedAt   DateTime?
   updatedAt   DateTime? @updatedAt
+  spells      String[]  @default([])
 
   @@map("templates")
   @@schema("portal")
@@ -160,6 +160,8 @@ view agents {
   version               String?   @db.VarChar(255)
   embeddingProvider     String?   @db.VarChar(255)
   embeddingModel        String?   @db.VarChar(255)
+  isDraft               Boolean?
+  draftAgentId          String?   @db.Uuid
   publicAgentId         String?
   description           String?
   remixable             Boolean?
@@ -171,8 +173,6 @@ view agents {
   creatorImage          String?
   likesCount            Int?
   commentsCount         BigInt?
-  isDraft               Boolean?
-  draftAgentId          String?
 
   @@schema("portal")
 }
@@ -196,119 +196,6 @@ view documents {
   projectId String?
   date      String?
   metadata  Json?
-
-  @@schema("portal")
-}
-
-view customers {
-  id                    String    @id @unique
-  object                String?
-  address               Json?
-  description           String?
-  email                 String?
-  metadata              Json?
-  name                  String?
-  phone                 String?
-  shipping              Json?
-  balance               Int?
-  created               Int?
-  currency              String?
-  default_source        String?
-  delinquent            Boolean?
-  discount              Json?
-  invoice_prefix        String?
-  invoice_settings      Json?
-  livemode              Boolean?
-  next_invoice_sequence Int?
-  preferred_locales     Json?
-  tax_exempt            String?
-  updated_at            DateTime? @db.Timestamptz(6)
-  deleted               Boolean?
-
-  @@schema("portal")
-}
-
-view subscriptions {
-  id                                String                              @id @unique
-  object                            String?
-  cancel_at_period_end              Boolean?
-  current_period_end                Int?
-  current_period_start              Int?
-  default_payment_method            String?
-  items                             Json?
-  metadata                          Json?
-  pending_setup_intent              String?
-  pending_update                    Json?
-  status                            Unsupported("subscription_status")?
-  application_fee_percent           Float?
-  billing_cycle_anchor              Int?
-  billing_thresholds                Json?
-  cancel_at                         Int?
-  canceled_at                       Int?
-  collection_method                 String?
-  created                           Int?
-  days_until_due                    Int?
-  default_source                    String?
-  default_tax_rates                 Json?
-  discount                          Json?
-  ended_at                          Int?
-  livemode                          Boolean?
-  next_pending_invoice_item_invoice Int?
-  pause_collection                  Json?
-  pending_invoice_item_interval     Json?
-  start_date                        Int?
-  transfer_data                     Json?
-  trial_end                         Json?
-  trial_start                       Json?
-  schedule                          String?
-  customer                          String?
-  latest_invoice                    String?
-  plan                              String?
-  updated_at                        DateTime?                           @db.Timestamptz(6)
-
-  @@schema("portal")
-}
-
-view products {
-  id                   String    @id @unique
-  object               String?
-  active               Boolean?
-  description          String?
-  metadata             Json?
-  name                 String?
-  created              Int?
-  images               Json?
-  livemode             Boolean?
-  package_dimensions   Json?
-  shippable            Boolean?
-  statement_descriptor String?
-  unit_label           String?
-  updated              Int?
-  url                  String?
-  updated_at           DateTime? @db.Timestamptz(6)
-
-  @@schema("portal")
-}
-
-view prices {
-  id                  String                        @id @unique
-  object              String?
-  active              Boolean?
-  currency            String?
-  metadata            Json?
-  nickname            String?
-  recurring           Json?
-  type                Unsupported("pricing_type")?
-  unit_amount         Int?
-  billing_scheme      String?
-  created             Int?
-  livemode            Boolean?
-  lookup_key          String?
-  tiers_mode          Unsupported("pricing_tiers")?
-  transform_quantity  Json?
-  unit_amount_decimal String?
-  product             String?
-  updated_at          DateTime?                     @db.Timestamptz(6)
 
   @@schema("portal")
 }
