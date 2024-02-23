@@ -46,7 +46,6 @@ type CreateContextOptions = {
  * @see https://create.t3.gg/en/usage/trpc#-serverapitrpcts
  */
 const createInnerTRPCContext = (opts: CreateContextOptions) => {
-  console.log("!!!HIT INNER TRPC CONTEXT!!!")
   return {
     req: opts.req,
     db: prismaPortal,
@@ -61,7 +60,6 @@ const createInnerTRPCContext = (opts: CreateContextOptions) => {
  * @see https://trpc.io/docs/context
  */
 export const createTRPCContext = async (opts: CreateNextContextOptions) => {
-  console.log("!!!HIT CREATE TRPC CONTEXT!!!")
   const { req } = opts
 
   return createInnerTRPCContext({
@@ -108,7 +106,6 @@ export const createTRPCRouter = t.router
 
 /** Middleware that enforces users are logged in before running the procedure. */
 const enforceUserIsAuthed = t.middleware(({ next, ctx }) => {
-  console.log("!!!HIT ENFORCE USER IS AUTHED!!!")
   if (!ctx.auth.userId) {
     throw new TRPCError({ code: 'UNAUTHORIZED' })
   }

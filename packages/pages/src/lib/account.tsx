@@ -119,7 +119,7 @@ export const AccountPage = () => {
     return percentage > 100 ? 100 : percentage // Cap the value at 100%
   }
 
-  const { data, isFetchingNextPage, fetchNextPage, hasNextPage, isLoading } =
+  const { data, isFetchingNextPage, fetchNextPage, hasNextPage } =
     api.billing.getTransactions.useInfiniteQuery(
       {},
       {

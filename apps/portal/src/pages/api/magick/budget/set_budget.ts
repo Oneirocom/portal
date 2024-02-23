@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { prismaPortal, type Prisma } from '@magickml/portal-db'
+import { prismaPortal } from '@magickml/portal-db'
 import { validateBudgetRequest } from '@magickml/portal-utils-server'
 import { recordTransaction, TransactionSource } from '@magickml/portal-billing'
 
