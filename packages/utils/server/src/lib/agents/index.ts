@@ -1,8 +1,12 @@
 import { prisma } from '@magickml/portal-db'
 import { prismaCore } from '@magickml/server-db'
 import { Session } from 'next-auth'
-import { Graph, PublicVariable, AgentDataOld } from '@magickml/portal-types'
-import { extractPublicVariablesV2 } from '@magickml/portal-utils-shared'
+import {
+  // Graph,
+  PublicVariable,
+  AgentDataOld,
+} from '@magickml/portal-types'
+// import { extractPublicVariablesV2 } from '@magickml/portal-utils-shared'
 import {
   type SignedInAuthObject,
   type SignedOutAuthObject,

@@ -1,7 +1,7 @@
-import { prisma } from '@magickml/portal-db'
-import { prismaCore } from '@magickml/server-db'
+// import { prisma } from '@magickml/portal-db'
+// import { prismaCore } from '@magickml/server-db'
 
-type InfiniteAgentsOptions = {
+export type InfiniteAgentsOptions = {
   limit: number
   cursor?: string
 }
