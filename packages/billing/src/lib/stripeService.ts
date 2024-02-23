@@ -93,77 +93,6 @@ export class StripeService {
     }
   }
 
-  async createOrRetrieveStripeCustomerId(
-    userId: string,
-    email: string
-  ): Promise<string | undefined> {
-    const user = await this.getUser(userId)
-    try {
-      const customer = await prisma.customers.findFirst({
-        where: { email: user?.email },
-      })
-
-      let id: string | undefined
-
-      if (!customer && email) {
-        id = await this.createStripeCustomer(email)
-      } else if (customer) {
-        id = customer.id
-      } else {
-        throw new Error('No email provided')
-      }
-
-      return id
-    } catch (error) {
-      console.error('Error in createOrRetrieveStripeCustomerId:', error)
-      throw error
-    }
-  }
-
-  async checkIfUserIsCustomer(userId: string): Promise<boolean> {
-    const user = await this.getUser(userId)
-    try {
-      const customer = await prisma.customers.findFirst({
-        where: { email: user?.email },
-      })
-      return Boolean(customer)
-    } catch (error) {
-      console.error('Error checking if user is a customer:', error)
-      throw error
-    }
-  }
-
-  async getUserSubscription(userId: string): Promise<string | false> {
-    const user = await this.getUser(userId)
-    try {
-      // Retrieve the customer record from your database
-      const customer = await prisma.customers.findFirst({
-        where: { email: user?.email },
-      })
-      if (!customer) {
-        return false
-      }
-
-      // Retrieve the Stripe customer's subscriptions
-      const subscriptions = await this.stripe.subscriptions.list({
-        customer: customer.id,
-        status: 'active',
-      })
-
-      if (subscriptions.data.length === 0) return false
-
-      const productId = subscriptions.data[0].items.data[0].price.product
-      const productData = await this.stripe.products.retrieve(
-        productId as string
-      )
-
-      return productData.name
-    } catch (error) {
-      console.error('Error checking user subscription:', error)
-      throw error
-    }
-  }
-
   async constructWebhookEvent(
     rawBody: string | Buffer,
     sig: string,
@@ -362,46 +291,6 @@ export class StripeService {
       await this.stripe.customers.del(customer.id)
     } catch (error) {
       console.error('Error deleting customer:', error)
-      throw error
-    }
-  }
-
-  async getClientSubscription(
-    userId: string
-  ): Promise<{ subscriptionId: string; productName: string } | false> {
-    const user = await this.getUser(userId)
-    try {
-      const customer = await prisma.customers.findFirst({
-        where: { email: user?.email },
-      })
-      if (!customer) {
-        return false
-      }
-
-      const subscriptions = await this.stripe.subscriptions.list({
-        customer: customer.id,
-        status: 'active',
-      })
-
-      if (subscriptions.data.length === 0) return false
-
-      const subscriptionId = subscriptions.data[0].id
-      const subscription = await this.stripe.subscriptions.retrieve(
-        subscriptionId
-      )
-
-      // Assuming there's always at least one item in the subscription
-      const productId = subscription.items.data[0].price.product
-
-      // Retrieve the product to get its name
-      const product = await this.stripe.products.retrieve(productId as string)
-
-      return {
-        subscriptionId: subscription.id,
-        productName: product.name,
-      }
-    } catch (error) {
-      console.error('Error getting client subscription:', error)
       throw error
     }
   }

@@ -6,23 +6,6 @@ import { getFullUser } from '@magickml/portal-utils-server'
 import type Stripe from 'stripe'
 
 export const billingRouter = createTRPCRouter({
-  getSubscription: protectedProcedure.query(async ({ ctx }) => {
-    const subscription = await stripeService.getClientSubscription(
-      ctx.auth.userId
-    )
-
-    if (!subscription) {
-      return {
-        exists: false,
-      }
-    }
-
-    return {
-      subscription,
-      exists: !!subscription,
-    }
-  }),
-
   createCheckout: protectedProcedure
     .input(
       z.object({

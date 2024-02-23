@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { createTRPCRouter, protectedProcedure } from '../trpc'
 import { hasAccess, prepareToken } from '../utils/shared'
-import { prisma } from '@magickml/portal-db'
+import { prismaCore } from '@magickml/server-db'
 
 type Document = {
   id: string
@@ -27,7 +27,7 @@ export const documentsRouter = createTRPCRouter({
       }
 
       // TODO: make this an infinite query
-      return await prisma.documents.findMany({
+      return await prismaCore.documents.findMany({
         orderBy: {
           date: 'desc',
         },

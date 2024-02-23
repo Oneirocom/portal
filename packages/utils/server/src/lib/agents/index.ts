@@ -43,7 +43,7 @@ export const getAgentDataSSR = async (
     },
   })
 
-  if (!agent || !agent.rootSpellId) return null
+  if (!agent || !agent.rootSpellId || !agent?.projectId) return null
 
   const publicAgent = await prisma.publicAgent.findUnique({
     where: {
@@ -155,7 +155,7 @@ export const getAgentData = async (params: GetAgentDataParams) => {
     },
   })
 
-  if (!agent) return null
+  if (!agent || !agent.projectId) return null
 
   // Additional logic based on the original view's operations
   const publicAgent = await prisma.publicAgent.findUnique({
@@ -204,7 +204,7 @@ export const getAgentData = async (params: GetAgentDataParams) => {
 
   const status = {
     isPublic,
-    isCreator: creatorId === params.auth?.user.id,
+    isCreator: creatorId === params.auth?.userId,
     isEnabled: agent.enabled,
   }
 
