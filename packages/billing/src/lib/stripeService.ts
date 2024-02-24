@@ -141,7 +141,7 @@ export class StripeService {
         },
       ],
       success_url: successUrl,
-      cancel_url: cancelUrl ?? `${this.getAppURL()}/account`,
+      cancel_url: cancelUrl ?? `${this.getAppURL()}/billing`,
     }
 
     sessionParams.mode = priceType === 'recurring' ? 'subscription' : 'payment'
@@ -177,8 +177,8 @@ export class StripeService {
           userId,
           subscriptionName: name.toUpperCase(),
         },
-        success_url: `${this.getAppURL()}/account`,
-        cancel_url: `${this.getAppURL()}/account`,
+        success_url: `${this.getAppURL()}/billing`,
+        cancel_url: `${this.getAppURL()}/billing`,
       })
 
       return session
@@ -217,8 +217,8 @@ export class StripeService {
           amount: amount.toString(),
           balance: 'true',
         },
-        success_url: `${this.getAppURL()}/account`,
-        cancel_url: `${this.getAppURL()}/account`,
+        success_url: `${this.getAppURL()}/billing`,
+        cancel_url: `${this.getAppURL()}/billing`,
       })
 
       return session
@@ -231,7 +231,7 @@ export class StripeService {
   async createPortal(customerId: string): Promise<string> {
     const portalSession = await this.stripe.billingPortal.sessions.create({
       customer: customerId,
-      return_url: this.getAppURL() + '/account',
+      return_url: this.getAppURL() + '/billing',
     })
     return portalSession.url
   }

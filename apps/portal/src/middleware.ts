@@ -33,6 +33,6 @@ export const config = {
     '/(api|trpc)(.*)',
     '/agents(.*)',
     '/account(.*)',
-    '/profile(.*)',
+    '/billing(.*)',
   ],
 }

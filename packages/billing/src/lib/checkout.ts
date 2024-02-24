@@ -1,7 +1,7 @@
 import { CreateCheckoutInput } from './stripeService'
 
-const successUrl = `${process.env.APP_URL}/account`
-const cancelUrl = `${process.env.APP_URL}/account`
+const successUrl = `${process.env.APP_URL}/billing`
+const cancelUrl = `${process.env.APP_URL}/billing`
 
 const baseSub = {
   priceType: 'recurring' as 'recurring' | 'one_time',

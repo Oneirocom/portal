@@ -63,16 +63,16 @@ export const DropDownUserMenu = () => {
       separator: true,
     },
     {
-      id: 'profile',
+      id: 'account',
       enabled: session?.status === 'active' ? true : false,
       children: (
         <>
           <UserCircleIcon className="w-6 h-6 mr-2" />
-          <span>Profile</span>
+          <span>Account</span>
         </>
       ),
       type: 'link',
-      href: '/profile',
+      href: '/account',
       navigate: handleNavigation,
       separator: true,
     },

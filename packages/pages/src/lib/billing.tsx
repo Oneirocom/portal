@@ -28,7 +28,7 @@ const amountSchema = z.object({
     .max(1000, 'Maximum amount is $1000.00'),
 })
 
-export const AccountPage = () => {
+export const BillingPage = () => {
   const user = useUser()
   const subscription = user.user?.publicMetadata.subscription as
     | string
@@ -145,13 +145,12 @@ export const AccountPage = () => {
 
       <div className="self-stretch justify-center items-center gap-5 inline-flex p-4 lg:p-10">
         <h1 className="grow shrink basis-0 text-2xl font-bold font-montAlt">
-          Account
+          Billing
         </h1>
       </div>
 
       {/* Billing */}
       <div className="flex flex-col gap-y-2 p-4 lg:p-10 border-none border-ds-neutral w-full">
-        <h3 className="text-2xl font-montAlt font-medium">Billing</h3>
         <p className="font-montAlt pb-2">
           Review and manage your subscription usage.
         </p>
@@ -320,7 +319,7 @@ export const AccountPage = () => {
   )
 }
 
-AccountPage.getLayout = function getLayout(page: any) {
+BillingPage.getLayout = function getLayout(page: any) {
   return (
     <PortalLayout>
       <MainLayout classNames="!mx-0">{page}</MainLayout>

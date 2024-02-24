@@ -95,9 +95,9 @@ export const MP: FC = () => {
         {/* MP Info container */}
         <div className="relative w-full text-center mt-2">
           <p className="text-ds-secondary-p dark:text-ds-secondary-m font-normal text-xs">
-            {`${
-              Number(budget?.promotional_balance.toFixed(0) || 0) * 100
-            } MP / ${isWizard ? '1000' : '200 Free Trial'} MP`}
+            {`${Number(budget?.promotional_balance.toFixed(0) || 0) * 100} / ${
+              isWizard ? '1000' : '200 Free Trial'
+            } MP`}
           </p>
         </div>
       </div>

@@ -58,14 +58,29 @@ export const UserMenu = () => {
       enabled: isSignedIn,
       children: (
         <Link
-          id="your-profile"
-          key="your-profile"
-          href="/profile"
+          id="your-account"
+          key="your-account"
+          href="/account"
           className={dropDownStyles}
           onClick={handleClose}
         >
           <UserCircleIcon className="w-6 h-6 mr-2" />
-          <span className="link-hover">Profile</span>
+          <span className="link-hover">Account</span>
+        </Link>
+      ),
+    },
+    {
+      enabled: isSignedIn,
+      children: (
+        <Link
+          href="/billing"
+          id="usermenu-settings"
+          key="usermenu-settings"
+          className={dropDownStyles}
+          onClick={handleClose}
+        >
+          <Cog6ToothIcon className="w-6 h-6 mr-2" />
+          <span className="link-hover">Billing</span>
         </Link>
       ),
     },
@@ -120,21 +135,6 @@ export const UserMenu = () => {
         </button>
       ),
       enabled: true,
-    },
-    {
-      enabled: isSignedIn,
-      children: (
-        <Link
-          href="/account"
-          id="usermenu-settings"
-          key="usermenu-settings"
-          className={dropDownStyles}
-          onClick={handleClose}
-        >
-          <Cog6ToothIcon className="w-6 h-6 mr-2" />
-          <span className="link-hover">Account</span>
-        </Link>
-      ),
     },
     {
       id: 'logIn',
