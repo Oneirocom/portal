@@ -1,6 +1,6 @@
 import { S3Client, PutObjectCommand, PutObjectOutput } from '@aws-sdk/client-s3'
 
-export type UploadImageType = 'userAvatar' | 'userBanner' | 'projectAvatar'
+export type UploadImageType = 'userAvatar' | 'userBanner' | 'projectAvatar' | 'agentAvatar'
 
 const typeToFolderAndFileKeyMap: Record<
   UploadImageType,
@@ -9,6 +9,7 @@ const typeToFolderAndFileKeyMap: Record<
   userAvatar: { folder: 'users', fileKey: 'avatar.jpg' },
   userBanner: { folder: 'users', fileKey: 'banner.jpg' },
   projectAvatar: { folder: 'projects', fileKey: 'avatar.jpg' },
+  agentAvatar: { folder: 'agents', fileKey: 'avatar.jpg' },
 }
 
 const s3 = new S3Client({

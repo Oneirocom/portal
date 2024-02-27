@@ -15,6 +15,7 @@ import {
 } from '@magickml/portal-utils-shared'
 import { makeClient } from 'ideClient'
 import { createFromTemplate } from '@magickml/portal-templates'
+import { uploadImage } from '../utils/upload'
 
 const ideServerUrl = process.env.IDE_SERVER_URL || 'http://localhost:3030'
 
@@ -133,21 +134,14 @@ export const agentsRouter = createTRPCRouter({
         throw new Error('No access to the specified workspace')
       }
 
-      // Define a function to handle image upload and return the image path
-      const uploadImageAndGetPath = async (agentId: string, image: string) => {
-        const response = await app
-          .service('agentImage')
-          .create({ agentId, image })
-        if (response.ETag && response.VersionId) {
-          return `/agents/${agentId}/avatar.jpg?versionId=${response.VersionId}`
-        } else {
-          throw new Error('Image upload failed!')
-        }
-      }
-
       // If an image is provided, upload it and get the path
       if (input.image) {
-        input.image = await uploadImageAndGetPath(input.agentId, input.image)
+        const imgResponse = await uploadImage(
+          input.agentId,
+          input.image,
+          'agentAvatar'
+        )
+        input.image = `/agents/${agent.id}/avatar.jpg?${imgResponse.VersionId}`
       }
 
       const performUpdate = async (agentIdToUpdate: string) => {
