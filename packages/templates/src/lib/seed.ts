@@ -1,16 +1,11 @@
 import { PrismaClient } from '../../../db/src/lib/prisma/client-portal'
 import { type Prisma } from '@magickml/portal-db'
-import {
-  blankTemplate,
-  babyAGITemplate,
-  slackDiscordTemplate,
-} from './templates'
+import * as templates from './templates'
 
-export const baseTemplates: Prisma.TemplateCreateInput[] = [
-  blankTemplate,
-  babyAGITemplate,
-  slackDiscordTemplate,
-]
+export const baseTemplates: Prisma.TemplateCreateInput[] =
+  Object.values(templates)
+
+console.log('baseTemplates', baseTemplates)
 
 const prisma = new PrismaClient()
 
