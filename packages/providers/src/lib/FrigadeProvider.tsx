@@ -14,14 +14,17 @@ type Props = {
 export const FrigadeProvider = ({ children }: Props) => {
   const { user, isSignedIn, isLoaded } = useUser()
   const router = useRouter()
-  const { userId, setUserId } = useFrigadeUser()
+  const { userId, setUserId, setUserIdWithProperties } = useFrigadeUser()
 
   useEffect(() => {
     if (!isLoaded) {
       return
     }
     if (isSignedIn) {
-      setUserId(user.id)
+      setUserIdWithProperties(user.id, {
+        email: user.primaryEmailAddress?.emailAddress || '',
+        username: user.username,
+      })
     } else if (!userId) {
       setUserId(uuidv4())
     }
