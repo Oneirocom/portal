@@ -49,8 +49,8 @@ export const CustomPosthogProvider = ({ children }: Props) => {
 
   // Set identity
   useEffect(() => {
-    if (isSignedIn && session?.user?.id) {
-      posthog.identify(session.user.id)
+    if (isSignedIn && session?.user?.primaryEmailAddress?.emailAddress) {
+      posthog.identify(session?.user.primaryEmailAddress.emailAddress)
     } else {
       posthog.reset()
     }
