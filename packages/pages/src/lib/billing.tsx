@@ -19,7 +19,6 @@ import { api } from '@magickml/portal-api-client'
 import { capitalizeFirst } from '@magickml/portal-utils-shared'
 import { useUser } from '@clerk/nextjs'
 import axios from 'axios'
-import { SubscriptionNames } from 'servicesShared'
 
 const amountSchema = z.object({
   amount: z
@@ -35,7 +34,7 @@ export const BillingPage = () => {
     | undefined
   const role = user.user?.publicMetadata.role as string | undefined
 
-  const isWizard = subscription?.toUpperCase() === SubscriptionNames.Wizard
+  const isWizard = subscription?.toUpperCase() === 'WIZARD'
 
   const isTester = role === 'TESTER' || role === 'ADMIN'
 
