@@ -5,12 +5,28 @@ import { PortalSubscriptions } from '@magickml/portal-utils-shared'
 import { buffer } from 'micro'
 import { NextApiRequest } from 'next'
 import { prismaPortal } from '@magickml/portal-db'
+import { PortalBot, type PortalBotPayload } from 'server/event-tracker'
 
 class StripeEventHandler {
   private stripe: Stripe
+  private bot: PortalBot = new PortalBot(
+    true,
+    typeof process.env.PORTAL_BOT_URL === 'string'
+  )
 
   constructor(stripe: Stripe) {
     this.stripe = stripe
+  }
+
+  private async errorLog(event: string, content: string) {
+    await this.bot.log({
+      event,
+      content,
+      slackMessage: {
+        text: `${event}: ${content}`,
+        blocks: [],
+      },
+    })
   }
 
   private getWebhookSecret = () => process.env.STRIPE_WEBHOOK_SECRET!
@@ -87,18 +103,36 @@ class StripeEventHandler {
             },
           },
         })
+
+        await this.bot.log({
+          event: 'Checkout session completed',
+          content: `Updated balance: ${userId} ${parsedAmount}`,
+          slackMessage: {
+            text: `Checkout session completed: ${userId} ${parsedAmount}`,
+            blocks: [
+              {
+                type: 'section',
+                text: {
+                  type: 'mrkdwn',
+                  text: `*${userId} Balance Information*\n*Amount*: ${parsedAmount}`,
+                },
+              },
+            ],
+          },
+        })
       } catch (error) {
-        console.error(
-          'BIG WARNING: Error updating user balance:',
-          error,
-          'in handleCheckoutSessionCompleted'
+        await this.errorLog(
+          'Checkout session completed',
+          `Error updating balance: ${error}`
         )
       }
     } else {
       if (!userId || !subscriptionName) {
-        console.error(
-          'BIG WARNING: Missing userId or subscriptionName in handleCheckoutSessionCompleted'
+        await this.errorLog(
+          'Checkout session completed',
+          `Missing userId or subscriptionName`
         )
+
         return
       }
       // add promotion
@@ -110,10 +144,9 @@ class StripeEventHandler {
           await makeWizardPromotion(userId)
           break
         default:
-          console.log(
-            'BIG WARNING: Unhandled subscription:',
-            subscriptionName,
-            'in handleCheckoutSessionCompleted'
+          await this.errorLog(
+            'Checkout session completed',
+            `Unhandled subscription: ${subscriptionName}`
           )
           break
       }
@@ -124,11 +157,27 @@ class StripeEventHandler {
             subscription: subscriptionName.toUpperCase(),
           },
         })
+
+        await this.bot.log({
+          event: 'Checkout session completed',
+          content: `Updated user metadata: ${userId} ${subscriptionName}`,
+          slackMessage: {
+            text: `Checkout session completed: ${userId} ${subscriptionName}`,
+            blocks: [
+              {
+                type: 'section',
+                text: {
+                  type: 'mrkdwn',
+                  text: `*${userId} Subscription Information*\n*Subscription*: ${subscriptionName}`,
+                },
+              },
+            ],
+          },
+        })
       } catch (error) {
-        console.error(
-          'BIG WARNING: Error updating user metadata:',
-          error,
-          'in handleCheckoutSessionCompleted'
+        await this.errorLog(
+          'Checkout session completed',
+          `Error updating user metadata: ${error}`
         )
       }
     }
