@@ -9,6 +9,7 @@ import {
   OrganizationWebhookEvent,
   OrganizationMembershipWebhookEvent,
   OrganizationInvitationWebhookEvent,
+  UserJSON,
 } from '@clerk/nextjs/server'
 import { stripeService } from '@magickml/portal-billing'
 import { Roles } from '@magickml/portal-config'
@@ -16,13 +17,17 @@ import { PortalSubscriptions } from '@magickml/portal-utils-shared'
 import { prismaPortal } from '@magickml/portal-db'
 import { prismaCore } from '@magickml/server-db'
 import { makeClient } from 'ideClient'
+import { PortalBot } from 'server/event-tracker'
 
 const ideServerUrl = process.env.IDE_SERVER_URL || 'http://localhost:3030'
 
 const app = makeClient(ideServerUrl)
 
 export class ClerkEventService {
-  private useLogs = process.env.CLERK_WEBHOOK_LOGGING === 'true'
+  private bot: PortalBot = new PortalBot(
+    process.env.CLERK_WEBHOOK_LOGGING === 'true',
+    typeof process.env.PORTAL_BOT_URL === 'string'
+  )
   async handleEvent(event: WebhookEvent) {
     const eventType: WebhookEventType = event.type
     switch (eventType) {
@@ -93,31 +98,33 @@ export class ClerkEventService {
         await this.handleSMSCreated(event as SMSWebhookEvent)
         break
       default:
-        this.log('Unhandled event', eventType)
+        await this.bot.log({
+          event: 'Unknown event',
+          content: JSON.stringify(event),
+        })
         break
     }
-  }
-
-  private log(event: string, content: string | undefined) {
-    this.useLogs &&
-      console.log(
-        `\x1b[35mCLERK: ${event}: ${content || 'Content was undefined.'}\x1b[0m`
-      )
   }
 
   // USER EVENTS
   private async handleUserCreated(event: UserWebhookEvent) {
     if (!event.data.id) {
-      this.log('User created', 'No user ID found in payload.')
+      this.bot.log({
+        event: 'User created',
+        content: 'No user ID found in payload.',
+      })
       return
     }
-    this.log('User created', event.data.id)
 
-    const user = await clerkClient.users.getUser(event.data.id)
+    await this.bot.log({
+      event: 'User created',
+      content: event.data.id,
+      slackMessage: this.bot.makeUserMessage(event.data as UserJSON),
+    })
 
-    const customer = await stripeService.handleNewCustomer(user.id)
+    const customer = await stripeService.handleNewCustomer(event.data.id)
 
-    await clerkClient.users.updateUserMetadata(user.id, {
+    await clerkClient.users.updateUserMetadata(event.data.id, {
       privateMetadata: {
         stripeId: customer,
       },
@@ -129,14 +136,21 @@ export class ClerkEventService {
   }
 
   private async handleUserUpdated(event: UserWebhookEvent) {
-    this.log('User updated', event.data.id)
+    this.bot.log({
+      event: 'User updated',
+      content: event.data.id,
+    })
   }
 
   private async handleUserDeleted(event: UserWebhookEvent) {
     const userId = event.data.id
 
     if (!userId) {
-      this.log('User deleted', 'No user ID found in payload.')
+      await this.bot.log({
+        event: 'User deleted',
+        content: 'No user ID found in payload.',
+      })
+
       return
     }
 
@@ -176,86 +190,127 @@ export class ClerkEventService {
 
       console.log('USER DELETED', userId)
     } catch (error) {
-      console.log('Error deleting user in hook', error)
-      this.log('User deleted', `Error deleting user: ${error}`)
+      await this.bot.log({
+        event: 'User deleted',
+        content: `Error deleting user: ${userId}`,
+      })
     }
   }
 
   // SESSION EVENTS
   private async handleSessionCreated(event: SessionWebhookEvent) {
-    this.log('Session created', event.data.user_id)
+    await this.bot.log({
+      event: 'Session created',
+      content: event.data.user_id,
+    })
   }
 
   private async handleSessionEnded(event: SessionWebhookEvent) {
-    this.log('Session ended', event.data.user_id)
+    await this.bot.log({
+      event: 'Session ended',
+      content: event.data.user_id,
+    })
   }
 
   private async handleSessionRemoved(event: SessionWebhookEvent) {
-    this.log('Session removed', event.data.user_id)
+    await this.bot.log({
+      event: 'Session removed',
+      content: event.data.user_id,
+    })
   }
 
   private async handleSessionRevoked(event: SessionWebhookEvent) {
-    this.log('Session revoked', event.data.user_id)
+    await this.bot.log({
+      event: 'Session revoked',
+      content: event.data.user_id,
+    })
   }
 
   // ORGANIZATION EVENTS
   private async handleOrganizationCreated(event: OrganizationWebhookEvent) {
-    this.log('Organization created', event.data.id)
+    await this.bot.log({
+      event: 'Organization created',
+      content: event.data.id,
+    })
   }
 
   private async handleOrganizationUpdated(event: OrganizationWebhookEvent) {
-    this.log('Organization updated', event.data.id)
+    await this.bot.log({
+      event: 'Organization updated',
+      content: event.data.id,
+    })
   }
 
   private async handleOrganizationDeleted(event: OrganizationWebhookEvent) {
-    this.log('Organization deleted', event.data.id)
+    await this.bot.log({
+      event: 'Organization deleted',
+      content: event.data.id,
+    })
   }
 
   // ORGANIZATION MEMBERSHIP EVENTS
   private async handleOrganizationMembershipCreated(
     event: OrganizationMembershipWebhookEvent
   ) {
-    this.log('Organization membership created', event.data.id)
+    await this.bot.log({
+      event: 'Organization membership created',
+      content: event.data.id,
+    })
   }
 
   private async handleOrganizationMembershipUpdated(
     event: OrganizationMembershipWebhookEvent
   ) {
-    this.log('Organization membership updated', event.data.id)
+    await this.bot.log({
+      event: 'Organization membership updated',
+      content: event.data.id,
+    })
   }
 
   private async handleOrganizationMembershipDeleted(
     event: OrganizationMembershipWebhookEvent
   ) {
-    this.log('Organization membership deleted', event.data.id)
+    await this.bot.log({
+      event: 'Organization membership deleted',
+      content: event.data.id,
+    })
   }
 
   // ORGANIZATION INVITATION EVENTS
   private async handleOrganizationInvitationCreated(
     event: OrganizationInvitationWebhookEvent
   ) {
-    this.log('Organization invitation created', event.data.id)
+    await this.bot.log({
+      event: 'Organization invitation created',
+      content: event.data.id,
+    })
   }
 
   private async handleOrganizationInvitationUpdated(
     event: OrganizationInvitationWebhookEvent
   ) {
-    this.log('Organization invitation updated', event.data.id)
+    await this.bot.log({
+      event: 'Organization invitation accepted',
+      content: event.data.id,
+    })
   }
 
   private async handleOrganizationInvitationRevoked(
     event: OrganizationInvitationWebhookEvent
   ) {
-    this.log('Organization invitation revoked', event.data.id)
+    await this.bot.log({
+      event: 'Organization invitation revoked',
+      content: event.data.id,
+    })
   }
 
   // MISC EVENTS
   private async handleEmailCreated(event: EmailWebhookEvent) {
-    this.log('Email created', event.data.id)
+    await this.bot.log({ event: 'Email created', content: event.data.id })
   }
 
   private async handleSMSCreated(event: SMSWebhookEvent) {
-    this.log('SMS created', event.data.id)
+    await this.bot.log({ event: 'SMS created', content: event.data.id })
   }
 }
 
