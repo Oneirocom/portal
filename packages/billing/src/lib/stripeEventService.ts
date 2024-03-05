@@ -5,7 +5,7 @@ import { PortalSubscriptions } from '@magickml/portal-utils-shared'
 import { buffer } from 'micro'
 import { NextApiRequest } from 'next'
 import { prismaPortal } from '@magickml/portal-db'
-import { PortalBot, type PortalBotPayload } from 'server/event-tracker'
+import { PortalBot } from 'server/event-tracker'
 
 class StripeEventHandler {
   private stripe: Stripe
