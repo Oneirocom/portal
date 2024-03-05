@@ -5,8 +5,6 @@ import * as templates from './templates'
 export const baseTemplates: Prisma.TemplateCreateInput[] =
   Object.values(templates)
 
-console.log('baseTemplates', baseTemplates)
-
 const prisma = new PrismaClient()
 
 async function main() {

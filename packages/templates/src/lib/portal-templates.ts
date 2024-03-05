@@ -10,8 +10,6 @@ const app = makeClient(ideServerUrl)
 export const baseTemplates: Prisma.TemplateCreateInput[] =
   Object.values(templates)
 
-console.log('baseTemplates', baseTemplates)
-
 export const createBaseTemplates = async () => {
   for (const template of baseTemplates) {
     const { id, ...rest } = template
