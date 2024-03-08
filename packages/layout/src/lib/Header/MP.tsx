@@ -31,7 +31,7 @@ export const MP: FC = () => {
   const getProgressValue = () => {
     const maxMP = isWizard ? 1000 : 200 // Maximum MP based on subscription
     const currentMP =
-      Number((budget?.promotional_balance || 0).toFixed(0) || 0) * 100 // Current MP
+      Number((budget?.promotional_balance || 0).toFixed(2) || 0) * 100 // Current MP
     const percentage = (currentMP / maxMP) * 100 // Calculate percentage of the max MP
 
     if (isNaN(percentage) || percentage < 0) return 0 // Ensure value is not NaN or negative
@@ -95,7 +95,7 @@ export const MP: FC = () => {
         {/* MP Info container */}
         <div className="relative w-full text-center mt-2">
           <p className="text-ds-secondary-p dark:text-ds-secondary-m font-normal text-xs">
-            {`${Number(budget?.promotional_balance.toFixed(0) || 0) * 100} / ${
+            {`${Number(budget?.promotional_balance.toFixed(2) || 0) * 100} / ${
               isWizard ? '1000' : '200 Free Trial'
             } MP`}
           </p>
