@@ -17,17 +17,26 @@ import { PortalSubscriptions } from '@magickml/portal-utils-shared'
 import { prismaPortal } from '@magickml/portal-db'
 import { prismaCore } from '@magickml/server-db'
 import { makeClient } from 'ideClient'
-import { PortalBot } from 'server/event-tracker'
+// import { PortalBot } from 'server/event-tracker'
 
 const ideServerUrl = process.env.IDE_SERVER_URL || 'http://localhost:3030'
 
 const app = makeClient(ideServerUrl)
 
 export class ClerkEventService {
-  private bot: PortalBot = new PortalBot(
-    process.env.CLERK_WEBHOOK_LOGGING === 'true',
-    typeof process.env.PORTAL_BOT_URL === 'string'
-  )
+  private bot = {
+    log: async (message: any) => {
+      console.log('LOGGING', message)
+    },
+    makeUserMessage: (_data: any) => {
+      console.log(_data)
+      return 'NOT IMPLEMENTED YET'
+    },
+  }
+  // private bot: PortalBot = new PortalBot(
+  //   process.env.CLERK_WEBHOOK_LOGGING === 'true',
+  //   typeof process.env.PORTAL_BOT_URL === 'string'
+  // )
   async handleEvent(event: WebhookEvent) {
     const eventType: WebhookEventType = event.type
     switch (eventType) {

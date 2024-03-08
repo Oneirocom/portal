@@ -5,14 +5,19 @@ import { PortalSubscriptions } from '@magickml/portal-utils-shared'
 import { buffer } from 'micro'
 import { NextApiRequest } from 'next'
 import { prismaPortal } from '@magickml/portal-db'
-import { PortalBot } from 'server/event-tracker'
+// import { PortalBot } from 'server/event-tracker'
 
 class StripeEventHandler {
   private stripe: Stripe
-  private bot: PortalBot = new PortalBot(
-    true,
-    typeof process.env.PORTAL_BOT_URL === 'string'
-  )
+  private bot = {
+    log: async (message: any) => {
+      console.log('LOGGING', message)
+    },
+    makeUserMessage: (_data: any) => {
+      console.log(_data)
+      return 'NOT IMPLEMENTED YET'
+    },
+  }
 
   constructor(stripe: Stripe) {
     this.stripe = stripe
