@@ -1,8 +1,12 @@
-import { Card, CardDescription, CardHeader, CardTitle } from '@magickml/client-ui'
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@magickml/client-ui'
 import Image from 'next/legacy/image'
 import { ImageType, getImage } from '@magickml/portal-utils-shared'
 import { AgentCardMenu } from './agent-card-menu'
-import { useRouter } from 'next/router'
 import { useState } from 'react'
 
 type AgentCardProps = {
@@ -15,12 +19,12 @@ type AgentCardProps = {
 }
 
 export const AgentCard: React.FC<AgentCardProps> = agent => {
-  const router = useRouter()
   const menuState = useState(false)
   const deleteModalState = useState(false)
   const publicModalState = useState(false)
   const renameModalState = useState(false)
   const imageModalState = useState(false)
+  const templateModalState = useState(false)
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     if (
@@ -28,11 +32,12 @@ export const AgentCard: React.FC<AgentCardProps> = agent => {
       deleteModalState[0] ||
       publicModalState[0] ||
       renameModalState[0] ||
-      imageModalState[0]
+      imageModalState[0] ||
+      templateModalState[0]
     ) {
       e.stopPropagation()
     } else {
-      router.push(`/projects/${agent.projectId}`)
+      window.open(`/projects/${agent.projectId}`, '_blank')
     }
   }
 
@@ -54,6 +59,7 @@ export const AgentCard: React.FC<AgentCardProps> = agent => {
           publicModalState={publicModalState}
           renameModalState={renameModalState}
           imageModalState={imageModalState}
+          templateModalState={templateModalState}
         />
         <Image
           src={getImage({

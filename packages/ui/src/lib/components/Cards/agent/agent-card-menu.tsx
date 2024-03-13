@@ -19,6 +19,8 @@ import {
 } from '@magickml/client-ui'
 
 import { convertFileToBase64 } from '@magickml/portal-utils-shared'
+import { useUser } from '@clerk/nextjs'
+import { useRouter } from 'next/router'
 
 type AgentCardMenuProps = {
   agentId: string | null
@@ -31,6 +33,12 @@ type AgentCardMenuProps = {
   deleteModalState: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
   renameModalState: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
   imageModalState: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
+  templateModalState: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
+}
+
+type CreateTemplateState = {
+  name: string
+  description: string
 }
 
 export const AgentCardMenu: React.FunctionComponent<AgentCardMenuProps> = ({
@@ -44,6 +52,7 @@ export const AgentCardMenu: React.FunctionComponent<AgentCardMenuProps> = ({
   deleteModalState,
   renameModalState,
   imageModalState,
+  templateModalState,
 }) => {
   const workspace = useAtomValue(workspaceAtom)
   const utils = api.useContext()
@@ -52,6 +61,38 @@ export const AgentCardMenu: React.FunctionComponent<AgentCardMenuProps> = ({
   const [disableConfirmDelete, setDisableConfirmDelete] = useState(true)
   const [renameValue, setRenameValue] = useState(agentName ?? '')
   const [imageFile, setImageFile] = useState<File | null>(null)
+  const { user, isSignedIn } = useUser()
+  const router = useRouter()
+
+  const [templateState, setTemplateState] = useState<CreateTemplateState>({
+    name: '',
+    description: '',
+  })
+
+  const { mutateAsync: createTemplate, isLoading: isCreateTemplateLoading } =
+    api.agents.createTemplate.useMutation({
+      onSuccess: async () => {
+        await utils.agents.invalidate()
+        toast.success('Template created')
+        templateModalState[1](false)
+        router.push('/agents/create')
+      },
+      onError: e => {
+        toast.error(e.message)
+        templateModalState[1](false)
+      },
+    })
+
+  const handleCreateTemplate = async () => {
+    if (user && isSignedIn && user.publicMetadata?.role === 'ADMIN') {
+      await createTemplate({
+        ...templateState,
+        agentId: agentId ?? '',
+      })
+    } else {
+      toast.error('You do not have permission to create a template.')
+    }
+  }
 
   const { mutateAsync: updateAgent, isLoading: isUpdateLoading } =
     api.agents.updateAgent.useMutation({
@@ -201,6 +242,12 @@ export const AgentCardMenu: React.FunctionComponent<AgentCardMenuProps> = ({
       type: 'button',
       enabled: true,
     },
+    {
+      name: 'Create Template',
+      action: () => templateModalState[1](true),
+      type: 'button',
+      enabled: user && isSignedIn && user.publicMetadata?.role === 'ADMIN',
+    },
 
     {
       name: 'Delete',
@@ -336,6 +383,44 @@ export const AgentCardMenu: React.FunctionComponent<AgentCardMenuProps> = ({
             className="focus:border-secondary-highlight placeholder:font-montserrat placeholder:text-black/70 dark:placeholder:text-white/70 w-full p-2 bg-transparent border-2 border-[#808f9a] rounded-[8px] dark:text-white"
             placeholder="Enter agent name to confirm"
             onChange={handleOnchangeDelete}
+          />
+        </div>
+      </MagickDialog>
+
+      {/* Create Template Modal */}
+      <MagickDialog
+        title="Create Template"
+        open={templateModalState[0]}
+        isLoading={isCreateTemplateLoading}
+        setOpen={templateModalState[1]}
+        onSubmit={handleCreateTemplate}
+        submitText={`${
+          isCreateTemplateLoading ? 'Creating' : 'Create'
+        } Template`}
+        submitDisabled={templateState.name === '' || isCreateTemplateLoading}
+        description={`Create a template from this agent.`}
+        destructive={false}
+      >
+        <div className="flex flex-col gap-2">
+          <Input
+            className="focus:border-secondary-highlight placeholder:font-montserrat placeholder:text-black/70 dark:placeholder:text-white/70 w-full p-2 bg-transparent border-2 border-[#808f9a] rounded-[8px] dark:text-white"
+            placeholder="Template Name"
+            value={templateState.name}
+            onChange={e =>
+              setTemplateState({ ...templateState, name: e.target.value })
+            }
+          />
+          <Textarea
+            className="focus:border-secondary-highlight placeholder:font-montserrat placeholder:text-black/70 dark:placeholder:text-white/70 w-full p-2 bg-transparent border-2 border-[#808f9a] rounded-[8px] dark:text-white"
+            placeholder="Template Description"
+            value={templateState.description}
+            onChange={e =>
+              setTemplateState({
+                ...templateState,
+                description: e.target.value,
+              })
+            }
+            rows={4}
           />
         </div>
       </MagickDialog>
