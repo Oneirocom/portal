@@ -14,11 +14,7 @@ import {
   PrivateEventTypes,
 } from '@magickml/portal-utils-shared'
 import { makeClient } from 'ideClient'
-import {
-  createFromTemplate,
-  createTemplate,
-  createFromAgent,
-} from '@magickml/portal-templates'
+import { createFromTemplate, createFromAgent } from '@magickml/portal-templates'
 import { uploadImage } from '../utils/upload'
 import { clerkClient } from '@clerk/nextjs'
 
