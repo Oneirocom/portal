@@ -10,7 +10,7 @@ export const hashStringToInt = (s: string, max: number) => {
 };
 
 export const defaultImage = (projectId: string) => {
-  return `${defaultImagePath}image-${hashStringToInt(projectId, 117)}.webp`;
+  return `${defaultImagePath}image-${hashStringToInt(projectId, 117)}.jpeg`;
 };
 
 export const defaultBannerImage = (userId: string) => {
