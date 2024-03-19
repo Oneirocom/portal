@@ -35,7 +35,12 @@ export const AgentsPage = ({ initialData }) => {
       <Head>
         <title>Agents | MagickML</title>
       </Head>
-      <h1 className="text-3xl font-semibold">Agents</h1>
+      <div className="inline-flex gap-x-1 items-center">
+        <h1 className="text-3xl font-semibold">Agents</h1>
+        {isLoading && (
+          <div className="loading loading-spinner text-ds-primary" />
+        )}
+      </div>
       <p className="text-lg font-medium text-ds-secondary-p dark:text-ds-secondary-m">
         {`Choose from your Agents to access the Development Environment, where you
         can edit it's Spell.`}
@@ -43,6 +48,7 @@ export const AgentsPage = ({ initialData }) => {
       <h3 className="text-2xl font-montAlt text-ds-secondary-p dark:text-ds-secondary-m">
         Choose your Agent:
       </h3>
+
       <div className="relative flex flex-wrap justify-center pb-10 gap-x-4 gap-y-4 lg:justify-start">
         {!isLoading &&
           data &&
