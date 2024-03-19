@@ -75,7 +75,7 @@ export const AgentCardMenu: React.FunctionComponent<AgentCardMenuProps> = ({
         await utils.agents.invalidate()
         toast.success('Template created')
         templateModalState[1](false)
-        router.push('/agents/create')
+        router.push('/create')
       },
       onError: e => {
         toast.error(e.message)
@@ -441,7 +441,9 @@ export const AgentCardMenu: React.FunctionComponent<AgentCardMenuProps> = ({
               item.enabled &&
               (item.type === 'link' ? (
                 <DropdownMenuItem asChild key={item.name}>
-                  <Link href={item.href ?? '#'}>{item.name}</Link>
+                  <Link target="_blank" href={item.href ?? '#'}>
+                    {item.name}
+                  </Link>
                 </DropdownMenuItem>
               ) : (
                 <DropdownMenuItem

@@ -46,7 +46,7 @@ export const AgentChatHeader = ({
           variant="ghost"
           onClick={() =>
             isSignedIn
-              ? router.push('/agents')
+              ? router.push('/')
               : router.push('/explore')
           }
           size="icon"

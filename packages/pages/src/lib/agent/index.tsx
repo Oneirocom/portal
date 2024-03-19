@@ -68,7 +68,7 @@ export const AgentsPage = ({ initialData }) => {
             ))}
 
         <Card
-          onClick={() => router.push('/agents/create')}
+          onClick={() => router.push('/create')}
           className="text-center font-medium font-montserrat bg-tranparent dark:bg-[#03010d] border-ds-primary-m border-dashed
         w-44 h-60 lg:w-56 lg:h-80 flex flex-col hover:scale-105 transition-all duration-150 ease-in-out hover:overflow-visible cursor-pointer justify-center items-center"
         >

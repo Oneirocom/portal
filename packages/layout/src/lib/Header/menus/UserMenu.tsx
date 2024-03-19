@@ -90,7 +90,7 @@ export const UserMenu = () => {
         <Link
           key="your-agents"
           id="your-agents"
-          href="/agents"
+          href="/"
           className={dropDownStyles}
           onClick={handleClose}
         >

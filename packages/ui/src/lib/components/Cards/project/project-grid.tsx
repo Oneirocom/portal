@@ -59,7 +59,7 @@ export const ProjectGrid: React.FC<CardGridProps> = ({
         {usePlaceholder && Icon && (
           <PlaceholderCard
             text={placeholderText}
-            link="/agents/create"
+            link="/create"
             type={type === 'agent' ? 'link' : 'button'}
             action={() => setCreateProjectOpen && setCreateProjectOpen(true)}
             Icon={Icon}
