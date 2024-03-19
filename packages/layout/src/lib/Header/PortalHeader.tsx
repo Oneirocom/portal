@@ -103,7 +103,8 @@ export const PortalHeader = () => {
       </Link>
       {/* LINKS */}
       <div className="items-center justify-start hidden pl-20 lg:inline-flex gap-x-10">
-        {navigation &&
+        {/* TEMPORARY REMOVE NAV */}
+        {false && navigation &&
           navigation.length > 0 &&
           navigation.map(
             (item: Route) =>
