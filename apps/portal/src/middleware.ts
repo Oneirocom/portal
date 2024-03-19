@@ -3,7 +3,6 @@ import { authMiddleware } from '@clerk/nextjs'
 export default authMiddleware({
   debug: process.env.CLERK_MIDDLEWARE_LOGGING === 'true',
   publicRoutes: [
-    '/',
     '/auth/sign-in',
     '/auth/sign-up',
     '/auth/verify',
