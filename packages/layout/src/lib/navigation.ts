@@ -1,4 +1,4 @@
-import { AgentIcon, ExploreIcon, HomeIcon, ProjectIcon } from '@magickml/icons'
+import { ExploreIcon, HomeIcon, ProjectIcon } from '@magickml/icons'
 import { Role } from '@magickml/portal-config'
 
 interface IconProps {
