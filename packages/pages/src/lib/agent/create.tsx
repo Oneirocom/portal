@@ -24,7 +24,7 @@ export const CreateAgentPage = () => {
       onSuccess: agent => {
         setOpen(false)
         setName('')
-        router.push(`/projects/${agent.project}`)
+        window.open(`/projects/${agent.project}`, '_blank')
         setTemplateId('')
       },
       onError: error => {
