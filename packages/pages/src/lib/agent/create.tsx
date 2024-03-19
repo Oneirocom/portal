@@ -1,7 +1,6 @@
 import { PortalLayout, MainLayout } from '@magickml/portal-layout'
 import { api } from '@magickml/portal-api-client'
 import { FunctionComponent, useState } from 'react'
-import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
 import { SlRefresh } from 'react-icons/sl'
 import { AgentCardTemplate } from '@magickml/portal-ui'
@@ -13,8 +12,6 @@ export const CreateAgentPage = () => {
   const [open, setOpen] = useState<boolean>(false)
   const [name, setName] = useState<string>('')
   const [templateId, setTemplateId] = useState<string | null>('')
-
-  const router = useRouter()
 
   const { data: templates, isLoading: templatesLoading } =
     api.agents.getTemplates.useQuery()
