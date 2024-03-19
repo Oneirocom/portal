@@ -14,7 +14,6 @@ export default authMiddleware({
     '/api/auth/sync',
     '/api/billing/sync',
     '/subscribe',
-    '/projects(.*)',
   ],
   ignoredRoutes: [
     '/api/magick',
@@ -31,6 +30,7 @@ export const config = {
     '/',
     '/(api|trpc)(.*)',
     '/agents(.*)',
+    '/projects(.*)',
     '/account(.*)',
     '/billing(.*)',
   ],
