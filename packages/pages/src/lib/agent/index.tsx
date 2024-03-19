@@ -7,8 +7,10 @@ import { useInView } from 'react-intersection-observer'
 import clsx from 'clsx'
 import { AgentCard } from '@magickml/portal-ui'
 import { Card, Button } from '@magickml/client-ui'
+import { useUser } from '@clerk/nextjs'
 
 export const AgentsPage = ({ initialData }) => {
+  const { isSignedIn } = useUser()
   const router = useRouter()
   const { ref, inView } = useInView()
   const { data, isFetchingNextPage, fetchNextPage, hasNextPage, isLoading } =
@@ -18,6 +20,7 @@ export const AgentsPage = ({ initialData }) => {
         getNextPageParam: lastPage => lastPage.nextCursor,
         refetchInterval: 1000 * 60 * 1, // 1 minute
         initialData: initialData,
+        enabled: isSignedIn,
       }
     )
 
