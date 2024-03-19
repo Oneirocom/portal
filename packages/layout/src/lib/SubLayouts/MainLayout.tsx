@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Image from "next/legacy/image"
 import { PortalHeader } from '../Header/PortalHeader'
-import MagickMobileNav from '../MobileNav/MagickMobileNav'
+// import MagickMobileNav from '../MobileNav/MagickMobileNav'
 import clsx from 'clsx'
 import MagickFooter from '../Footer/MagickFooter'
 
@@ -136,7 +136,7 @@ export const MainLayout: React.FC<Props> = ({
           {children}
         </div>
 
-        <MagickMobileNav />
+        {/* <MagickMobileNav /> */}
       </div>
       <MagickFooter />
     </>
