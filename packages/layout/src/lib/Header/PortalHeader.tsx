@@ -34,7 +34,7 @@ export const PortalHeader = () => {
   }, [isSignedIn, user])
 
   return (
-    <div className="bg-ds-header shrink-0 h-12 lg:h-20 relative w-full inline-flex justify-start items-center text-left text-ds-black dark:text-ds-white lg:px-10">
+    <div className="bg-ds-header shrink-0 h-16 relative w-full inline-flex justify-start items-center text-left text-ds-black dark:text-ds-white lg:px-10">
       {/* LOGO */}
       <Link
         href="/"
@@ -97,14 +97,20 @@ export const PortalHeader = () => {
             </g>
           </svg>
         </div>
-        <span className="mt-3 text-sm font-semibold lg:mt-5 lg:text-xl font-montAlt text-ds-primary">
-          BETA
-        </span>
+        <div className="flex flex-col items-start justify-around h-full">
+          <span className="text-[10px] font-montserrat leading-none  text-ds-primary-m">
+            V2.0
+          </span>
+          <span className="text-sm font-bold leading-none !font-montAlt text-ds-primary">
+            BETA
+          </span>
+        </div>
       </Link>
       {/* LINKS */}
       <div className="items-center justify-start hidden pl-20 lg:inline-flex gap-x-10">
         {/* TEMPORARY REMOVE NAV */}
-        {false && navigation &&
+        {false &&
+          navigation &&
           navigation.length > 0 &&
           navigation.map(
             (item: Route) =>

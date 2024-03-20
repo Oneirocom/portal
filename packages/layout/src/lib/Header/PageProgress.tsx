@@ -53,7 +53,7 @@ export const PageProgress = () => {
           'bg-secondary-highlight/60': progress <= 33,
           'bg-secondary-highlight/80': progress > 33 && progress <= 66,
           'bg-secondary-highlight': progress > 66 && progress <= 99,
-          'bg-[#262730]': progress > 99,
+          'bg-ds-neutral': progress > 99,
         })}
         style={{ width: `${progress}%` }}
       />
