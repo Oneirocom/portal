@@ -7,8 +7,10 @@ import { useInView } from 'react-intersection-observer'
 import clsx from 'clsx'
 import { AgentCard } from '@magickml/portal-ui'
 import { Card, Button } from '@magickml/client-ui'
+import { useUser } from '@clerk/nextjs'
 
 export const AgentsPage = ({ initialData }) => {
+  const { isSignedIn } = useUser()
   const router = useRouter()
   const { ref, inView } = useInView()
   const { data, isFetchingNextPage, fetchNextPage, hasNextPage, isLoading } =
@@ -18,6 +20,7 @@ export const AgentsPage = ({ initialData }) => {
         getNextPageParam: lastPage => lastPage.nextCursor,
         refetchInterval: 1000 * 60 * 1, // 1 minute
         initialData: initialData,
+        enabled: isSignedIn,
       }
     )
 
@@ -32,7 +35,12 @@ export const AgentsPage = ({ initialData }) => {
       <Head>
         <title>Agents | MagickML</title>
       </Head>
-      <h1 className="text-3xl font-semibold">Agents</h1>
+      <div className="inline-flex gap-x-1 items-center">
+        <h1 className="text-3xl font-semibold">Agents</h1>
+        {isLoading && (
+          <div className="loading loading-spinner text-ds-primary" />
+        )}
+      </div>
       <p className="text-lg font-medium text-ds-secondary-p dark:text-ds-secondary-m">
         {`Choose from your Agents to access the Development Environment, where you
         can edit it's Spell.`}
@@ -40,6 +48,7 @@ export const AgentsPage = ({ initialData }) => {
       <h3 className="text-2xl font-montAlt text-ds-secondary-p dark:text-ds-secondary-m">
         Choose your Agent:
       </h3>
+
       <div className="relative flex flex-wrap justify-center pb-10 gap-x-4 gap-y-4 lg:justify-start">
         {!isLoading &&
           data &&
@@ -59,7 +68,7 @@ export const AgentsPage = ({ initialData }) => {
             ))}
 
         <Card
-          onClick={() => router.push('/agents/create')}
+          onClick={() => router.push('/create')}
           className="text-center font-medium font-montserrat bg-tranparent dark:bg-[#03010d] border-ds-primary-m border-dashed
         w-44 h-60 lg:w-56 lg:h-80 flex flex-col hover:scale-105 transition-all duration-150 ease-in-out hover:overflow-visible cursor-pointer justify-center items-center"
         >

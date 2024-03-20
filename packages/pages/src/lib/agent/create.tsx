@@ -1,7 +1,6 @@
 import { PortalLayout, MainLayout } from '@magickml/portal-layout'
 import { api } from '@magickml/portal-api-client'
 import { FunctionComponent, useState } from 'react'
-import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
 import { SlRefresh } from 'react-icons/sl'
 import { AgentCardTemplate } from '@magickml/portal-ui'
@@ -14,8 +13,6 @@ export const CreateAgentPage = () => {
   const [name, setName] = useState<string>('')
   const [templateId, setTemplateId] = useState<string | null>('')
 
-  const router = useRouter()
-
   const { data: templates, isLoading: templatesLoading } =
     api.agents.getTemplates.useQuery()
 
@@ -24,7 +21,7 @@ export const CreateAgentPage = () => {
       onSuccess: agent => {
         setOpen(false)
         setName('')
-        router.push(`/projects/${agent.project}`)
+        window.open(`/projects/${agent.project}`, '_blank')
         setTemplateId('')
       },
       onError: error => {
@@ -70,15 +67,16 @@ export const CreateAgentPage = () => {
           ))}
       </div>
       <MagickDialog
+        logo={false}
         open={open}
         hideButton={true}
         isLoading={isMakingAgentRemix}
         setOpen={setOpen}
         trigger={<RemixButton onClick={() => setOpen(true)} />}
-        title="Remix Agent"
-        description="Remixing an agent will create a new agent with the same spell as the original agent. The new agent will be owned by you and will be placed in your workspace."
+        title="Name Your Agent"
+        description="Using a Template will create a new Agent with the same spell as the Template."
         onSubmit={handleRemixAgent}
-        submitText="Remix"
+        submitText="Create"
         submitDisabled={!name}
       >
         <Label htmlFor="name" className="text-left">
@@ -89,7 +87,7 @@ export const CreateAgentPage = () => {
           autoComplete="off"
           value={name}
           onChange={e => setName(e.target.value)}
-          className="focus:border-secondary-highlight placeholder:font-montserrat placeholder:text-black/70 dark:placeholder:text-white/70 w-full p-2 bg-transparent border-2 border-[#808f9a] rounded-[8px] dark:text-white"
+          className="focus:border-secondary-highlight bg-ds-card-alt placeholder:font-montserrat placeholder:text-black/70 dark:placeholder:text-white/70 w-full p-2 border-2 border-[#808f9a] rounded-[8px] dark:text-white"
           placeholder="Tom Bombadil"
         />
       </MagickDialog>

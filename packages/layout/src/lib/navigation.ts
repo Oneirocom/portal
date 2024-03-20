@@ -1,16 +1,10 @@
-import {
-  AgentIcon,
-  ExploreIcon,
-  HomeIcon,
-  ProjectIcon,
-} from '@magickml/icons'
+import { ExploreIcon, HomeIcon, ProjectIcon } from '@magickml/icons'
 import { Role } from '@magickml/portal-config'
 
-
 interface IconProps {
-  className?: string;
-  width?: number;
-  height?: number;
+  className?: string
+  width?: number
+  height?: number
 }
 
 export type Route = {
@@ -25,8 +19,8 @@ export type Route = {
 export const rolesConfig: Record<Role, string[]> = {
   ANONYMOUS: ['home'],
   USER: ['home', 'agents'],
-  TESTER: ['home', 'agents', 'projects'],
-  ADMIN: ['home', 'agents', 'projects'],
+  TESTER: ['home', 'projects'],
+  ADMIN: ['home', 'projects'],
 }
 
 export const allRoutes: Record<string, any> = {
@@ -43,13 +37,6 @@ export const allRoutes: Record<string, any> = {
     icon: '/images/icons/community.svg',
     enabled: false,
     Iicon: ExploreIcon,
-  },
-  agents: {
-    name: 'Agents',
-    href: '/agents',
-    icon: '/images/icons/agents.svg',
-    enabled: true,
-    Iicon: AgentIcon,
   },
   projects: {
     name: 'Projects',

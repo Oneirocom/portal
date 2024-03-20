@@ -3,7 +3,6 @@ import { authMiddleware } from '@clerk/nextjs'
 export default authMiddleware({
   debug: process.env.CLERK_MIDDLEWARE_LOGGING === 'true',
   publicRoutes: [
-    '/',
     '/auth/sign-in',
     '/auth/sign-up',
     '/auth/verify',
@@ -15,7 +14,6 @@ export default authMiddleware({
     '/api/auth/sync',
     '/api/billing/sync',
     '/subscribe',
-    '/projects(.*)',
   ],
   ignoredRoutes: [
     '/api/magick',
@@ -32,6 +30,7 @@ export const config = {
     '/',
     '/(api|trpc)(.*)',
     '/agents(.*)',
+    '/projects(.*)',
     '/account(.*)',
     '/billing(.*)',
   ],

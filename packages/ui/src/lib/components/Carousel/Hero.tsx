@@ -79,7 +79,7 @@ export function CarouselHero() {
   const onButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
     if (isSignedIn) {
-      router.push('/agents/create')
+      router.push('/create')
     } else {
       router.push('/sign-in')
     }
