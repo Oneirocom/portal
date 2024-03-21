@@ -1,10 +1,8 @@
-import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next'
-
 export default function AgentsPage() {
   return <></>
 }
 
-export async function getServerSideProps(ctx: GetServerSidePropsContext) {
+export async function getServerSideProps() {
   return {
     redirect: {
       destination: '/',
