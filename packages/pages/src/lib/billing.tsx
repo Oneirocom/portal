@@ -157,7 +157,11 @@ export const BillingPage = () => {
         <div className="self-stretch pb-4 justify-center items-center gap-6 flex lg:flex-row flex-col">
           <Card>
             <p className="text-center text-3xl font-medium">
-              {subscription ? capitalizeFirst(subscription) : 'Aspirant'}
+              {subscription
+                ? capitalizeFirst(
+                    subscription === 'NEOPHYTE' ? 'ASPIRANT' : subscription
+                  )
+                : 'Aspirant'}
             </p>
             <p className="text-center text-ds-secondary-p dark:text-ds-secondary-m text-base font-normal">
               {subscription && subscription !== 'NEOPHYTE' ? (
