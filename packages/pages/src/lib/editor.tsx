@@ -62,6 +62,7 @@ export const Editor = (props: AppConfig): React.ReactElement | null => {
           contentClassNames="pt-0"
           titleClassNames="py-2 text-center font-montAlt"
           type="error"
+          noClose
         >
           <div className="text-black dark:text-ds-white font-montserrat font-medium text-base flex flex-col gap-y-2">
             <p>
