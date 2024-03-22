@@ -98,7 +98,7 @@ export const PortalHeader = () => {
           </svg>
         </div>
         <div className="flex flex-col items-start justify-around h-full">
-          <span className="text-[10px] font-montserrat leading-none  text-ds-primary-m">
+          <span className="text-[10px] font-montserrat leading-none  text-ds-primary-p dark:text-ds-primary-m">
             V2.0
           </span>
           <span className="text-sm font-bold leading-none !font-montAlt text-ds-primary">
