@@ -58,7 +58,7 @@ export const Editor = (props: AppConfig): React.ReactElement | null => {
           onSubmit={() => {
             router.push('/')
           }}
-          submitText="OK"
+          submitButton={false}
           contentClassNames="pt-0"
           titleClassNames="py-2 text-center font-montAlt"
           type="error"
