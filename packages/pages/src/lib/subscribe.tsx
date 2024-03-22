@@ -62,7 +62,10 @@ const subscriptionOptions: SubscriptionOption[] = [
     description: 'standard package',
     price: '24.99',
     pricePeriod: 'month',
-    features: ['Access all AI providers', '$10 compute credits / month'],
+    features: [
+      'Access all AI providers',
+      '1000 MP (compute credits) included monthly',
+    ],
     imageUrl: '/images/subscriptions/wizard.png',
     isBestValue: true,
     subscriptionTooltip: {
