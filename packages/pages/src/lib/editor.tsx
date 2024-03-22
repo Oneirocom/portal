@@ -17,7 +17,7 @@ const MagickIDE = dynamic(
 
 export const Editor = (props: AppConfig): React.ReactElement | null => {
   const [loading, setLoading] = useState(true)
-  const [status] = useState<string>('Initializing editor...')
+  const status = useState<string>('Initializing editor...')
   const [cookie, setCookie] = useState<boolean | null>(null)
   const [mobileDialog, setMobileDialog] = useState(false)
 
@@ -75,9 +75,14 @@ export const Editor = (props: AppConfig): React.ReactElement | null => {
       )}
       {loading && (
         <div className=" h-dvh flex items-center justify-center flex-col gap-y-1 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-          <span className="loading loading-spinner loading-lg text-white" />
+          <object
+            type="image/svg+xml"
+            data="/images/loading.svg"
+            aria-label="loading..."
+            className="w-72 h-72"
+          />
           <span className="text-sm font-montserrat font-medium tracking-tight">
-            {status}
+            {status[0]}
           </span>
         </div>
       )}
@@ -85,7 +90,11 @@ export const Editor = (props: AppConfig): React.ReactElement | null => {
         <Maintenance mode="editor" />
       ) : cookie !== null ? (
         <>
-          <MagickIDE config={props} loading={[loading, setLoading]} />
+          <MagickIDE
+            config={props}
+            loading={[loading, setLoading]}
+            loadingStatus={status}
+          />
         </>
       ) : null}
     </>
