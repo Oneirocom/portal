@@ -1,7 +1,8 @@
 import { clerkClient } from '@clerk/nextjs'
 import { createTRPCRouter, protectedProcedure } from '../trpc'
-import { createFromAgent } from '@magickml/portal-templates'
+import { createFromAgent, removeTemplate } from '@magickml/portal-templates'
 import { z } from 'zod'
+import { prismaPortal } from '@magickml/portal-db'
 
 export const templatesRouter = createTRPCRouter({
   create: protectedProcedure
@@ -25,5 +26,22 @@ export const templatesRouter = createTRPCRouter({
         userId: ctx.auth.userId,
         type: role === 'ADMIN' ? 'OFFICIAL' : 'COMMUNITY',
       })
+    }),
+  deleteTemplate: protectedProcedure
+    .input(z.object({ templateId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const template = await prismaPortal.template.findUnique({
+        where: { id: input.templateId },
+      })
+
+      if (!template) {
+        throw new Error('Template not found')
+      }
+
+      if (template.userId !== ctx.auth.userId) {
+        throw new Error('You are not authorized to delete this template')
+      }
+
+      await removeTemplate(input.templateId)
     }),
 })
