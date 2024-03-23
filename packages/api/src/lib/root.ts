@@ -19,7 +19,7 @@ export const portalRouter = createTRPCRouter({
   chat: chatRouter,
   anonUsers: anonUserRouter,
   billing: billingRouter,
-  tempaltes: templatesRouter,
+  templates: templatesRouter,
 })
 
 // export type definition of API
