@@ -128,7 +128,9 @@ exports.Prisma.TemplateScalarFieldEnum = {
   createdAt: 'createdAt',
   deletedAt: 'deletedAt',
   updatedAt: 'updatedAt',
-  spells: 'spells'
+  spells: 'spells',
+  type: 'type',
+  userId: 'userId'
 };
 
 exports.Prisma.PublicAgentScalarFieldEnum = {
@@ -250,7 +252,8 @@ exports.Prisma.TemplateOrderByRelevanceFieldEnum = {
   name: 'name',
   description: 'description',
   image: 'image',
-  spells: 'spells'
+  spells: 'spells',
+  userId: 'userId'
 };
 
 exports.Prisma.PublicAgentOrderByRelevanceFieldEnum = {
@@ -303,6 +306,11 @@ exports.Prisma.TransactionOrderByRelevanceFieldEnum = {
   projectId: 'projectId',
   agentId: 'agentId'
 };
+exports.TemplateType = exports.$Enums.TemplateType = {
+  OFFICIAL: 'OFFICIAL',
+  COMMUNITY: 'COMMUNITY'
+};
+
 exports.PromotionType = exports.$Enums.PromotionType = {
   INTRO: 'INTRO',
   ADMIN: 'ADMIN',

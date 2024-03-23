@@ -29,17 +29,26 @@ model Project {
 }
 
 model Template {
-  id          String    @id @default(cuid())
+  id          String       @id @default(cuid())
   name        String
   description String?
   image       String?
   graph       Json?
-  createdAt   DateTime? @default(now())
+  createdAt   DateTime?    @default(now())
   deletedAt   DateTime?
-  updatedAt   DateTime? @updatedAt
-  spells      String[]  @default([])
+  updatedAt   DateTime?    @updatedAt
+  spells      String[]     @default([])
+  type        TemplateType @default(OFFICIAL)
+  userId      String?
 
   @@map("templates")
+  @@schema("portal")
+}
+
+enum TemplateType {
+  OFFICIAL
+  COMMUNITY
+
   @@schema("portal")
 }
 

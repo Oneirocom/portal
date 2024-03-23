@@ -68,7 +68,15 @@ export type Transaction = $Result.DefaultSelection<Prisma.$TransactionPayload>
  * Enums
  */
 export namespace $Enums {
-  export const PromotionType: {
+  export const TemplateType: {
+  OFFICIAL: 'OFFICIAL',
+  COMMUNITY: 'COMMUNITY'
+};
+
+export type TemplateType = (typeof TemplateType)[keyof typeof TemplateType]
+
+
+export const PromotionType: {
   INTRO: 'INTRO',
   ADMIN: 'ADMIN',
   SUBSCRIPTION: 'SUBSCRIPTION'
@@ -85,6 +93,10 @@ export const TransactionSource: {
 export type TransactionSource = (typeof TransactionSource)[keyof typeof TransactionSource]
 
 }
+
+export type TemplateType = $Enums.TemplateType
+
+export const TemplateType: typeof $Enums.TemplateType
 
 export type PromotionType = $Enums.PromotionType
 
@@ -2609,6 +2621,8 @@ export namespace Prisma {
     createdAt: Date | null
     deletedAt: Date | null
     updatedAt: Date | null
+    type: $Enums.TemplateType | null
+    userId: string | null
   }
 
   export type TemplateMaxAggregateOutputType = {
@@ -2619,6 +2633,8 @@ export namespace Prisma {
     createdAt: Date | null
     deletedAt: Date | null
     updatedAt: Date | null
+    type: $Enums.TemplateType | null
+    userId: string | null
   }
 
   export type TemplateCountAggregateOutputType = {
@@ -2631,6 +2647,8 @@ export namespace Prisma {
     deletedAt: number
     updatedAt: number
     spells: number
+    type: number
+    userId: number
     _all: number
   }
 
@@ -2643,6 +2661,8 @@ export namespace Prisma {
     createdAt?: true
     deletedAt?: true
     updatedAt?: true
+    type?: true
+    userId?: true
   }
 
   export type TemplateMaxAggregateInputType = {
@@ -2653,6 +2673,8 @@ export namespace Prisma {
     createdAt?: true
     deletedAt?: true
     updatedAt?: true
+    type?: true
+    userId?: true
   }
 
   export type TemplateCountAggregateInputType = {
@@ -2665,6 +2687,8 @@ export namespace Prisma {
     deletedAt?: true
     updatedAt?: true
     spells?: true
+    type?: true
+    userId?: true
     _all?: true
   }
 
@@ -2750,6 +2774,8 @@ export namespace Prisma {
     deletedAt: Date | null
     updatedAt: Date | null
     spells: string[]
+    type: $Enums.TemplateType
+    userId: string | null
     _count: TemplateCountAggregateOutputType | null
     _min: TemplateMinAggregateOutputType | null
     _max: TemplateMaxAggregateOutputType | null
@@ -2779,6 +2805,8 @@ export namespace Prisma {
     deletedAt?: boolean
     updatedAt?: boolean
     spells?: boolean
+    type?: boolean
+    userId?: boolean
   }, ExtArgs["result"]["template"]>
 
   export type TemplateSelectScalar = {
@@ -2791,6 +2819,8 @@ export namespace Prisma {
     deletedAt?: boolean
     updatedAt?: boolean
     spells?: boolean
+    type?: boolean
+    userId?: boolean
   }
 
 
@@ -2807,6 +2837,8 @@ export namespace Prisma {
       deletedAt: Date | null
       updatedAt: Date | null
       spells: string[]
+      type: $Enums.TemplateType
+      userId: string | null
     }, ExtArgs["result"]["template"]>
     composites: {}
   }
@@ -3210,6 +3242,8 @@ export namespace Prisma {
     readonly deletedAt: FieldRef<"Template", 'DateTime'>
     readonly updatedAt: FieldRef<"Template", 'DateTime'>
     readonly spells: FieldRef<"Template", 'String[]'>
+    readonly type: FieldRef<"Template", 'TemplateType'>
+    readonly userId: FieldRef<"Template", 'String'>
   }
     
 
@@ -11040,7 +11074,9 @@ export namespace Prisma {
     createdAt: 'createdAt',
     deletedAt: 'deletedAt',
     updatedAt: 'updatedAt',
-    spells: 'spells'
+    spells: 'spells',
+    type: 'type',
+    userId: 'userId'
   };
 
   export type TemplateScalarFieldEnum = (typeof TemplateScalarFieldEnum)[keyof typeof TemplateScalarFieldEnum]
@@ -11207,7 +11243,8 @@ export namespace Prisma {
     name: 'name',
     description: 'description',
     image: 'image',
-    spells: 'spells'
+    spells: 'spells',
+    userId: 'userId'
   };
 
   export type TemplateOrderByRelevanceFieldEnum = (typeof TemplateOrderByRelevanceFieldEnum)[keyof typeof TemplateOrderByRelevanceFieldEnum]
@@ -11325,6 +11362,20 @@ export namespace Prisma {
    * Reference to a field of type 'Json'
    */
   export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+  /**
+   * Reference to a field of type 'TemplateType'
+   */
+  export type EnumTemplateTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TemplateType'>
+    
+
+
+  /**
+   * Reference to a field of type 'TemplateType[]'
+   */
+  export type ListEnumTemplateTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TemplateType[]'>
     
 
 
@@ -11480,6 +11531,8 @@ export namespace Prisma {
     deletedAt?: DateTimeNullableFilter<"Template"> | Date | string | null
     updatedAt?: DateTimeNullableFilter<"Template"> | Date | string | null
     spells?: StringNullableListFilter<"Template">
+    type?: EnumTemplateTypeFilter<"Template"> | $Enums.TemplateType
+    userId?: StringNullableFilter<"Template"> | string | null
   }
 
   export type TemplateOrderByWithRelationAndSearchRelevanceInput = {
@@ -11492,6 +11545,8 @@ export namespace Prisma {
     deletedAt?: SortOrderInput | SortOrder
     updatedAt?: SortOrderInput | SortOrder
     spells?: SortOrder
+    type?: SortOrder
+    userId?: SortOrderInput | SortOrder
     _relevance?: TemplateOrderByRelevanceInput
   }
 
@@ -11508,6 +11563,8 @@ export namespace Prisma {
     deletedAt?: DateTimeNullableFilter<"Template"> | Date | string | null
     updatedAt?: DateTimeNullableFilter<"Template"> | Date | string | null
     spells?: StringNullableListFilter<"Template">
+    type?: EnumTemplateTypeFilter<"Template"> | $Enums.TemplateType
+    userId?: StringNullableFilter<"Template"> | string | null
   }, "id">
 
   export type TemplateOrderByWithAggregationInput = {
@@ -11520,6 +11577,8 @@ export namespace Prisma {
     deletedAt?: SortOrderInput | SortOrder
     updatedAt?: SortOrderInput | SortOrder
     spells?: SortOrder
+    type?: SortOrder
+    userId?: SortOrderInput | SortOrder
     _count?: TemplateCountOrderByAggregateInput
     _max?: TemplateMaxOrderByAggregateInput
     _min?: TemplateMinOrderByAggregateInput
@@ -11538,6 +11597,8 @@ export namespace Prisma {
     deletedAt?: DateTimeNullableWithAggregatesFilter<"Template"> | Date | string | null
     updatedAt?: DateTimeNullableWithAggregatesFilter<"Template"> | Date | string | null
     spells?: StringNullableListFilter<"Template">
+    type?: EnumTemplateTypeWithAggregatesFilter<"Template"> | $Enums.TemplateType
+    userId?: StringNullableWithAggregatesFilter<"Template"> | string | null
   }
 
   export type PublicAgentWhereInput = {
@@ -12163,6 +12224,8 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     updatedAt?: Date | string | null
     spells?: TemplateCreatespellsInput | string[]
+    type?: $Enums.TemplateType
+    userId?: string | null
   }
 
   export type TemplateUncheckedCreateInput = {
@@ -12175,6 +12238,8 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     updatedAt?: Date | string | null
     spells?: TemplateCreatespellsInput | string[]
+    type?: $Enums.TemplateType
+    userId?: string | null
   }
 
   export type TemplateUpdateInput = {
@@ -12187,6 +12252,8 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     spells?: TemplateUpdatespellsInput | string[]
+    type?: EnumTemplateTypeFieldUpdateOperationsInput | $Enums.TemplateType
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type TemplateUncheckedUpdateInput = {
@@ -12199,6 +12266,8 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     spells?: TemplateUpdatespellsInput | string[]
+    type?: EnumTemplateTypeFieldUpdateOperationsInput | $Enums.TemplateType
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type TemplateCreateManyInput = {
@@ -12211,6 +12280,8 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     updatedAt?: Date | string | null
     spells?: TemplateCreatespellsInput | string[]
+    type?: $Enums.TemplateType
+    userId?: string | null
   }
 
   export type TemplateUpdateManyMutationInput = {
@@ -12223,6 +12294,8 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     spells?: TemplateUpdatespellsInput | string[]
+    type?: EnumTemplateTypeFieldUpdateOperationsInput | $Enums.TemplateType
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type TemplateUncheckedUpdateManyInput = {
@@ -12235,6 +12308,8 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     spells?: TemplateUpdatespellsInput | string[]
+    type?: EnumTemplateTypeFieldUpdateOperationsInput | $Enums.TemplateType
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type PublicAgentCreateInput = {
@@ -12978,6 +13053,13 @@ export namespace Prisma {
     isEmpty?: boolean
   }
 
+  export type EnumTemplateTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.TemplateType | EnumTemplateTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.TemplateType[] | ListEnumTemplateTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TemplateType[] | ListEnumTemplateTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumTemplateTypeFilter<$PrismaModel> | $Enums.TemplateType
+  }
+
   export type TemplateOrderByRelevanceInput = {
     fields: TemplateOrderByRelevanceFieldEnum | TemplateOrderByRelevanceFieldEnum[]
     sort: SortOrder
@@ -12994,6 +13076,8 @@ export namespace Prisma {
     deletedAt?: SortOrder
     updatedAt?: SortOrder
     spells?: SortOrder
+    type?: SortOrder
+    userId?: SortOrder
   }
 
   export type TemplateMaxOrderByAggregateInput = {
@@ -13004,6 +13088,8 @@ export namespace Prisma {
     createdAt?: SortOrder
     deletedAt?: SortOrder
     updatedAt?: SortOrder
+    type?: SortOrder
+    userId?: SortOrder
   }
 
   export type TemplateMinOrderByAggregateInput = {
@@ -13014,6 +13100,8 @@ export namespace Prisma {
     createdAt?: SortOrder
     deletedAt?: SortOrder
     updatedAt?: SortOrder
+    type?: SortOrder
+    userId?: SortOrder
   }
   export type JsonNullableWithAggregatesFilter<$PrismaModel = never> = 
     | PatchUndefined<
@@ -13039,6 +13127,16 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedJsonNullableFilter<$PrismaModel>
     _max?: NestedJsonNullableFilter<$PrismaModel>
+  }
+
+  export type EnumTemplateTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.TemplateType | EnumTemplateTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.TemplateType[] | ListEnumTemplateTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TemplateType[] | ListEnumTemplateTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumTemplateTypeWithAggregatesFilter<$PrismaModel> | $Enums.TemplateType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumTemplateTypeFilter<$PrismaModel>
+    _max?: NestedEnumTemplateTypeFilter<$PrismaModel>
   }
 
   export type DateTimeFilter<$PrismaModel = never> = {
@@ -13540,6 +13638,10 @@ export namespace Prisma {
     push?: string | string[]
   }
 
+  export type EnumTemplateTypeFieldUpdateOperationsInput = {
+    set?: $Enums.TemplateType
+  }
+
   export type CommentsCreateNestedManyWithoutPublicAgentInput = {
     create?: XOR<CommentsCreateWithoutPublicAgentInput, CommentsUncheckedCreateWithoutPublicAgentInput> | CommentsCreateWithoutPublicAgentInput[] | CommentsUncheckedCreateWithoutPublicAgentInput[]
     connectOrCreate?: CommentsCreateOrConnectWithoutPublicAgentInput | CommentsCreateOrConnectWithoutPublicAgentInput[]
@@ -13852,6 +13954,13 @@ export namespace Prisma {
     _min?: NestedDateTimeNullableFilter<$PrismaModel>
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
+
+  export type NestedEnumTemplateTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.TemplateType | EnumTemplateTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.TemplateType[] | ListEnumTemplateTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TemplateType[] | ListEnumTemplateTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumTemplateTypeFilter<$PrismaModel> | $Enums.TemplateType
+  }
   export type NestedJsonNullableFilter<$PrismaModel = never> = 
     | PatchUndefined<
         Either<Required<NestedJsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>,
@@ -13873,6 +13982,16 @@ export namespace Prisma {
     gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
+  export type NestedEnumTemplateTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.TemplateType | EnumTemplateTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.TemplateType[] | ListEnumTemplateTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TemplateType[] | ListEnumTemplateTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumTemplateTypeWithAggregatesFilter<$PrismaModel> | $Enums.TemplateType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumTemplateTypeFilter<$PrismaModel>
+    _max?: NestedEnumTemplateTypeFilter<$PrismaModel>
   }
 
   export type NestedDateTimeFilter<$PrismaModel = never> = {
