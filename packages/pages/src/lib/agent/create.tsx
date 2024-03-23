@@ -62,7 +62,6 @@ export const CreateAgentPage = () => {
               name={t.name ?? 'Untitled'}
               image={t.image}
               description={t?.description ?? ''}
-              handleClick={() => onTemplateClick(t.id)}
             />
           ))}
       </div>
