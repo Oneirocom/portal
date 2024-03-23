@@ -1,17 +1,17 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { BaseAgentCard } from './base-agent-card'
 import { AgentCardMenu } from './menu/'
+import { AgentCardFooter } from './agent-card-footer'
+import { AgentCardInfo } from './types'
 
-type AgentCardProps = {
-  id: string
+type AgentCardProps = AgentCardInfo & {
   projectId: string | null
-  name: string | null
-  image: string | null
-  description: string | null
   publicAgentId: string | null
 }
 
 export const AgentCard: React.FC<AgentCardProps> = agent => {
+  const footerRef = useRef<HTMLButtonElement>(null)
+  const footerState = useState(false)
   const menuState = useState(false)
   const deleteModalState = useState(false)
   const publicModalState = useState(false)
@@ -19,8 +19,17 @@ export const AgentCard: React.FC<AgentCardProps> = agent => {
   const imageModalState = useState(false)
   const templateModalState = useState(false)
 
+  const checkIfFooterIsHovered = (e: MouseEvent) => {
+    if (footerRef.current) {
+      return footerRef.current.contains(e.target as Node)
+    }
+    return false
+  }
+
   const handleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     if (
+      checkIfFooterIsHovered(e.nativeEvent) ||
+      footerState[0] ||
       menuState[0] ||
       deleteModalState[0] ||
       publicModalState[0] ||
@@ -36,7 +45,7 @@ export const AgentCard: React.FC<AgentCardProps> = agent => {
 
   return (
     <BaseAgentCard
-      {...agent}
+      agent={agent}
       onClick={handleClick}
       menu={
         <AgentCardMenu
@@ -51,6 +60,15 @@ export const AgentCard: React.FC<AgentCardProps> = agent => {
           renameModalState={renameModalState}
           imageModalState={imageModalState}
           templateModalState={templateModalState}
+        />
+      }
+      footer={
+        <AgentCardFooter
+          agent={agent}
+          state={footerState}
+          buttonRef={footerRef}
+          submitText="More Info"
+          onSubmit={() => console.log('More info')}
         />
       }
     />
