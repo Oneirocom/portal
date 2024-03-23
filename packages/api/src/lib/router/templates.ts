@@ -16,15 +16,11 @@ export const templatesRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       // check clerk metadata for role
       const user = await clerkClient.users.getUser(ctx.auth.userId)
-      const role = user.publicMetadata?.role
-      if (role !== 'ADMIN') {
-        throw new Error('User is not authorized to create templates.')
-      }
 
       return await createFromAgent({
         ...input,
         userId: ctx.auth.userId,
-        type: role === 'ADMIN' ? 'OFFICIAL' : 'COMMUNITY',
+        type: user.publicMetadata?.role === 'ADMIN' ? 'OFFICIAL' : 'COMMUNITY',
       })
     }),
   deleteTemplate: protectedProcedure
