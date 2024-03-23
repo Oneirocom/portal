@@ -84,14 +84,10 @@ export const AgentCardMenu: React.FunctionComponent<AgentCardMenuProps> = ({
     })
 
   const handleCreateTemplate = async () => {
-    if (user && isSignedIn && user.publicMetadata?.role === 'ADMIN') {
-      await createTemplate({
-        ...templateState,
-        agentId: agentId ?? '',
-      })
-    } else {
-      toast.error('You do not have permission to create a template.')
-    }
+    await createTemplate({
+      ...templateState,
+      agentId: agentId ?? '',
+    })
   }
 
   const { mutateAsync: updateAgent, isLoading: isUpdateLoading } =
