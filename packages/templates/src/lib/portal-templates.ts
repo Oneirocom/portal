@@ -16,7 +16,7 @@ export const createBaseTemplates = async () => {
     await prismaPortal.template.upsert({
       where: { id },
       update: rest,
-      create: template,
+      create: { ...template, type: 'OFFICIAL' },
     })
   }
 }
@@ -29,6 +29,8 @@ export interface CreateFromAgentInput {
   name: string
   description?: string
   agentId: string
+  userId?: string
+  type?: 'OFFICIAL' | 'COMMUNITY'
 }
 
 export const createFromAgent = async (input: CreateFromAgentInput) => {
@@ -49,9 +51,11 @@ export const createFromAgent = async (input: CreateFromAgentInput) => {
     name: input.name,
     description: input.description,
     spells: spells.map(spell => JSON.stringify(spell)),
+    userId: input.userId,
+    type: input.type || 'OFFICIAL',
   }
 
-  return prismaPortal.template.createMany({ data: [template] })
+  return prismaPortal.template.create({ data: template })
 }
 
 interface CreateFromTemplateInput {
@@ -60,8 +64,10 @@ interface CreateFromTemplateInput {
   templateId: string
   owner: string
 }
+
 export const createFromTemplate = async (input: CreateFromTemplateInput) => {
   const { projectName, agentName, templateId, owner } = input
+
   const template = await prismaPortal.template.findUnique({
     where: { id: templateId },
   })
@@ -89,6 +95,7 @@ export const createFromTemplate = async (input: CreateFromTemplateInput) => {
 
   for (const tspell of templateSpells) {
     console.log('tspell', tspell.graph)
+
     const input = {
       id: uuidv4(),
       projectId: project.id,
@@ -103,4 +110,19 @@ export const createFromTemplate = async (input: CreateFromTemplateInput) => {
   return {
     project: project.id,
   }
+}
+
+export const removeTemplate = async (templateId: string) => {
+  const template = await prismaPortal.template.findUnique({
+    where: { id: templateId },
+  })
+
+  if (!template) {
+    throw new Error('Template not found')
+  }
+
+  await prismaPortal.template.update({
+    where: { id: templateId },
+    data: { deletedAt: new Date() },
+  })
 }

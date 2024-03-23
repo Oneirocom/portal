@@ -5,6 +5,7 @@ import { agentsRouter } from './router/agents'
 import { chatRouter } from './router/chat'
 import { anonUserRouter } from './router/anonUsers'
 import { billingRouter } from './router/billing'
+import { templatesRouter } from './router/templates'
 
 /**
  * This is the primary router for your server.
@@ -18,6 +19,7 @@ export const portalRouter = createTRPCRouter({
   chat: chatRouter,
   anonUsers: anonUserRouter,
   billing: billingRouter,
+  tempaltes: templatesRouter,
 })
 
 // export type definition of API

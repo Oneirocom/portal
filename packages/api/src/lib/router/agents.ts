@@ -14,9 +14,8 @@ import {
   PrivateEventTypes,
 } from '@magickml/portal-utils-shared'
 import { makeClient } from 'ideClient'
-import { createFromTemplate, createFromAgent } from '@magickml/portal-templates'
+import { createFromTemplate } from '@magickml/portal-templates'
 import { uploadImage } from '../utils/upload'
-import { clerkClient } from '@clerk/nextjs'
 
 const ideServerUrl = process.env.IDE_SERVER_URL || 'http://localhost:3030'
 
@@ -449,24 +448,6 @@ export const agentsRouter = createTRPCRouter({
       },
     })
   }),
-  createTemplate: protectedProcedure
-    .input(
-      z.object({
-        agentId: z.string(),
-        name: z.string(),
-        description: z.string().optional(),
-      })
-    )
-    .mutation(async ({ ctx, input }) => {
-      // check clerk metadata for role
-      const user = await clerkClient.users.getUser(ctx.auth.userId)
-      const role = user.publicMetadata?.role
-      if (role !== 'ADMIN') {
-        throw new Error('User is not authorized to create templates.')
-      }
-
-      return await createFromAgent(input)
-    }),
 })
 
 interface FetchAgentAnalyticsInput {

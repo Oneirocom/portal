@@ -70,7 +70,7 @@ export const AgentCardMenu: React.FunctionComponent<AgentCardMenuProps> = ({
   })
 
   const { mutateAsync: createTemplate, isLoading: isCreateTemplateLoading } =
-    api.agents.createTemplate.useMutation({
+    api.tempaltes.create.useMutation({
       onSuccess: async () => {
         await utils.agents.invalidate()
         toast.success('Template created')
