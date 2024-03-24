@@ -9,10 +9,10 @@ import {
   Button,
 } from '@magickml/client-ui'
 
-import { RenameDialog } from './dialogs/rename-dialog'
-import { DeleteDialog } from './dialogs/delete-dialog'
-import { ImageDialog } from './dialogs/image-dialog'
-import { TemplateDialog } from './dialogs/template-dialog'
+import { RenameDialog } from './dialogs/agent-rename-dialog'
+import { DeleteDialog } from './dialogs/agent-delete-dialog'
+import { ImageDialog } from './dialogs/agent-image-dialog'
+import { TemplateDialog } from './dialogs/create-template-dialog'
 import Link from 'next/link'
 
 type AgentCardMenuProps = {
