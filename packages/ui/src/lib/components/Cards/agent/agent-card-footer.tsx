@@ -30,27 +30,18 @@ export const AgentCardFooter: React.FC<AgentCardFooterProps> = ({
   return (
     <Dialog onOpenChange={setOpen} modal={true} open={open}>
       <DialogTrigger asChild>
-        <button
+        <Button
           ref={buttonRef}
-          className="w-full relative inline-flex overflow-hidden rounded-[10px] p-[1px] group"
           onClick={() => state[1](!state[0])}
+          variant="portal-neutral"
+          size="sm"
+          className="w-full hover:animate-shimmer bg-[length:200%_100%]
+          hover:border hover:border-ds-neutral
+          bg-gradient-to-tr from-ds-neutral to-ds-neutral active:scale-95 transition-all
+          hover:bg-[linear-gradient(110deg,#565c62,45%,#117a91,55%,#565c62)]"
         >
-          <span className="opacity-0 group-hover:opacity-100 transition-opacity ease-in-out group-hover:block absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#1bc5eb_0%,#117a91_50%,#1bc5eb_100%)]" />
-
-          <span
-            className={cn(
-              'rounded-[10px] inline-flex h-full w-full cursor-pointer items-center justify-center bg-slate-950 px-3 py-1 text-sm font-medium text-white backdrop-blur-3xl',
-              buttonVariants({
-                variant: 'portal-neutral',
-                size: 'sm',
-                className: 'w-full',
-              }),
-              'hover:bg-ds-card-alt'
-            )}
-          >
-            More Info
-          </span>
-        </button>
+          More Info
+        </Button>
       </DialogTrigger>
       <DialogContent
         onPointerDownOutside={e => e.preventDefault()}
