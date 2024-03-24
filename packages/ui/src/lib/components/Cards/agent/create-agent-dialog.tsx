@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Input, InputWithLabel, Label, PortalDialog } from '@magickml/client-ui'
+import { InputWithLabel, PortalDialog } from '@magickml/client-ui'
 import { api } from '@magickml/portal-api-client'
 import toast from 'react-hot-toast'
 

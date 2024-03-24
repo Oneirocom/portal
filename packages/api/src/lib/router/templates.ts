@@ -159,7 +159,7 @@ export const templatesRouter = createTRPCRouter({
         ),
       })
     )
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ input }) => {
       return await createTemplateCollection(input)
     }),
   getTemplateCollection: protectedProcedure

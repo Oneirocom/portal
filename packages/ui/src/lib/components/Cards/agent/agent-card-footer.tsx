@@ -4,8 +4,6 @@ import {
   DialogFooter,
   DialogTrigger,
   Button,
-  cn,
-  buttonVariants,
 } from '@magickml/client-ui'
 import Image from 'next/image'
 import { getImage, ImageType } from 'shared/utils'

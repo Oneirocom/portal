@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { api } from '@magickml/portal-api-client'
 import toast from 'react-hot-toast'
 import { convertFileToBase64 } from '@magickml/portal-utils-shared'
-import { PortalDialog, Input, Label, InputWithLabel } from '@magickml/client-ui'
+import { PortalDialog, InputWithLabel } from '@magickml/client-ui'
 
 type ImageDialogProps = {
   isOpen: boolean

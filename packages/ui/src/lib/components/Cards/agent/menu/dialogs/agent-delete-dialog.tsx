@@ -1,12 +1,7 @@
 import { useState } from 'react'
 import { api } from '@magickml/portal-api-client'
 import toast from 'react-hot-toast'
-import {
-  PortalDialog,
-  Input,
-  InputWithLabel,
-  DialogType,
-} from '@magickml/client-ui'
+import { PortalDialog, InputWithLabel, DialogType } from '@magickml/client-ui'
 
 type DeleteDialogProps = {
   isOpen: boolean
