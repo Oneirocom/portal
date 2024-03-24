@@ -430,24 +430,6 @@ export const agentsRouter = createTRPCRouter({
 
       return paginateItems(fetchedItems, limit)
     }),
-
-  getTemplates: publicProcedure.query(async () => {
-    return await prismaPortal.template.findMany({
-      where: {
-        deletedAt: null,
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-      select: {
-        id: true,
-        name: true,
-        description: true,
-        image: true,
-        updatedAt: true,
-      },
-    })
-  }),
 })
 
 interface FetchAgentAnalyticsInput {
