@@ -8,6 +8,15 @@ import clsx from 'clsx'
 import { AgentCard } from '@magickml/portal-ui'
 import { Card, Button } from '@magickml/client-ui'
 import { useUser } from '@clerk/nextjs'
+import { PageHeader, type PageHeaderProps } from '../ui/page-header'
+import { PageSection } from '../ui/page-section'
+
+const header: PageHeaderProps = {
+  title: 'Agents',
+  description:
+    "Choose from your Agents to access the Development Environment, where you can edit it's Spell.",
+  loading: false,
+}
 
 export const AgentsPage = ({ initialData }) => {
   const { isSignedIn } = useUser()
@@ -35,21 +44,10 @@ export const AgentsPage = ({ initialData }) => {
       <Head>
         <title>Agents | MagickML</title>
       </Head>
-      <div className="inline-flex gap-x-1 items-center">
-        <h1 className="text-3xl font-semibold">Agents</h1>
-        {isLoading && (
-          <div className="loading loading-spinner text-ds-primary" />
-        )}
-      </div>
-      <p className="text-lg font-medium text-ds-secondary-p dark:text-ds-secondary-m">
-        {`Choose from your Agents to access the Development Environment, where you
-        can edit it's Spell.`}
-      </p>
-      <h3 className="text-2xl font-montAlt text-ds-secondary-p dark:text-ds-secondary-m">
-        Choose your Agent:
-      </h3>
 
-      <div className="relative flex flex-wrap justify-center pb-10 gap-x-4 gap-y-4 lg:justify-start">
+      <PageHeader {...header} loading={isLoading} />
+
+      <PageSection title="Your Agents">
         {!isLoading &&
           data &&
           Array.isArray(data.pages) &&
@@ -97,7 +95,7 @@ export const AgentsPage = ({ initialData }) => {
             )}
           </Button>
         </div>
-      </div>
+      </PageSection>
     </>
   )
 }
@@ -105,7 +103,7 @@ export const AgentsPage = ({ initialData }) => {
 AgentsPage.getLayout = (page: React.ReactElement) => {
   return (
     <PortalLayout>
-      <MainLayout classNames="p-2 lg:p-10 gap-y-4">{page}</MainLayout>
+      <MainLayout classNames="p-2 lg:p-10 gap-y-10">{page}</MainLayout>
     </PortalLayout>
   )
 }
