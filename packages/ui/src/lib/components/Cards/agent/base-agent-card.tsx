@@ -29,7 +29,7 @@ export const BaseAgentCard: React.FC<BaseAgentCardProps> = ({
     <Card
       onClick={onClick}
       key={id}
-      className="w-44 h-60 lg:w-56 lg:h-80 flex flex-col border-ds-neutral hover:border-ds-primary hover:scale-105 transition-all duration-150 ease-in-out hover:overflow-visible cursor-pointer"
+      className="w-44 h-60 lg:w-56 lg:h-80 flex flex-col border-ds-neutral hover:border-ds-primary hover:scale-[102.5%] transition-all duration-150 ease-in-out hover:overflow-visible cursor-pointer"
     >
       <div className="relative w-full h-[53%] rounded-t-xl overflow-hidden m-0 p-0">
         {menu}

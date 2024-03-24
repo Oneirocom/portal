@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { api } from '@magickml/portal-api-client'
 import toast from 'react-hot-toast'
-import { PortalDialog, Input, InputWithLabel } from '@magickml/client-ui'
+import { PortalDialog, InputWithLabel } from '@magickml/client-ui'
 
 type RenameDialogProps = {
   isOpen: boolean
@@ -61,6 +61,7 @@ export const RenameDialog: React.FC<RenameDialogProps> = ({
         disabled: renameValue === agentName || renameValue === '',
         isLoading: isUpdateLoading,
         className: 'w-full',
+        variant: 'portal-primary',
       }}
     >
       <div className="flex flex-col gap-8">
