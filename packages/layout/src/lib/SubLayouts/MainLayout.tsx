@@ -123,7 +123,7 @@ export const MainLayout: React.FC<Props> = ({
               </>
             )}
             {/* overlay to dark the bg a bit */}
-            <div className="absolute top-0 left-0 w-full h-full object-cover bg-black/10" />
+            <div className="absolute top-0 left-0 w-full h-full object-cover bg-black/25" />
           </div>
         )}
         <PortalHeader />
