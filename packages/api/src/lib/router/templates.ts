@@ -11,9 +11,48 @@ import {
   getTemplateCollection,
 } from '@magickml/portal-templates'
 import { z } from 'zod'
-import { prismaPortal } from '@magickml/portal-db'
+import { prismaPortal, TemplateType } from '@magickml/portal-db'
 
 export const templatesRouter = createTRPCRouter({
+  find: protectedProcedure
+    .input(
+      z.object({
+        type: z
+          .nativeEnum(TemplateType)
+          .optional()
+          .default(TemplateType.OFFICIAL),
+        userId: z.string().optional(),
+      })
+    )
+    .query(async ({ input, ctx }) => {
+      const isUserRequested = !!input.userId
+      const isUser = ctx.auth.userId === input.userId
+
+      return await prismaPortal.template.findMany({
+        where: {
+          type: input.type,
+          deletedAt: null,
+          public: isUserRequested
+            ? isUser
+              ? undefined
+              : true
+            : input.type === 'OFFICIAL'
+            ? undefined
+            : true,
+          userId: input.userId,
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+        select: {
+          id: true,
+          name: true,
+          description: true,
+          image: true,
+          updatedAt: true,
+        },
+      })
+    }),
   create: protectedProcedure
     .input(
       z.object({
