@@ -40,6 +40,10 @@ export const AgentCard: React.FC<AgentCardProps> = agent => {
     }
   }
 
+  const openEditor = () => {
+    window.open(`/projects/${agent.projectId}`, '_blank')
+  }
+
   return (
     <BaseAgentCard
       agent={agent}
@@ -63,8 +67,8 @@ export const AgentCard: React.FC<AgentCardProps> = agent => {
           agent={agent}
           state={footerState}
           buttonRef={footerRef}
-          submitText="More Info"
-          onSubmit={() => console.log('More info')}
+          submitText="Build"
+          onSubmit={openEditor}
         />
       }
     />

@@ -14,7 +14,7 @@ export type AgentCardFooterProps = {
   state: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
   buttonRef: React.RefObject<HTMLButtonElement>
   submitText: string
-  onSubmit: () => void | Promise<void>
+  onSubmit: () => void | Promise<void> | null
 }
 
 export const AgentCardFooter: React.FC<AgentCardFooterProps> = ({
