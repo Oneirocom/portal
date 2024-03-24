@@ -130,6 +130,7 @@ exports.Prisma.TemplateScalarFieldEnum = {
   updatedAt: 'updatedAt',
   spells: 'spells',
   type: 'type',
+  public: 'public',
   userId: 'userId'
 };
 
