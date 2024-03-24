@@ -1,10 +1,7 @@
 import { PortalLayout, MainLayout } from '@magickml/portal-layout'
 import { api } from '@magickml/portal-api-client'
-import { FunctionComponent, useState } from 'react'
-import toast from 'react-hot-toast'
-import { SlRefresh } from 'react-icons/sl'
+import { useState } from 'react'
 import { AgentCardTemplate } from '@magickml/portal-ui'
-import { Label, Button, Input, MagickDialog } from '@magickml/client-ui'
 import React from 'react'
 import Head from 'next/head'
 
