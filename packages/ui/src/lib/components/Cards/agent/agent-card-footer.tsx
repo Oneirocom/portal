@@ -4,6 +4,8 @@ import {
   DialogFooter,
   DialogTrigger,
   Button,
+  cn,
+  buttonVariants,
 } from '@magickml/client-ui'
 import Image from 'next/image'
 import { getImage, ImageType } from 'shared/utils'
@@ -28,15 +30,27 @@ export const AgentCardFooter: React.FC<AgentCardFooterProps> = ({
   return (
     <Dialog onOpenChange={setOpen} modal={true} open={open}>
       <DialogTrigger asChild>
-        <Button
+        <button
           ref={buttonRef}
-          size="sm"
-          className="w-full rounded-[10px] font-medium z-40"
-          variant="portal-neutral"
+          className="w-full relative inline-flex overflow-hidden rounded-[10px] p-[1px] group"
           onClick={() => state[1](!state[0])}
         >
-          More Info
-        </Button>
+          <span className="opacity-0 group-hover:opacity-100 transition-opacity ease-in-out group-hover:block absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#1bc5eb_0%,#117a91_50%,#1bc5eb_100%)]" />
+
+          <span
+            className={cn(
+              'rounded-[10px] inline-flex h-full w-full cursor-pointer items-center justify-center bg-slate-950 px-3 py-1 text-sm font-medium text-white backdrop-blur-3xl',
+              buttonVariants({
+                variant: 'portal-neutral',
+                size: 'sm',
+                className: 'w-full',
+              }),
+              'hover:bg-ds-card-alt'
+            )}
+          >
+            More Info
+          </span>
+        </button>
       </DialogTrigger>
       <DialogContent
         onPointerDownOutside={e => e.preventDefault()}
@@ -70,18 +84,9 @@ export const AgentCardFooter: React.FC<AgentCardFooterProps> = ({
         </div>
 
         <DialogFooter className="pt-8">
-          {/* <Button onClick={onSubmit} variant="portal-primary" type="submit">
+          <Button onClick={onSubmit} variant="portal-primary">
             {submitText}
-          </Button> */}
-          <button
-            onClick={onSubmit}
-            className="relative inline-flex overflow-hidden p-[1px] focus:outline-none focus:ring-none rounded-[10px]"
-          >
-            <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#1bc5eb_0%,#117a91_50%,#1bc5eb_100%)] rounded-[10px]" />
-            <span className="px-4 font-montserrat font-semibold inline-flex h-full w-full cursor-pointer items-center justify-center rounded-[10px] bg-ds-card py-2 text-sm text-ds-black dark:text-ds-white backdrop-blur-3xl">
-              {submitText}
-            </span>
-          </button>
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
