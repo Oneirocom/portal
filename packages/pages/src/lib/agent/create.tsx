@@ -1,15 +1,10 @@
 import { PortalLayout, MainLayout } from '@magickml/portal-layout'
 import { api } from '@magickml/portal-api-client'
-import { useState } from 'react'
 import { AgentCardTemplate } from '@magickml/portal-ui'
 import React from 'react'
 import Head from 'next/head'
 
 export const CreateAgentPage = () => {
-  const [open, setOpen] = useState<boolean>(false)
-  const [name, setName] = useState<string>('')
-  const [templateId, setTemplateId] = useState<string | null>('')
-
   const { data: templates, isLoading: templatesLoading } =
     api.agents.getTemplates.useQuery()
 
