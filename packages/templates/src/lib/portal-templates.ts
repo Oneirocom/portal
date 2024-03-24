@@ -51,10 +51,17 @@ export const createFromAgent = async (input: CreateFromAgentInput) => {
   const template: Prisma.TemplateCreateInput = {
     name: input.name,
     description: input.description,
-    spells: spells.map(spell => JSON.stringify(spell)),
     userId: input.userId,
     type: input.type || 'OFFICIAL',
     public: input.public || false,
+    templateVersions: {
+      create: [
+        {
+          version: 1,
+          spells: spells.map(spell => JSON.stringify(spell)),
+        },
+      ],
+    },
   }
 
   return prismaPortal.template.create({ data: template })
@@ -93,11 +100,21 @@ export const createFromTemplate = async (input: CreateFromTemplateInput) => {
     projectId: project.id,
   })
 
-  const templateSpells = template.spells.map(spell => JSON.parse(spell))
+  const latestTemplateVersion = await prismaPortal.templateVersion.findFirst({
+    where: { templateId },
+    orderBy: { version: 'desc' },
+  })
+
+  if (!latestTemplateVersion) {
+    throw new Error('No template version found')
+  }
+
+  const templateSpells = latestTemplateVersion.spells as {
+    name: string
+    graph: any
+  }[]
 
   for (const tspell of templateSpells) {
-    console.log('tspell', tspell.graph)
-
     const input = {
       id: uuidv4(),
       projectId: project.id,
@@ -108,6 +125,8 @@ export const createFromTemplate = async (input: CreateFromTemplateInput) => {
 
     await app.service('spells').create(input)
   }
+
+  await incrementTemplateUsage(templateId)
 
   return {
     project: project.id,
@@ -127,4 +146,173 @@ export const removeTemplate = async (templateId: string) => {
     where: { id: templateId },
     data: { deletedAt: new Date() },
   })
+}
+
+export const rateTemplate = async (
+  templateId: string,
+  userId: string,
+  rating: number
+) => {
+  const existingRating = await prismaPortal.templateRating.findUnique({
+    where: {
+      templateId_userId: {
+        templateId,
+        userId,
+      },
+    },
+  })
+
+  if (existingRating) {
+    return prismaPortal.templateRating.update({
+      where: {
+        id: existingRating.id,
+      },
+      data: {
+        rating,
+        updatedAt: new Date(),
+      },
+    })
+  } else {
+    return prismaPortal.templateRating.create({
+      data: {
+        templateId,
+        userId,
+        rating,
+      },
+    })
+  }
+}
+
+export const getTemplateRating = async (templateId: string) => {
+  const ratings = await prismaPortal.templateRating.findMany({
+    where: {
+      templateId,
+    },
+  })
+
+  const totalRating = ratings.reduce((sum, rating) => sum + rating.rating, 0)
+  const averageRating = totalRating / ratings.length
+
+  return {
+    averageRating,
+    totalRatings: ratings.length,
+  }
+}
+
+export const incrementTemplateUsage = async (templateId: string) => {
+  return prismaPortal.template.update({
+    where: {
+      id: templateId,
+    },
+    data: {
+      usageCount: {
+        increment: 1,
+      },
+    },
+  })
+}
+
+export const updateTemplateVersion = async (
+  templateId: string,
+  spells: string[]
+) => {
+  const latestVersion = await prismaPortal.templateVersion.findFirst({
+    where: { templateId },
+    orderBy: { version: 'desc' },
+  })
+
+  const newVersion = (latestVersion?.version || 0) + 1
+
+  return prismaPortal.templateVersion.create({
+    data: {
+      templateId,
+      version: newVersion,
+      spells: spells.map(spell => JSON.stringify(spell)),
+    },
+  })
+}
+
+export const getTemplateVersion = async (
+  templateId: string,
+  version: number
+) => {
+  return prismaPortal.templateVersion.findUnique({
+    where: {
+      templateId_version: {
+        templateId,
+        version,
+      },
+    },
+  })
+}
+
+export interface CreateTemplateCollectionInput {
+  name: string
+  description?: string
+  templates: {
+    templateId: string
+    version: number
+  }[]
+}
+
+export const createTemplateCollection = async (
+  input: CreateTemplateCollectionInput
+) => {
+  const { name, description, templates } = input
+
+  const templateData = await Promise.all(
+    templates.map(async ({ templateId, version }) => {
+      const templateVersion = await getTemplateVersion(templateId, version)
+      if (!templateVersion) {
+        throw new Error(`Template version not found: ${templateId} v${version}`)
+      }
+      return {
+        templateId,
+        version,
+        spells: templateVersion.spells,
+      }
+    })
+  )
+
+  return prismaPortal.templateCollection.create({
+    data: {
+      name,
+      description,
+      templates: JSON.stringify(templateData),
+    },
+  })
+}
+
+export const getTemplateCollection = async (collectionId: string) => {
+  const collection = await prismaPortal.templateCollection.findUnique({
+    where: { id: collectionId },
+  })
+
+  if (!collection) {
+    throw new Error('Template collection not found')
+  }
+
+  const templateData = collection.templates as {
+    templateId: string
+    version: number
+    spells: string[]
+  }[]
+
+  const templatesWithDetails = await Promise.all(
+    templateData.map(async ({ templateId, version, spells }) => {
+      const template = await prismaPortal.template.findUnique({
+        where: { id: templateId },
+      })
+      return {
+        ...template,
+        version,
+        spells,
+      }
+    })
+  )
+
+  return {
+    ...collection,
+    templates: templatesWithDetails,
+  }
 }
