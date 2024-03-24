@@ -11,6 +11,7 @@ export const templatesRouter = createTRPCRouter({
         agentId: z.string(),
         name: z.string(),
         description: z.string().optional(),
+        public: z.boolean().optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -21,6 +22,7 @@ export const templatesRouter = createTRPCRouter({
         ...input,
         userId: ctx.auth.userId,
         type: user.publicMetadata?.role === 'ADMIN' ? 'OFFICIAL' : 'COMMUNITY',
+        public: input.public ?? false,
       })
     }),
   deleteTemplate: protectedProcedure

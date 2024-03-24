@@ -31,6 +31,7 @@ export interface CreateFromAgentInput {
   agentId: string
   userId?: string
   type?: 'OFFICIAL' | 'COMMUNITY'
+  public?: boolean
 }
 
 export const createFromAgent = async (input: CreateFromAgentInput) => {
@@ -53,6 +54,7 @@ export const createFromAgent = async (input: CreateFromAgentInput) => {
     spells: spells.map(spell => JSON.stringify(spell)),
     userId: input.userId,
     type: input.type || 'OFFICIAL',
+    public: input.public || false,
   }
 
   return prismaPortal.template.create({ data: template })
