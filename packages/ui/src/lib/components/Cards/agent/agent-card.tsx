@@ -19,7 +19,7 @@ export const AgentCard: React.FC<AgentCardProps> = agent => {
   const imageModalState = useState(false)
   const templateModalState = useState(false)
 
-  const checkIfFooterIsHovered = (e: MouseEvent) => {
+  const isFooterActive = (e: MouseEvent) => {
     if (footerRef.current) {
       return footerRef.current.contains(e.target as Node)
     }
@@ -28,7 +28,7 @@ export const AgentCard: React.FC<AgentCardProps> = agent => {
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     if (
-      checkIfFooterIsHovered(e.nativeEvent) ||
+      isFooterActive(e.nativeEvent) ||
       footerState[0] ||
       menuState[0] ||
       deleteModalState[0] ||
