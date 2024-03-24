@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { api } from '@magickml/portal-api-client'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/router'
-import { MagickDialog, Input, Textarea } from '@magickml/client-ui'
+import { PortalDialog, Input, Textarea } from '@magickml/client-ui'
 
 type TemplateDialogProps = {
   isOpen: boolean
@@ -50,16 +50,21 @@ export const TemplateDialog: React.FC<TemplateDialogProps> = ({
   }
 
   return (
-    <MagickDialog
+    <PortalDialog
+      base={{
+        root: {
+          open: isOpen,
+          onOpenChange: setIsOpen,
+        },
+      }}
       title="Create Template"
-      open={isOpen}
-      isLoading={isCreateTemplateLoading}
-      setOpen={setIsOpen}
-      onSubmit={handleCreateTemplate}
-      submitText={`${isCreateTemplateLoading ? 'Creating' : 'Create'} Template`}
-      submitDisabled={templateState.name === '' || isCreateTemplateLoading}
       description="Create a template from this agent."
-      destructive={false}
+      footerText={`${isCreateTemplateLoading ? 'Creating' : 'Create'} Template`}
+      footerButton={{
+        onClick: handleCreateTemplate,
+        disabled: templateState.name === '' || isCreateTemplateLoading,
+        isLoading: isCreateTemplateLoading,
+      }}
     >
       <div className="flex flex-col gap-2">
         <Input
@@ -80,6 +85,6 @@ export const TemplateDialog: React.FC<TemplateDialogProps> = ({
           rows={4}
         />
       </div>
-    </MagickDialog>
+    </PortalDialog>
   )
 }

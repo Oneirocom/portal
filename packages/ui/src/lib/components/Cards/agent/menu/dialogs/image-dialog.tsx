@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { api } from '@magickml/portal-api-client'
 import toast from 'react-hot-toast'
 import { convertFileToBase64 } from '@magickml/portal-utils-shared'
-import { MagickDialog, Input, Label } from '@magickml/client-ui'
+import { PortalDialog, Input, Label, InputWithLabel } from '@magickml/client-ui'
 
 type ImageDialogProps = {
   isOpen: boolean
@@ -45,21 +45,32 @@ export const ImageDialog: React.FC<ImageDialogProps> = ({
   }
 
   return (
-    <MagickDialog
+    <PortalDialog
+      base={{
+        root: {
+          open: isOpen,
+          onOpenChange: setIsOpen,
+        },
+      }}
       title="Update Image"
-      open={isOpen}
-      isLoading={isUpdateLoading}
-      setOpen={setIsOpen}
-      onSubmit={handleImageUpdate}
-      submitText="Update Image"
-      submitDisabled={!imageFile}
       description="Update your agent's image."
-      destructive={false}
+      footerText="Update Image"
+      footerButton={{
+        onClick: handleImageUpdate,
+        disabled: !imageFile,
+        isLoading: isUpdateLoading,
+      }}
     >
-      <div className="grid w-full max-w-sm items-center gap-1.5">
-        <Label htmlFor="agentImage">Upload an image</Label>
-        <Input id="agentImage" type="file" onChange={handleFileChange} />
+      <div className="flex flex-col gap-8">
+        <InputWithLabel
+          id="agentImage"
+          type="file"
+          label="Upload an image"
+          onChange={handleFileChange}
+          placeholder="Upload an image"
+          className="w-full"
+        />
       </div>
-    </MagickDialog>
+    </PortalDialog>
   )
 }

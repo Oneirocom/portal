@@ -1,7 +1,13 @@
 import { useState } from 'react'
 import { api } from '@magickml/portal-api-client'
 import toast from 'react-hot-toast'
-import { MagickDialog, Label, Checkbox, Textarea } from '@magickml/client-ui'
+import {
+  PortalDialog,
+  Label,
+  Checkbox,
+  Textarea,
+  Switch,
+} from '@magickml/client-ui'
 
 type PublicDialogProps = {
   isOpen: boolean
@@ -69,18 +75,24 @@ export const PublicDialog: React.FC<PublicDialogProps> = ({
   }
 
   return (
-    <MagickDialog
+    <PortalDialog
+      base={{
+        root: {
+          open: isOpen,
+          onOpenChange: setIsOpen,
+        },
+      }}
       title={`Make ${isPublic ? 'Private' : 'Public'}`}
-      open={isOpen}
-      setOpen={setIsOpen}
-      onSubmit={handlePublicToggle}
-      isLoading={isMakingAgentPublic || isMakingAgentPrivate}
-      submitText={`Make ${isPublic ? 'Private' : 'Public'}`}
       description={`Make your agent ${
         isPublic
           ? "private so that it won't appear on public pages."
           : 'public so that others can interact with it.'
       }`}
+      footerText={`Make ${isPublic ? 'Private' : 'Public'}`}
+      footerButton={{
+        onClick: handlePublicToggle,
+        isLoading: isMakingAgentPublic || isMakingAgentPrivate,
+      }}
     >
       <div className="flex flex-col text-black gap-y-4 dark:text-white">
         {!isPublic && (
@@ -91,8 +103,15 @@ export const PublicDialog: React.FC<PublicDialogProps> = ({
             setRemixable={setRemixable}
           />
         )}
+        <Switch
+          checked={isPublic || false}
+          onCheckedChange={handlePublicToggle}
+          className="data-[state=checked]:bg-blue-600 dark:data-[state=checked]:bg-blue-900"
+        >
+          <span className="ml-2">{isPublic ? 'Public' : 'Private'}</span>
+        </Switch>
       </div>
-    </MagickDialog>
+    </PortalDialog>
   )
 }
 

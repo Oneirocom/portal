@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { api } from '@magickml/portal-api-client'
 import toast from 'react-hot-toast'
-import { MagickDialog, Input } from '@magickml/client-ui'
+import { PortalDialog, Input, InputWithLabel } from '@magickml/client-ui'
 
 type RenameDialogProps = {
   isOpen: boolean
@@ -46,28 +46,34 @@ export const RenameDialog: React.FC<RenameDialogProps> = ({
   }
 
   return (
-    <MagickDialog
+    <PortalDialog
+      base={{
+        root: {
+          open: isOpen,
+          onOpenChange: setIsOpen,
+        },
+      }}
       title="Rename Agent"
-      open={isOpen}
-      isLoading={isUpdateLoading}
-      setOpen={setIsOpen}
-      onSubmit={handleRename}
-      submitText="Rename Agent"
-      submitDisabled={renameValue === agentName || renameValue === ''}
       description="Rename your agent to a new name."
-      destructive={false}
+      footerText="Rename Agent"
+      footerButton={{
+        onClick: handleRename,
+        disabled: renameValue === agentName || renameValue === '',
+        isLoading: isUpdateLoading,
+        className: 'w-full',
+      }}
     >
-      <div className="flex flex-col gap-2">
-        <p className="text-sm font-montserrat">
-          Current name: <span className="font-semibold">{agentName}</span>
-        </p>
-        <Input
-          className="focus:border-secondary-highlight placeholder:font-montserrat placeholder:text-black/70 dark:placeholder:text-white/70 w-full p-2 bg-transparent border-2 border-[#808f9a] rounded-[8px] dark:text-white"
-          placeholder="Enter new agent name"
+      <div className="flex flex-col gap-8">
+        <InputWithLabel
+          id="rename-agent"
+          label={`Current name: ${agentName}`}
           value={renameValue}
           onChange={e => setRenameValue(e.target.value)}
+          placeholder="Enter new agent name"
+          disabled={isUpdateLoading}
+          className="w-full"
         />
       </div>
-    </MagickDialog>
+    </PortalDialog>
   )
 }

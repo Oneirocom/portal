@@ -1,7 +1,12 @@
 import { useState } from 'react'
 import { api } from '@magickml/portal-api-client'
 import toast from 'react-hot-toast'
-import { MagickDialog, Input } from '@magickml/client-ui'
+import {
+  PortalDialog,
+  Input,
+  InputWithLabel,
+  DialogType,
+} from '@magickml/client-ui'
 
 type DeleteDialogProps = {
   isOpen: boolean
@@ -52,27 +57,34 @@ export const DeleteDialog: React.FC<DeleteDialogProps> = ({
   }
 
   return (
-    <MagickDialog
+    <PortalDialog
+      base={{
+        root: {
+          open: isOpen,
+          onOpenChange: setIsOpen,
+        },
+      }}
       title="Delete Agent"
-      open={isOpen}
-      isLoading={isDeleteLoading}
-      setOpen={setIsOpen}
-      onSubmit={handleAgentDelete}
-      submitText="Delete Agent"
-      submitDisabled={disableConfirmDelete}
-      description={`Are you sure you want to delete this agent? This action cannot be undone and this agent will be deleted.`}
-      destructive
+      description={`Are you sure you want to delete this agent? This action cannot be undone and all data associated with this agent will be lost.`}
+      footerText="Delete Agent"
+      footerButton={{
+        onClick: handleAgentDelete,
+        disabled: disableConfirmDelete,
+        isLoading: isDeleteLoading,
+        className: 'w-full bg-ds-error',
+      }}
+      type={DialogType.ERROR}
     >
-      <div className="flex flex-col gap-2">
-        <p className="text-sm font-montserrat">
-          Agent name: <span className="font-semibold">{agentName}</span>
-        </p>
-        <Input
-          className="focus:border-secondary-highlight placeholder:font-montserrat placeholder:text-black/70 dark:placeholder:text-white/70 w-full p-2 bg-transparent border-2 border-[#808f9a] rounded-[8px] dark:text-white"
-          placeholder="Enter agent name to confirm"
+      <div className="flex flex-col gap-8">
+        <InputWithLabel
+          id="delete-agent"
+          label={`Agent Name: ${agentName}`}
           onChange={handleOnChangeDelete}
+          placeholder="Enter agent name to confirm"
+          disabled={isDeleteLoading}
+          className="w-full"
         />
       </div>
-    </MagickDialog>
+    </PortalDialog>
   )
 }
