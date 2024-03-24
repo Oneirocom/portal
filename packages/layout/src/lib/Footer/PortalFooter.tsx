@@ -10,7 +10,7 @@ import FooterLink from './FooterLink'
  */
 const PortalFooter: FunctionComponent = () => {
   return (
-    <footer className="hidden mt-auto lg:inline-flex absolute bottom-0 w-full z-50 text-ds-secondary-p dark:text-ds-secondary-m justify-center gap-x-6 font-berkley-mono text-xs py-2 bg-ds-background">
+    <footer className="hidden mt-auto lg:inline-flex absolute bottom-0 w-full z-50 text-ds-secondary-p dark:text-ds-secondary-m justify-center gap-x-6 font-berkley-mono text-xs py-2 bg-ds-background border-t border-t-ds-neutral">
       <FooterLink href="/privacy">Privacy Policy </FooterLink>
       <FooterLink href="/terms">Terms & Conditions </FooterLink>
       <FooterLink href="https://bit.ly/magickdiscordx">
