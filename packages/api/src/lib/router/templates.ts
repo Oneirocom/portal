@@ -1,6 +1,15 @@
 import { clerkClient } from '@clerk/nextjs'
 import { createTRPCRouter, protectedProcedure } from '../trpc'
-import { createFromAgent, removeTemplate } from '@magickml/portal-templates'
+import {
+  createFromAgent,
+  removeTemplate,
+  rateTemplate,
+  getTemplateRating,
+  updateTemplateVersion,
+  getTemplateVersion,
+  createTemplateCollection,
+  getTemplateCollection,
+} from '@magickml/portal-templates'
 import { z } from 'zod'
 import { prismaPortal } from '@magickml/portal-db'
 
@@ -41,5 +50,82 @@ export const templatesRouter = createTRPCRouter({
       }
 
       await removeTemplate(input.templateId)
+    }),
+  rateTemplate: protectedProcedure
+    .input(
+      z.object({
+        templateId: z.string(),
+        rating: z.number().min(1).max(5),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      await rateTemplate(input.templateId, ctx.auth.userId, input.rating)
+    }),
+  getTemplateRating: protectedProcedure
+    .input(z.object({ templateId: z.string() }))
+    .query(async ({ input }) => {
+      return await getTemplateRating(input.templateId)
+    }),
+  updateTemplateVersion: protectedProcedure
+    .input(
+      z.object({
+        templateId: z.string(),
+        spells: z.array(
+          z.object({
+            id: z.string().optional(),
+            projectId: z.string().optional(),
+            name: z.string().optional(),
+            graph: z.record(z.unknown()).optional(),
+            type: z.string().optional(),
+          })
+        ),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const template = await prismaPortal.template.findUnique({
+        where: { id: input.templateId },
+      })
+
+      if (!template) {
+        throw new Error('Template not found')
+      }
+
+      if (template.userId !== ctx.auth.userId) {
+        throw new Error('You are not authorized to update this template')
+      }
+
+      // TODO: FIX ANY. Theres a way to type json cols in the schema.prisma file
+      await updateTemplateVersion(input.templateId, input.spells as any)
+    }),
+  getTemplateVersion: protectedProcedure
+    .input(
+      z.object({
+        templateId: z.string(),
+        version: z.number(),
+      })
+    )
+    .query(async ({ input }) => {
+      return await getTemplateVersion(input.templateId, input.version)
+    }),
+  createTemplateCollection: protectedProcedure
+    .input(
+      z.object({
+        name: z.string(),
+        description: z.string().optional(),
+        templates: z.array(
+          z.object({
+            templateId: z.string(),
+            version: z.number(),
+          })
+        ),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      return await createTemplateCollection(input)
+    }),
+  getTemplateCollection: protectedProcedure
+    .input(z.object({ collectionId: z.string() }))
+    .query(async ({ input }) => {
+      return await getTemplateCollection(input.collectionId)
     }),
 })
