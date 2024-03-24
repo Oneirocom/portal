@@ -2,13 +2,13 @@ import { FunctionComponent } from 'react'
 import FooterLink from './FooterLink'
 
 /**
- * MagickFooter Component
+ * PortalFooter Component
  *
  * This component renders the footer links with optional icons.
  *
  * @returns JSX.Element
  */
-const MagickFooter: FunctionComponent = () => {
+const PortalFooter: FunctionComponent = () => {
   return (
     <footer className="hidden mt-auto lg:inline-flex absolute bottom-0 w-full z-50 text-ds-secondary-p dark:text-ds-secondary-m justify-center gap-x-6 font-berkley-mono text-xs py-2 bg-ds-background">
       <FooterLink href="/privacy">Privacy Policy </FooterLink>
@@ -29,7 +29,7 @@ const MagickFooter: FunctionComponent = () => {
   )
 }
 
-export default MagickFooter
+export default PortalFooter
 
 const DiscordIcon = () => {
   return (

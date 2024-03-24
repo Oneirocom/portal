@@ -3,7 +3,7 @@ import Image from "next/legacy/image"
 import { PortalHeader } from '../Header/PortalHeader'
 // import MagickMobileNav from '../MobileNav/MagickMobileNav'
 import clsx from 'clsx'
-import MagickFooter from '../Footer/MagickFooter'
+import PortalFooter from '../Footer/PortalFooter'
 
 export enum BackgroundType {
   Image = 'image',
@@ -138,7 +138,7 @@ export const MainLayout: React.FC<Props> = ({
 
         {/* <MagickMobileNav /> */}
       </div>
-      <MagickFooter />
+      <PortalFooter />
     </>
   )
 }
