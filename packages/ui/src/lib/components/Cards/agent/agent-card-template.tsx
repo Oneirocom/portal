@@ -113,16 +113,3 @@ const CreateDialog: React.FC<CreateDialogProps> = ({ state, templateId }) => {
     </MagickDialog>
   )
 }
-
-type RemixButtonProps = {
-  onClick: () => void
-}
-
-const RemixButton: React.FC<RemixButtonProps> = ({ onClick }) => {
-  return (
-    <Button onClick={onClick} variant="agent" size="sm">
-      <SlRefresh className="text-lg lg:mr-1" />
-      <span className="hidden lg:flex">Remix</span>
-    </Button>
-  )
-}

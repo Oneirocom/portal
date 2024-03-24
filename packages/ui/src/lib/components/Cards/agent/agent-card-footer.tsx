@@ -42,7 +42,9 @@ export const AgentCardFooter: React.FC<AgentCardFooterProps> = ({
         onPointerDownOutside={e => e.preventDefault()}
         className="max-w-xs lg:max-w-2xl w-full text-ds-black dark:text-ds-white p-8"
       >
-        <h2 className="text-2xl font-bold !font-montAlt capitalize">{agent.name}</h2>
+        <h2 className="text-2xl font-bold !font-montAlt capitalize">
+          {agent.name}
+        </h2>
         <div className="flex flex-col lg:flex-row gap-2 items-start justify-start">
           <div className="aspect-square font-montserrat relative w-full h-full rounded-t-xl overflow-hidden m-0 p-0 basis-1/3">
             <Image
@@ -68,9 +70,18 @@ export const AgentCardFooter: React.FC<AgentCardFooterProps> = ({
         </div>
 
         <DialogFooter className="pt-8">
-          <Button onClick={onSubmit} variant="portal-primary" type="submit">
+          {/* <Button onClick={onSubmit} variant="portal-primary" type="submit">
             {submitText}
-          </Button>
+          </Button> */}
+          <button
+            onClick={onSubmit}
+            className="relative inline-flex overflow-hidden p-[1px] focus:outline-none focus:ring-none rounded-[10px]"
+          >
+            <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#1bc5eb_0%,#117a91_50%,#1bc5eb_100%)] rounded-[10px]" />
+            <span className="px-4 font-montserrat font-semibold inline-flex h-full w-full cursor-pointer items-center justify-center rounded-[10px] bg-ds-card py-2 text-sm text-ds-black dark:text-ds-white backdrop-blur-3xl">
+              {submitText}
+            </span>
+          </button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
