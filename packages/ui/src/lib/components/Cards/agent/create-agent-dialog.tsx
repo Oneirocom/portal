@@ -46,14 +46,14 @@ export const CreateAgentDialog: React.FC<CreateAgentDialogProps> = ({
         },
       }}
       title="Name Your Agent"
-      description="Using a Template will create a new Agent with the same spell as the Template."
+      description="Using a Template will create a new Agent with the same spells as the Template."
       footerText="Create"
       footerButton={{
         onClick: handleCreate,
         disabled: !name,
         isLoading: isLoading,
-        variant: "portal-primary",
-        className: "w-full",
+        variant: 'portal-primary',
+        className: 'w-full',
       }}
       triggerButton={{
         className: 'hidden',

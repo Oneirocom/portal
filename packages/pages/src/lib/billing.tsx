@@ -19,6 +19,7 @@ import { api } from '@magickml/portal-api-client'
 import { capitalizeFirst } from '@magickml/portal-utils-shared'
 import { useUser } from '@clerk/nextjs'
 import axios from 'axios'
+import { PageHeader } from './ui/page-header'
 
 const amountSchema = z.object({
   amount: z
@@ -139,20 +140,12 @@ export const BillingPage = () => {
   )
 
   return (
-    <div className="flex flex-col font-montserrat justify-center items-start">
-      {/* Header */}
-
-      <div className="self-stretch justify-center items-center gap-5 inline-flex p-4 lg:p-10">
-        <h1 className="grow shrink basis-0 text-2xl font-bold font-montAlt">
-          Billing
-        </h1>
-      </div>
-
-      {/* Billing */}
-      <div className="flex flex-col gap-y-2 p-4 lg:p-10 border-none border-ds-neutral w-full">
-        <p className="font-montAlt pb-2">
-          Review and manage your subscription usage.
-        </p>
+    <>
+      <PageHeader
+        title="Billing"
+        description="Review and manage your subscription usage."
+      />
+      <div className="flex flex-col gap-y-2 border-none border-ds-neutral w-full">
         {/* Cards */}
         <div className="self-stretch pb-4 justify-center items-center gap-6 flex lg:flex-row flex-col">
           <Card>
@@ -318,14 +311,14 @@ export const BillingPage = () => {
           {hasNextPage && loadMoreButton}
         </div>
       )}
-    </div>
+    </>
   )
 }
 
 BillingPage.getLayout = function getLayout(page: any) {
   return (
     <PortalLayout>
-      <MainLayout classNames="!mx-0">{page}</MainLayout>
+      <MainLayout classNames="p-2 lg:p-10 gap-y-10">{page}</MainLayout>
     </PortalLayout>
   )
 }
