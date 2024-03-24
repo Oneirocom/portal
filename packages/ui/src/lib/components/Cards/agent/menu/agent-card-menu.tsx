@@ -11,7 +11,6 @@ import {
 
 import { RenameDialog } from './dialogs/rename-dialog'
 import { DeleteDialog } from './dialogs/delete-dialog'
-import { PublicDialog } from './dialogs/public-dialog'
 import { ImageDialog } from './dialogs/image-dialog'
 import { TemplateDialog } from './dialogs/template-dialog'
 import Link from 'next/link'
@@ -24,7 +23,6 @@ type AgentCardMenuProps = {
   agentDescription: string | null
   openState: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
   deleteModalState: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
-  publicModalState: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
   renameModalState: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
   imageModalState: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
   templateModalState: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
@@ -34,17 +32,13 @@ export const AgentCardMenu: React.FC<AgentCardMenuProps> = ({
   agentId,
   agentName,
   projectId,
-  isPublic,
-  agentDescription,
   openState,
   deleteModalState,
-  publicModalState,
   renameModalState,
   imageModalState,
   templateModalState,
 }) => {
   const [isOpen, setIsOpen] = openState
-  const [isPublicDialogOpen, setIsPublicDialogOpen] = publicModalState
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = deleteModalState
   const [isRenameDialogOpen, setIsRenameDialogOpen] = renameModalState
   const [isImageDialogOpen, setIsImageDialogOpen] = imageModalState
@@ -61,12 +55,6 @@ export const AgentCardMenu: React.FC<AgentCardMenuProps> = ({
       name: 'Chat with Agent',
       type: 'link',
       href: `/agents/${agentId}`,
-      enabled: false,
-    },
-    {
-      name: `Make ${isPublic ? 'Private' : 'Public'}`,
-      type: 'button',
-      action: () => setIsPublicDialogOpen(true),
       enabled: false,
     },
     {
@@ -108,13 +96,6 @@ export const AgentCardMenu: React.FC<AgentCardMenuProps> = ({
 
   return (
     <>
-      <PublicDialog
-        isOpen={isPublicDialogOpen}
-        setIsOpen={setIsPublicDialogOpen}
-        agentId={agentId}
-        isPublic={isPublic}
-        agentDescription={agentDescription}
-      />
       <ImageDialog
         isOpen={isImageDialogOpen}
         setIsOpen={setIsImageDialogOpen}
