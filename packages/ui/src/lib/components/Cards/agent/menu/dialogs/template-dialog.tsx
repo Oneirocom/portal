@@ -2,7 +2,12 @@ import { useState } from 'react'
 import { api } from '@magickml/portal-api-client'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/router'
-import { PortalDialog, Input, Textarea } from '@magickml/client-ui'
+import {
+  PortalDialog,
+  InputWithLabel,
+  SwitchWithLabel,
+} from '@magickml/client-ui'
+import TextareaWithLabel from 'packages/client/ui/src/lib/components/inputs/portal-textarea'
 
 type TemplateDialogProps = {
   isOpen: boolean
@@ -13,6 +18,7 @@ type TemplateDialogProps = {
 type CreateTemplateState = {
   name: string
   description: string
+  public: boolean
 }
 
 export const TemplateDialog: React.FC<TemplateDialogProps> = ({
@@ -25,6 +31,7 @@ export const TemplateDialog: React.FC<TemplateDialogProps> = ({
   const [templateState, setTemplateState] = useState<CreateTemplateState>({
     name: '',
     description: '',
+    public: false,
   })
 
   const { mutateAsync: createTemplate, isLoading: isCreateTemplateLoading } =
@@ -64,25 +71,39 @@ export const TemplateDialog: React.FC<TemplateDialogProps> = ({
         onClick: handleCreateTemplate,
         disabled: templateState.name === '' || isCreateTemplateLoading,
         isLoading: isCreateTemplateLoading,
+        className: 'w-full',
+        variant: 'portal-primary',
       }}
     >
-      <div className="flex flex-col gap-2">
-        <Input
-          className="focus:border-secondary-highlight placeholder:font-montserrat placeholder:text-black/70 dark:placeholder:text-white/70 w-full p-2 bg-transparent border-2 border-[#808f9a] rounded-[8px] dark:text-white"
-          placeholder="Template Name"
+      <div className="flex flex-col gap-8">
+        <InputWithLabel
+          id="template-name"
+          label="Template Name"
           value={templateState.name}
           onChange={e =>
             setTemplateState({ ...templateState, name: e.target.value })
           }
+          placeholder="Enter a name for the template"
         />
-        <Textarea
-          className="focus:border-secondary-highlight placeholder:font-montserrat placeholder:text-black/70 dark:placeholder:text-white/70 w-full p-2 bg-transparent border-2 border-[#808f9a] rounded-[8px] dark:text-white"
-          placeholder="Template Description"
+        <TextareaWithLabel
+          id="template-description"
+          label="Template Description"
           value={templateState.description}
           onChange={e =>
             setTemplateState({ ...templateState, description: e.target.value })
           }
+          placeholder="Enter a description for the template"
           rows={4}
+        />
+
+        <SwitchWithLabel
+          id="template-public"
+          label="Make this template public?"
+          className="data-[state=unchecked]:bg-ds-card-alt data-[state=unchecked]:border-ds-neutral data-[state=unchecked]:border"
+          checked={templateState.public}
+          onCheckedChange={checked =>
+            setTemplateState({ ...templateState, public: checked })
+          }
         />
       </div>
     </PortalDialog>
