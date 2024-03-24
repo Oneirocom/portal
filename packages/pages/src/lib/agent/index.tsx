@@ -69,11 +69,15 @@ export const AgentsPage = ({ initialData }) => {
 
         <Card
           onClick={() => router.push('/create')}
-          className="text-center font-medium font-montserrat bg-tranparent dark:bg-[#03010d] border-ds-primary-m border-dashed
+          className="text-center font-medium font-montserrat bg-ds-card border-ds-primary-m border-dashed
         w-44 h-60 lg:w-56 lg:h-80 flex flex-col hover:scale-105 transition-all duration-150 ease-in-out hover:overflow-visible cursor-pointer justify-center items-center"
         >
-          <span className="text-6xl text-ds-primary-m ">+</span>
-          <span className="text-base text-ds-primary-m ">Create New Agent</span>
+          <span className="text-6xl dark:text-ds-primary-m text-ds-primary-p ">
+            +
+          </span>
+          <span className="text-base dark:text-ds-primary-m text-ds-primary-p">
+            Create New Agent
+          </span>
         </Card>
 
         <div className="flex flex-col w-full">
