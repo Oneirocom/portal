@@ -131,7 +131,36 @@ exports.Prisma.TemplateScalarFieldEnum = {
   spells: 'spells',
   type: 'type',
   public: 'public',
-  userId: 'userId'
+  userId: 'userId',
+  usageCount: 'usageCount'
+};
+
+exports.Prisma.TemplateVersionScalarFieldEnum = {
+  id: 'id',
+  templateId: 'templateId',
+  version: 'version',
+  spells: 'spells',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.TemplateCollectionScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  templates: 'templates',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  templateId: 'templateId'
+};
+
+exports.Prisma.TemplateRatingScalarFieldEnum = {
+  id: 'id',
+  templateId: 'templateId',
+  userId: 'userId',
+  rating: 'rating',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.PublicAgentScalarFieldEnum = {
@@ -224,6 +253,10 @@ exports.Prisma.NullableJsonNullValueInput = {
   JsonNull: Prisma.JsonNull
 };
 
+exports.Prisma.JsonNullValueInput = {
+  JsonNull: Prisma.JsonNull
+};
+
 exports.Prisma.QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
@@ -254,6 +287,24 @@ exports.Prisma.TemplateOrderByRelevanceFieldEnum = {
   description: 'description',
   image: 'image',
   spells: 'spells',
+  userId: 'userId'
+};
+
+exports.Prisma.TemplateVersionOrderByRelevanceFieldEnum = {
+  id: 'id',
+  templateId: 'templateId'
+};
+
+exports.Prisma.TemplateCollectionOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  templateId: 'templateId'
+};
+
+exports.Prisma.TemplateRatingOrderByRelevanceFieldEnum = {
+  id: 'id',
+  templateId: 'templateId',
   userId: 'userId'
 };
 
@@ -326,6 +377,9 @@ exports.TransactionSource = exports.$Enums.TransactionSource = {
 exports.Prisma.ModelName = {
   Project: 'Project',
   Template: 'Template',
+  TemplateVersion: 'TemplateVersion',
+  TemplateCollection: 'TemplateCollection',
+  TemplateRating: 'TemplateRating',
   PublicAgent: 'PublicAgent',
   Reports: 'Reports',
   Likes: 'Likes',
