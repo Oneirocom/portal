@@ -1,12 +1,11 @@
 import { useRef, useState } from 'react'
 import { BaseAgentCard } from './base-agent-card'
-import { AgentCardMenu } from './menu/'
+import { AgentCardMenu } from './menu/agent-card-menu'
 import { AgentCardFooter } from './agent-card-footer'
 import { AgentCardInfo } from './types'
 
 type AgentCardProps = AgentCardInfo & {
-  projectId: string | null
-  publicAgentId: string | null
+  projectId: string
 }
 
 export const AgentCard: React.FC<AgentCardProps> = agent => {
@@ -14,7 +13,6 @@ export const AgentCard: React.FC<AgentCardProps> = agent => {
   const footerState = useState(false)
   const menuState = useState(false)
   const deleteModalState = useState(false)
-  const publicModalState = useState(false)
   const renameModalState = useState(false)
   const imageModalState = useState(false)
   const templateModalState = useState(false)
@@ -32,7 +30,6 @@ export const AgentCard: React.FC<AgentCardProps> = agent => {
       footerState[0] ||
       menuState[0] ||
       deleteModalState[0] ||
-      publicModalState[0] ||
       renameModalState[0] ||
       imageModalState[0] ||
       templateModalState[0]
@@ -53,10 +50,9 @@ export const AgentCard: React.FC<AgentCardProps> = agent => {
           agentId={agent.id}
           agentDescription={agent.description}
           projectId={agent.projectId}
-          isPublic={false}
+          isPublic={true} // TODO: get from API
           openState={menuState}
           deleteModalState={deleteModalState}
-          publicModalState={publicModalState}
           renameModalState={renameModalState}
           imageModalState={imageModalState}
           templateModalState={templateModalState}

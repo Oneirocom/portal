@@ -60,10 +60,10 @@ export const AgentsPage = ({ initialData }) => {
                 key={agent.id}
                 id={agent.id}
                 projectId={agent.projectId ?? ''}
+                isPublic={null}
                 name={agent.name ?? 'Untitled'}
                 image={agent.image}
-                description={agent?.description ?? ''}
-                publicAgentId={agent.publicAgentId ?? ''}
+                description={agent.description ?? ''}
               />
             ))}
 
