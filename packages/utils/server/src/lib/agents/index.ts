@@ -263,12 +263,9 @@ export async function getInfiniteAgents({
   })
 
   if (projects.length === 0) {
-    console.log('no projects')
     return []
   }
-  console.log('projects', projects.length)
 
-  console.log('getting agents')
   const agent = await prismaCore.agents.findMany({
     take: limit + 1, // add 1 to check for next page
     cursor: cursor ? { id: cursor } : undefined,
@@ -289,10 +286,7 @@ export async function getInfiniteAgents({
     },
   })
 
-  console.log('got agents', agent.length)
-
   if (agent.length === 0) {
-    console.log('no agents')
     return []
   }
 
