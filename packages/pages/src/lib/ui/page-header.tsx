@@ -1,6 +1,6 @@
 export type PageHeaderProps = {
   title: string
-  description: string
+  description?: string
   loading?: boolean
 }
 
@@ -17,7 +17,9 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
           <span className="loading loading-spinner text-ds-primary" />
         )}
       </h1>
-      <p className="text-base font-normal font-montserrat">{description}</p>
+      {description && (
+        <p className="text-base font-normal font-montserrat">{description}</p>
+      )}
     </div>
   )
 }
