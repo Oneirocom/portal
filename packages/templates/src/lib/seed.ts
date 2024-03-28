@@ -8,13 +8,41 @@ export const baseTemplates: Prisma.TemplateCreateInput[] =
 const prisma = new PrismaClient()
 
 async function main() {
-  for (const template of baseTemplates) {
-    const { id, ...rest } = template
-    await prisma.template.upsert({
+  console.log('Seeding templates...')
+  for (const t of baseTemplates) {
+    const { id, name, description, image, type, spells, ...rest } = t
+
+    // Check if the template already exists
+    const existingTemplate = await prisma.template.findUnique({
       where: { id },
-      update: rest,
-      create: template,
     })
+
+    if (existingTemplate) {
+      console.log(`Template ${id}: ${name} already exists, skipping...`)
+      continue
+    }
+
+    // Create a new template record
+    const template = await prisma.template.create({
+      data: {
+        name,
+        description,
+        image,
+        type,
+        public: t.public || true,
+      },
+    })
+
+    // Create a new template version record
+    await prisma.templateVersion.create({
+      data: {
+        templateId: template.id,
+        version: 1,
+        spells,
+      },
+    })
+
+    console.log(`Template ${id}: ${name} created`)
   }
 }
 

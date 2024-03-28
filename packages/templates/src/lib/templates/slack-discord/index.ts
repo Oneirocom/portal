@@ -8,4 +8,6 @@ export const slackDiscordTemplate: Prisma.TemplateCreateInput = {
   description:
     'A template setup for basic Slack and Discord messaging.  Great place to start to learn how to connect you agent to platforms.',
   spells: [JSON.stringify(slackDiscordSpell), JSON.stringify(discordSpell)],
+  type: 'OFFICIAL',
+  public: true,
 }

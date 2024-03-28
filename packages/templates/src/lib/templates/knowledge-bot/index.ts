@@ -7,4 +7,6 @@ export const knowledgeBotTemplate: Prisma.TemplateCreateInput = {
   description:
     'This template is a very basic agent which demonstrates how to query knowledge from the agents knowledge base. Be sure to use the knowledge tab to add knowledge into the agent.',
   spells: [JSON.stringify(knowledgeBotSpell)],
+  type: 'OFFICIAL',
+  public: true,
 }
