@@ -1,5 +1,4 @@
 import { PrismaClient } from '../../../db/src/lib/prisma/client-portal'
-import { type Prisma } from '@magickml/portal-db'
 import * as templates from './templates'
 
 export const baseTemplates = Object.values(templates)
