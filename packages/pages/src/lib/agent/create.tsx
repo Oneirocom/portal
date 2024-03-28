@@ -39,18 +39,10 @@ export const CreateAgentPage = () => {
 
   return (
     <>
+    
       <Head>
         <title>Create an Agent | MagickML</title>
       </Head>
-      {/* <div className="gap-y-4 flex flex-col w-full">
-        <h1 className="text-3xl font-semibold font-montserrat">
-          Create an Agent
-        </h1>
-        <p className="text-base font-normal font-montserrat">
-          Choose from a selection of our Official Magick Agents that you would
-          like to customize and make your own!
-        </p>
-      </div> */}
       <PageHeader {...header} />
 
       <PageSection
@@ -67,6 +59,7 @@ export const CreateAgentPage = () => {
               image={t.image}
               description={t?.description ?? ''}
               isPublic={false}
+              creator={t.userId}
             />
           ))}
       </PageSection>
@@ -85,6 +78,7 @@ export const CreateAgentPage = () => {
               image={t.image}
               description={t?.description ?? ''}
               isPublic={true}
+              creator={t.userId}
             />
           ))}
       </PageSection>
@@ -100,6 +94,7 @@ export const CreateAgentPage = () => {
               image={t.image}
               description={t?.description ?? ''}
               isPublic={false}
+              creator={t.userId}
             />
           ))}
       </PageSection>
