@@ -1,5 +1,6 @@
 import { createNextApiHandler } from '@trpc/server/adapters/next'
-import { createTRPCContext, portalRouter } from '@magickml/portal-api'
+import { createTRPCContext } from '@magickml/portal-server-core'
+import { portalRouter } from'@magickml/portal-server-router'
 
 export const maxDuration = 300
 

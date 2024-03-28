@@ -1,5 +1,5 @@
 import { GetServerSidePropsContext } from 'next'
-import { prepareToken } from '@magickml/portal-api'
+import { prepareToken } from '@magickml/portal-server-router'
 import { prismaPortal } from '@magickml/portal-db'
 import { Editor } from '@magickml/portal-pages'
 import { getAuth } from '@clerk/nextjs/server'
