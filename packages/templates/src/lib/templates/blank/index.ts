@@ -6,7 +6,14 @@ export const blankTemplate: Prisma.TemplateCreateInput = {
   name: 'Blank Template',
   description:
     'A totally empty agent.  This is a great place to start if you want to build an agent from scratch.',
-  spells: [JSON.stringify(blankSpell)],
+  templateVersions: {
+    create: [
+      {
+        version: 1,
+        spells: [JSON.stringify(blankSpell.graph)],
+      },
+    ],
+  },
   type: 'OFFICIAL',
   public: true,
   
