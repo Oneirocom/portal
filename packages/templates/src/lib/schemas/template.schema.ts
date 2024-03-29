@@ -3,7 +3,7 @@ import { TemplateType } from '@magickml/portal-db'
 
 export const findTemplatesSchema = z.object({
   type: z.nativeEnum(TemplateType).optional().default(TemplateType.OFFICIAL),
-  userId: z.string().optional(),
+  self: z.boolean().optional(),
 })
 
 export const createTemplateSchema = z.object({
@@ -18,6 +18,7 @@ export const updateTemplateSchema = z.object({
   templateId: z.string(),
   name: z.string().optional(),
   description: z.string().optional(),
+  public: z.boolean().optional(),
 })
 
 export const deleteTemplateSchema = z.object({

@@ -22,27 +22,35 @@ export const CreateAgentPage = () => {
       type: 'OFFICIAL',
     })
 
+  const { data: communityTemplates, ...communityQuery } =
+    api.templates.find.useQuery(
+      {
+        type: 'COMMUNITY',
+      },
+      {
+        enabled: isSignedIn,
+      }
+    )
+
   const { data: userTemplates, ...userQuery } = api.templates.find.useQuery(
     {
-      type: 'COMMUNITY',
-      userId: user?.id,
+      self: true,
     },
     {
       enabled: isSignedIn,
     }
   )
 
-  const { data: communityTemplates, ...communityQuery } =
-    api.templates.find.useQuery({
-      type: 'COMMUNITY',
-    })
-
   return (
     <>
-    
       <Head>
         <title>Create an Agent | MagickML</title>
+        <meta
+          name="description"
+          content="Choose from a selection of our Official Magick Agents that you would like to customize and make your own!"
+        />
       </Head>
+
       <PageHeader {...header} />
 
       <PageSection
@@ -53,12 +61,12 @@ export const CreateAgentPage = () => {
           officalTemplates &&
           officalTemplates.map((t, i: number) => (
             <AgentCardTemplate
-              key={t.id}
+              key={`${t.id}--official`}
               id={t.id}
               name={t.name ?? 'Untitled'}
               image={t.image}
               description={t?.description ?? ''}
-              isPublic={false}
+              isPublic={t.public}
               creator={t.userId}
             />
           ))}
@@ -72,12 +80,12 @@ export const CreateAgentPage = () => {
           communityTemplates &&
           communityTemplates.map((t, i: number) => (
             <AgentCardTemplate
-              key={t.id}
+              key={`${t.id}--community`}
               id={t.id}
               name={t.name ?? 'Untitled'}
               image={t.image}
               description={t?.description ?? ''}
-              isPublic={true}
+              isPublic={t.public}
               creator={t.userId}
             />
           ))}
@@ -88,12 +96,12 @@ export const CreateAgentPage = () => {
           userTemplates &&
           userTemplates.map((t, i: number) => (
             <AgentCardTemplate
-              key={t.id}
+              key={`${t.id}--user`}
               id={t.id}
               name={t.name ?? 'Untitled'}
               image={t.image}
               description={t?.description ?? ''}
-              isPublic={false}
+              isPublic={t.public}
               creator={t.userId}
             />
           ))}

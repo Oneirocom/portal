@@ -1,4 +1,7 @@
-import { createTRPCRouter, protectedProcedure } from '@magickml/portal-server-core'
+import {
+  createTRPCRouter,
+  protectedProcedure,
+} from '@magickml/portal-server-core'
 import { prismaPortal, TemplateType } from '@magickml/portal-db'
 import { clerkClient } from '@clerk/nextjs'
 import {
@@ -13,24 +16,18 @@ export const templatesRouter = createTRPCRouter({
   find: protectedProcedure
     .input(findTemplatesSchema)
     .query(async ({ input, ctx }) => {
-      const isUserRequested = !!input.userId
-      const isUser = ctx.auth.userId === input.userId
+      const { type, self } = input
+      const userId = ctx.auth.userId
+
+      if (self && !userId) {
+        throw new Error('User not found')
+      }
 
       const where = {
         deletedAt: null,
-        userId: input.userId,
-        type: isUserRequested
-          ? isUser
-            ? undefined
-            : TemplateType.COMMUNITY
-          : input.type,
-        public: isUserRequested
-          ? isUser
-            ? undefined
-            : true
-          : input.type === TemplateType.OFFICIAL
-          ? true
-          : undefined,
+        userId: self ? userId : undefined,
+        type: self ? undefined : type,
+        public: self ? undefined : true,
       }
 
       return await prismaPortal.template.findMany({
@@ -43,6 +40,7 @@ export const templatesRouter = createTRPCRouter({
           image: true,
           updatedAt: true,
           userId: true,
+          public: true,
         },
       })
     }),
@@ -65,8 +63,9 @@ export const templatesRouter = createTRPCRouter({
   update: protectedProcedure
     .input(updateTemplateSchema)
     .mutation(async ({ ctx, input }) => {
+      const { templateId: id, ...data } = input
       const template = await prismaPortal.template.findUnique({
-        where: { id: input.templateId },
+        where: { id },
       })
 
       if (!template) {
@@ -78,8 +77,8 @@ export const templatesRouter = createTRPCRouter({
       }
 
       return prismaPortal.template.update({
-        where: { id: input.templateId },
-        data: input,
+        where: { id },
+        data,
       })
     }),
 
