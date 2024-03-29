@@ -1,31 +1,6 @@
 import { Prisma } from '@magickml/portal-db'
 
 /**
- * Represents the metadata extracted from a group of spells.
- */
-interface SpellMetadata {
-  /**
-   * The models used across all generateText nodes in the spells.
-   */
-  models: string[]
-
-  /**
-   * Indicates whether any of the spells use Discord integration.
-   */
-  discord: boolean
-
-  /**
-   * Indicates whether any of the spells use Slack integration.
-   */
-  slack: boolean
-
-  /**
-   * Indicates whether any of the spells use the knowledge system.
-   */
-  knowledge: boolean
-}
-
-/**
  * Generates metadata from an array of spell JSON objects.
  * @param spells - The array of spell JSON objects to extract metadata from.
  * @returns The extracted spell metadata.
