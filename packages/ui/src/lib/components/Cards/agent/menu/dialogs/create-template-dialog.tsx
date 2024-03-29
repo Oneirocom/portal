@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { api } from '@magickml/portal-api-client'
+import { api, type RouterInputs } from '@magickml/portal-api-client'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/router'
 import {
@@ -7,7 +7,8 @@ import {
   InputWithLabel,
   SwitchWithLabel,
 } from '@magickml/client-ui'
-import TextareaWithLabel from 'packages/client/ui/src/lib/components/inputs/portal-textarea'
+import { TextareaWithLabel } from '@magickml/client-ui'
+import { useUser } from '@clerk/nextjs'
 
 type TemplateDialogProps = {
   isOpen: boolean
@@ -19,6 +20,7 @@ type CreateTemplateState = {
   name: string
   description: string
   public: boolean
+  type: 'OFFICIAL' | 'COMMUNITY'
 }
 
 export const TemplateDialog: React.FC<TemplateDialogProps> = ({
@@ -26,12 +28,16 @@ export const TemplateDialog: React.FC<TemplateDialogProps> = ({
   setIsOpen,
   agentId,
 }) => {
+  const { user } = useUser()
+  const role = user?.publicMetadata?.role as string | undefined
+
   const utils = api.useContext()
   const router = useRouter()
   const [templateState, setTemplateState] = useState<CreateTemplateState>({
     name: '',
     description: '',
     public: false,
+    type: 'COMMUNITY',
   })
 
   const { mutateAsync: createTemplate, isLoading: isCreateTemplateLoading } =
@@ -99,12 +105,27 @@ export const TemplateDialog: React.FC<TemplateDialogProps> = ({
         <SwitchWithLabel
           id="template-public"
           label="Make this template public?"
-          className="data-[state=unchecked]:bg-ds-card-alt data-[state=unchecked]:border-ds-neutral data-[state=unchecked]:border"
+          className=""
           checked={templateState.public}
           onCheckedChange={checked =>
             setTemplateState({ ...templateState, public: checked })
           }
         />
+
+        {role?.toUpperCase() === 'ADMIN' && (
+          <SwitchWithLabel
+            id="template-type"
+            label="Make this template official?"
+            className="data-[state=unchecked]:bg-ds-card-alt data-[state=unchecked]:border-ds-neutral data-[state=unchecked]:border"
+            checked={templateState.type === 'OFFICIAL'}
+            onCheckedChange={checked =>
+              setTemplateState({
+                ...templateState,
+                type: checked ? 'OFFICIAL' : 'COMMUNITY',
+              })
+            }
+          />
+        )}
       </div>
     </PortalDialog>
   )
