@@ -66,17 +66,18 @@ export const createFromTemplate = async (input: CreateFromTemplateInput) => {
 
   let i = 1
   for (const tspell of templateSpells) {
-    const graphObject = tspell?.graph || {
+    const graph = tspell?.graph || {
       nodes: [],
       values: [],
       customEvents: [],
     }
+    const name = tspell?.name || `${agentName}-spell-${i}`
 
     const input = {
       id: v4(),
       projectId: project.id,
-      name: `${agentName}-spell-${i}`,
-      graph: graphObject,
+      name,
+      graph,
       type: 'behave',
     }
 
