@@ -7,7 +7,10 @@ import { CreateAgentDialog } from './create-agent-dialog'
 import { TemplateCardMenu } from './menu/agent-card-template-menu'
 import { useUser } from '@clerk/nextjs'
 
-type AgentCardTemplateProps = AgentCardInfo & {}
+type AgentCardTemplateProps = AgentCardInfo & {
+  metadata?: any
+  ogAgentId: string | null
+}
 
 export const AgentCardTemplate: React.FC<AgentCardTemplateProps> = template => {
   const { user, isSignedIn } = useUser()
@@ -77,6 +80,7 @@ export const AgentCardTemplate: React.FC<AgentCardTemplateProps> = template => {
             buttonRef={footerRef}
             submitText="Build"
             onSubmit={handleFooterSubmit}
+            metadata={template.metadata}
           />
           <CreateAgentDialog templateId={template.id} state={createState} />
         </>

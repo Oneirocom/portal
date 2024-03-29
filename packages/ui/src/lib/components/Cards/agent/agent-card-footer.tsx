@@ -4,10 +4,21 @@ import {
   DialogFooter,
   DialogTrigger,
   Button,
+  Avatar,
+  AvatarImage,
+  AvatarFallback,
 } from '@magickml/client-ui'
 import Image from 'next/image'
 import { getImage, ImageType } from 'shared/utils'
 import type { AgentCardInfo } from './types'
+import { getPluginCredentials } from 'shared/nodeSpec'
+
+interface SpellMetadata {
+  models: string[]
+  discord: boolean
+  slack: boolean
+  knowledge: boolean
+}
 
 export type AgentCardFooterProps = {
   agent: AgentCardInfo
@@ -15,6 +26,7 @@ export type AgentCardFooterProps = {
   buttonRef: React.RefObject<HTMLButtonElement>
   submitText: string
   onSubmit: () => void | Promise<void> | null
+  metadata?: any
 }
 
 export const AgentCardFooter: React.FC<AgentCardFooterProps> = ({
@@ -23,8 +35,20 @@ export const AgentCardFooter: React.FC<AgentCardFooterProps> = ({
   buttonRef,
   submitText,
   onSubmit,
+  metadata,
 }) => {
   const [open, setOpen] = state
+  const castedMetadata = metadata as SpellMetadata | undefined | null
+
+  const pluginCredentials = getPluginCredentials()
+
+  const discordCredentials = pluginCredentials?.find(
+    credential => credential.pluginName === 'discord'
+  )
+  const slackCredentials = pluginCredentials?.find(
+    credential => credential.pluginName === 'slack'
+  )
+
   return (
     <Dialog onOpenChange={setOpen} modal={true} open={open}>
       <DialogTrigger asChild>
@@ -68,6 +92,39 @@ export const AgentCardFooter: React.FC<AgentCardFooterProps> = ({
                 ? agent.description
                 : 'No description'}
             </div>
+
+            {/* metadata */}
+            {castedMetadata?.models && (
+              <div className="flex flex-col gap-1">
+                <p className="text-base font-semibold text-left">
+                  Language Models
+                </p>
+                <div className="text-base font-normal">
+                  {castedMetadata.models.join(', ')}
+                </div>
+              </div>
+            )}
+            <div className="inline-flex gap-2">
+              {castedMetadata?.discord && (
+                <Avatar className='h-6 w-6'>
+                  <AvatarImage src={discordCredentials?.icon} alt="discord" />
+                  <AvatarFallback>D</AvatarFallback>
+                </Avatar>
+              )}
+              {castedMetadata?.slack && (
+                <Avatar className='h-6 w-6'>
+                  <AvatarImage src={slackCredentials?.icon} alt="slack" />
+                  <AvatarFallback>S</AvatarFallback>
+                </Avatar>
+              )}
+            </div>
+
+            {castedMetadata?.knowledge && (
+              <p className="text-xs">
+                This agent uses the knowledge system so make your you upload
+                your own knowledge in the editor.
+              </p>
+            )}
           </div>
         </div>
 
