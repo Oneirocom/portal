@@ -62,23 +62,25 @@ export const createFromTemplate = async (input: CreateFromTemplateInput) => {
     throw new Error('No template version found')
   }
 
-  const templateSpells = latestTemplateVersion.spells as {
-    name: string
-    graph: any
-  }[]
+  const templateSpells = latestTemplateVersion.spells as any
 
+  let i = 1
   for (const tspell of templateSpells) {
-    console.log('Creating spell:', tspell)
+    console.log(`Typeof tspell: ${typeof tspell}`)
+
+    // Parse the tspell string into an object
+    const graphObject = JSON.parse(tspell)
 
     const input = {
       id: v4(),
       projectId: project.id,
-      name: tspell.name ?? 'Unnamed-spell',
-      graph: tspell.graph ?? {},
+      name: `${agentName}-spell-${i}`,
+      graph: graphObject,
       type: 'behave',
     }
 
     await app.service('spells').create(input)
+    i++
   }
 
   await incrementTemplateUsage(templateId)
