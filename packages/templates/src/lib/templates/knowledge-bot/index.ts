@@ -10,7 +10,7 @@ export const knowledgeBotTemplate: Prisma.TemplateCreateInput = {
     create: [
       {
         version: 1,
-        spells: [JSON.stringify(knowledgeBotSpell.graph)],
+        spells: [knowledgeBotSpell],
       },
     ],
   },

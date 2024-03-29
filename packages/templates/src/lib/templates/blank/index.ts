@@ -10,7 +10,7 @@ export const blankTemplate: Prisma.TemplateCreateInput = {
     create: [
       {
         version: 1,
-        spells: [JSON.stringify(blankSpell.graph)],
+        spells: [blankSpell],
       },
     ],
   },

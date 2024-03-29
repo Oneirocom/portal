@@ -10,7 +10,7 @@ export const babyAGITemplate: Prisma.TemplateCreateInput = {
     create: [
       {
         version: 1,
-        spells: [JSON.stringify(babyAGISpell.graph)],
+        spells: [babyAGISpell],
       },
     ],
   },

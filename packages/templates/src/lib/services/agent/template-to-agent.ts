@@ -66,10 +66,11 @@ export const createFromTemplate = async (input: CreateFromTemplateInput) => {
 
   let i = 1
   for (const tspell of templateSpells) {
-    console.log(`Typeof tspell: ${typeof tspell}`)
-
-    // Parse the tspell string into an object
-    const graphObject = JSON.parse(tspell)
+    const graphObject = tspell?.graph || {
+      nodes: [],
+      values: [],
+      customEvents: [],
+    }
 
     const input = {
       id: v4(),

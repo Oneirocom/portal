@@ -11,10 +11,7 @@ export const slackDiscordTemplate: Prisma.TemplateCreateInput = {
     create: [
       {
         version: 1,
-        spells: [
-          JSON.stringify(slackDiscordSpell.graph),
-          JSON.stringify(discordSpell.graph),
-        ],
+        spells: [slackDiscordSpell, discordSpell],
       },
     ],
   },
