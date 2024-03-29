@@ -3,5 +3,6 @@ export type AgentCardInfo = {
   name: string | null
   image: string | null
   description: string | null
-  isPublic: boolean | null
+  isPublic?: boolean | null
+  creator?: string | null
 }
