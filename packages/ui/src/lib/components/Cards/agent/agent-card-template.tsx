@@ -4,13 +4,22 @@ import { AgentCardFooter } from './agent-card-footer'
 import { AgentCardInfo } from './types'
 import React from 'react'
 import { CreateAgentDialog } from './create-agent-dialog'
+import { TemplateCardMenu } from './menu/agent-card-template-menu'
+import { useUser } from '@clerk/nextjs'
 
 type AgentCardTemplateProps = AgentCardInfo & {}
 
-export const AgentCardTemplate: React.FC<AgentCardTemplateProps> = agent => {
-  const footerState = useState(false)
+export const AgentCardTemplate: React.FC<AgentCardTemplateProps> = template => {
+  const { user, isSignedIn } = useUser()
+  const isAdmin = (role: unknown) => role === 'ADMIN'
+  const isCreator = (creator: string | null | undefined) => creator === user?.id
+
   const footerRef = useRef<HTMLButtonElement>(null)
+  const menuState = useState(false)
+  const footerState = useState(false)
   const createState = useState(false)
+  const updateState = useState(false)
+  const deleteState = useState(false)
 
   const isFooterActive = (e: MouseEvent) => {
     if (footerRef.current) {
@@ -20,7 +29,14 @@ export const AgentCardTemplate: React.FC<AgentCardTemplateProps> = agent => {
   }
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    if (isFooterActive(e.nativeEvent) || footerState[0]) {
+    if (
+      isFooterActive(e.nativeEvent) ||
+      menuState[0] ||
+      footerState[0] ||
+      createState[0] ||
+      updateState[0] ||
+      deleteState[0]
+    ) {
       e.stopPropagation()
     } else if (!createState[0]) {
       createState[1](true)
@@ -34,18 +50,35 @@ export const AgentCardTemplate: React.FC<AgentCardTemplateProps> = agent => {
 
   return (
     <BaseAgentCard
-      agent={agent}
+      agent={template}
       onClick={handleClick}
+      menu={
+        isSignedIn &&
+        (isAdmin(user?.publicMetadata.role) || isCreator(template.creator)) && (
+          <TemplateCardMenu
+            templateId={template.id}
+            templateName={template.name}
+            templateVersion={'1'}
+            templateDescription={template.description}
+            isCreator={isCreator(template.creator)}
+            isAdmin={isAdmin(user?.publicMetadata.role)}
+            isPublic={template?.isPublic || false}
+            openState={menuState}
+            updateDialogState={updateState}
+            deleteDialogState={deleteState}
+          />
+        )
+      }
       footer={
         <>
           <AgentCardFooter
-            agent={agent}
+            agent={template}
             state={footerState}
             buttonRef={footerRef}
             submitText="Build"
             onSubmit={handleFooterSubmit}
           />
-          <CreateAgentDialog templateId={agent.id} state={createState} />
+          <CreateAgentDialog templateId={template.id} state={createState} />
         </>
       }
     />
