@@ -132,7 +132,8 @@ exports.Prisma.TemplateScalarFieldEnum = {
   type: 'type',
   public: 'public',
   userId: 'userId',
-  usageCount: 'usageCount'
+  usageCount: 'usageCount',
+  ogAgentId: 'ogAgentId'
 };
 
 exports.Prisma.TemplateVersionScalarFieldEnum = {
@@ -140,6 +141,7 @@ exports.Prisma.TemplateVersionScalarFieldEnum = {
   templateId: 'templateId',
   version: 'version',
   spells: 'spells',
+  metadata: 'metadata',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -287,7 +289,8 @@ exports.Prisma.TemplateOrderByRelevanceFieldEnum = {
   description: 'description',
   image: 'image',
   spells: 'spells',
-  userId: 'userId'
+  userId: 'userId',
+  ogAgentId: 'ogAgentId'
 };
 
 exports.Prisma.TemplateVersionOrderByRelevanceFieldEnum = {

@@ -2925,6 +2925,7 @@ export namespace Prisma {
     public: boolean | null
     userId: string | null
     usageCount: number | null
+    ogAgentId: string | null
   }
 
   export type TemplateMaxAggregateOutputType = {
@@ -2939,6 +2940,7 @@ export namespace Prisma {
     public: boolean | null
     userId: string | null
     usageCount: number | null
+    ogAgentId: string | null
   }
 
   export type TemplateCountAggregateOutputType = {
@@ -2955,6 +2957,7 @@ export namespace Prisma {
     public: number
     userId: number
     usageCount: number
+    ogAgentId: number
     _all: number
   }
 
@@ -2979,6 +2982,7 @@ export namespace Prisma {
     public?: true
     userId?: true
     usageCount?: true
+    ogAgentId?: true
   }
 
   export type TemplateMaxAggregateInputType = {
@@ -2993,6 +2997,7 @@ export namespace Prisma {
     public?: true
     userId?: true
     usageCount?: true
+    ogAgentId?: true
   }
 
   export type TemplateCountAggregateInputType = {
@@ -3009,6 +3014,7 @@ export namespace Prisma {
     public?: true
     userId?: true
     usageCount?: true
+    ogAgentId?: true
     _all?: true
   }
 
@@ -3112,6 +3118,7 @@ export namespace Prisma {
     public: boolean
     userId: string | null
     usageCount: number
+    ogAgentId: string | null
     _count: TemplateCountAggregateOutputType | null
     _avg: TemplateAvgAggregateOutputType | null
     _sum: TemplateSumAggregateOutputType | null
@@ -3147,6 +3154,7 @@ export namespace Prisma {
     public?: boolean
     userId?: boolean
     usageCount?: boolean
+    ogAgentId?: boolean
     templateVersions?: boolean | Template$templateVersionsArgs<ExtArgs>
     templateCollections?: boolean | Template$templateCollectionsArgs<ExtArgs>
     _count?: boolean | TemplateCountOutputTypeDefaultArgs<ExtArgs>
@@ -3166,6 +3174,7 @@ export namespace Prisma {
     public?: boolean
     userId?: boolean
     usageCount?: boolean
+    ogAgentId?: boolean
   }
 
   export type TemplateInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3195,6 +3204,7 @@ export namespace Prisma {
       public: boolean
       userId: string | null
       usageCount: number
+      ogAgentId: string | null
     }, ExtArgs["result"]["template"]>
     composites: {}
   }
@@ -3605,6 +3615,7 @@ export namespace Prisma {
     readonly public: FieldRef<"Template", 'Boolean'>
     readonly userId: FieldRef<"Template", 'String'>
     readonly usageCount: FieldRef<"Template", 'Int'>
+    readonly ogAgentId: FieldRef<"Template", 'String'>
   }
     
 
@@ -4015,6 +4026,7 @@ export namespace Prisma {
     templateId: number
     version: number
     spells: number
+    metadata: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -4050,6 +4062,7 @@ export namespace Prisma {
     templateId?: true
     version?: true
     spells?: true
+    metadata?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -4146,6 +4159,7 @@ export namespace Prisma {
     templateId: string
     version: number
     spells: JsonValue[]
+    metadata: JsonValue | null
     createdAt: Date
     updatedAt: Date
     _count: TemplateVersionCountAggregateOutputType | null
@@ -4174,6 +4188,7 @@ export namespace Prisma {
     templateId?: boolean
     version?: boolean
     spells?: boolean
+    metadata?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     Template?: boolean | TemplateDefaultArgs<ExtArgs>
@@ -4184,6 +4199,7 @@ export namespace Prisma {
     templateId?: boolean
     version?: boolean
     spells?: boolean
+    metadata?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
@@ -4203,6 +4219,7 @@ export namespace Prisma {
       templateId: string
       version: number
       spells: Prisma.JsonValue[]
+      metadata: Prisma.JsonValue | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["templateVersion"]>
@@ -4604,6 +4621,7 @@ export namespace Prisma {
     readonly templateId: FieldRef<"TemplateVersion", 'String'>
     readonly version: FieldRef<"TemplateVersion", 'Int'>
     readonly spells: FieldRef<"TemplateVersion", 'Json[]'>
+    readonly metadata: FieldRef<"TemplateVersion", 'Json'>
     readonly createdAt: FieldRef<"TemplateVersion", 'DateTime'>
     readonly updatedAt: FieldRef<"TemplateVersion", 'DateTime'>
   }
@@ -14347,7 +14365,8 @@ export namespace Prisma {
     type: 'type',
     public: 'public',
     userId: 'userId',
-    usageCount: 'usageCount'
+    usageCount: 'usageCount',
+    ogAgentId: 'ogAgentId'
   };
 
   export type TemplateScalarFieldEnum = (typeof TemplateScalarFieldEnum)[keyof typeof TemplateScalarFieldEnum]
@@ -14358,6 +14377,7 @@ export namespace Prisma {
     templateId: 'templateId',
     version: 'version',
     spells: 'spells',
+    metadata: 'metadata',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -14559,7 +14579,8 @@ export namespace Prisma {
     description: 'description',
     image: 'image',
     spells: 'spells',
-    userId: 'userId'
+    userId: 'userId',
+    ogAgentId: 'ogAgentId'
   };
 
   export type TemplateOrderByRelevanceFieldEnum = (typeof TemplateOrderByRelevanceFieldEnum)[keyof typeof TemplateOrderByRelevanceFieldEnum]
@@ -14898,6 +14919,7 @@ export namespace Prisma {
     public?: BoolFilter<"Template"> | boolean
     userId?: StringNullableFilter<"Template"> | string | null
     usageCount?: IntFilter<"Template"> | number
+    ogAgentId?: StringNullableFilter<"Template"> | string | null
     templateVersions?: TemplateVersionListRelationFilter
     templateCollections?: TemplateCollectionListRelationFilter
   }
@@ -14916,6 +14938,7 @@ export namespace Prisma {
     public?: SortOrder
     userId?: SortOrderInput | SortOrder
     usageCount?: SortOrder
+    ogAgentId?: SortOrderInput | SortOrder
     templateVersions?: TemplateVersionOrderByRelationAggregateInput
     templateCollections?: TemplateCollectionOrderByRelationAggregateInput
     _relevance?: TemplateOrderByRelevanceInput
@@ -14938,6 +14961,7 @@ export namespace Prisma {
     public?: BoolFilter<"Template"> | boolean
     userId?: StringNullableFilter<"Template"> | string | null
     usageCount?: IntFilter<"Template"> | number
+    ogAgentId?: StringNullableFilter<"Template"> | string | null
     templateVersions?: TemplateVersionListRelationFilter
     templateCollections?: TemplateCollectionListRelationFilter
   }, "id">
@@ -14956,6 +14980,7 @@ export namespace Prisma {
     public?: SortOrder
     userId?: SortOrderInput | SortOrder
     usageCount?: SortOrder
+    ogAgentId?: SortOrderInput | SortOrder
     _count?: TemplateCountOrderByAggregateInput
     _avg?: TemplateAvgOrderByAggregateInput
     _max?: TemplateMaxOrderByAggregateInput
@@ -14980,6 +15005,7 @@ export namespace Prisma {
     public?: BoolWithAggregatesFilter<"Template"> | boolean
     userId?: StringNullableWithAggregatesFilter<"Template"> | string | null
     usageCount?: IntWithAggregatesFilter<"Template"> | number
+    ogAgentId?: StringNullableWithAggregatesFilter<"Template"> | string | null
   }
 
   export type TemplateVersionWhereInput = {
@@ -14990,6 +15016,7 @@ export namespace Prisma {
     templateId?: StringFilter<"TemplateVersion"> | string
     version?: IntFilter<"TemplateVersion"> | number
     spells?: JsonNullableListFilter<"TemplateVersion">
+    metadata?: JsonNullableFilter<"TemplateVersion">
     createdAt?: DateTimeFilter<"TemplateVersion"> | Date | string
     updatedAt?: DateTimeFilter<"TemplateVersion"> | Date | string
     Template?: XOR<TemplateRelationFilter, TemplateWhereInput>
@@ -15000,6 +15027,7 @@ export namespace Prisma {
     templateId?: SortOrder
     version?: SortOrder
     spells?: SortOrder
+    metadata?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     Template?: TemplateOrderByWithRelationAndSearchRelevanceInput
@@ -15015,6 +15043,7 @@ export namespace Prisma {
     templateId?: StringFilter<"TemplateVersion"> | string
     version?: IntFilter<"TemplateVersion"> | number
     spells?: JsonNullableListFilter<"TemplateVersion">
+    metadata?: JsonNullableFilter<"TemplateVersion">
     createdAt?: DateTimeFilter<"TemplateVersion"> | Date | string
     updatedAt?: DateTimeFilter<"TemplateVersion"> | Date | string
     Template?: XOR<TemplateRelationFilter, TemplateWhereInput>
@@ -15025,6 +15054,7 @@ export namespace Prisma {
     templateId?: SortOrder
     version?: SortOrder
     spells?: SortOrder
+    metadata?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: TemplateVersionCountOrderByAggregateInput
@@ -15042,6 +15072,7 @@ export namespace Prisma {
     templateId?: StringWithAggregatesFilter<"TemplateVersion"> | string
     version?: IntWithAggregatesFilter<"TemplateVersion"> | number
     spells?: JsonNullableListFilter<"TemplateVersion">
+    metadata?: JsonNullableWithAggregatesFilter<"TemplateVersion">
     createdAt?: DateTimeWithAggregatesFilter<"TemplateVersion"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"TemplateVersion"> | Date | string
   }
@@ -15800,6 +15831,7 @@ export namespace Prisma {
     public?: boolean
     userId?: string | null
     usageCount?: number
+    ogAgentId?: string | null
     templateVersions?: TemplateVersionCreateNestedManyWithoutTemplateInput
     templateCollections?: TemplateCollectionCreateNestedManyWithoutTemplateInput
   }
@@ -15818,6 +15850,7 @@ export namespace Prisma {
     public?: boolean
     userId?: string | null
     usageCount?: number
+    ogAgentId?: string | null
     templateVersions?: TemplateVersionUncheckedCreateNestedManyWithoutTemplateInput
     templateCollections?: TemplateCollectionUncheckedCreateNestedManyWithoutTemplateInput
   }
@@ -15836,6 +15869,7 @@ export namespace Prisma {
     public?: BoolFieldUpdateOperationsInput | boolean
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     usageCount?: IntFieldUpdateOperationsInput | number
+    ogAgentId?: NullableStringFieldUpdateOperationsInput | string | null
     templateVersions?: TemplateVersionUpdateManyWithoutTemplateNestedInput
     templateCollections?: TemplateCollectionUpdateManyWithoutTemplateNestedInput
   }
@@ -15854,6 +15888,7 @@ export namespace Prisma {
     public?: BoolFieldUpdateOperationsInput | boolean
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     usageCount?: IntFieldUpdateOperationsInput | number
+    ogAgentId?: NullableStringFieldUpdateOperationsInput | string | null
     templateVersions?: TemplateVersionUncheckedUpdateManyWithoutTemplateNestedInput
     templateCollections?: TemplateCollectionUncheckedUpdateManyWithoutTemplateNestedInput
   }
@@ -15872,6 +15907,7 @@ export namespace Prisma {
     public?: boolean
     userId?: string | null
     usageCount?: number
+    ogAgentId?: string | null
   }
 
   export type TemplateUpdateManyMutationInput = {
@@ -15888,6 +15924,7 @@ export namespace Prisma {
     public?: BoolFieldUpdateOperationsInput | boolean
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     usageCount?: IntFieldUpdateOperationsInput | number
+    ogAgentId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type TemplateUncheckedUpdateManyInput = {
@@ -15904,12 +15941,14 @@ export namespace Prisma {
     public?: BoolFieldUpdateOperationsInput | boolean
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     usageCount?: IntFieldUpdateOperationsInput | number
+    ogAgentId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type TemplateVersionCreateInput = {
     id?: string
     version: number
     spells?: TemplateVersionCreatespellsInput | InputJsonValue[]
+    metadata?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     Template: TemplateCreateNestedOneWithoutTemplateVersionsInput
@@ -15920,6 +15959,7 @@ export namespace Prisma {
     templateId: string
     version: number
     spells?: TemplateVersionCreatespellsInput | InputJsonValue[]
+    metadata?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -15928,6 +15968,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     version?: IntFieldUpdateOperationsInput | number
     spells?: TemplateVersionUpdatespellsInput | InputJsonValue[]
+    metadata?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     Template?: TemplateUpdateOneRequiredWithoutTemplateVersionsNestedInput
@@ -15938,6 +15979,7 @@ export namespace Prisma {
     templateId?: StringFieldUpdateOperationsInput | string
     version?: IntFieldUpdateOperationsInput | number
     spells?: TemplateVersionUpdatespellsInput | InputJsonValue[]
+    metadata?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -15947,6 +15989,7 @@ export namespace Prisma {
     templateId: string
     version: number
     spells?: TemplateVersionCreatespellsInput | InputJsonValue[]
+    metadata?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -15955,6 +15998,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     version?: IntFieldUpdateOperationsInput | number
     spells?: TemplateVersionUpdatespellsInput | InputJsonValue[]
+    metadata?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -15964,6 +16008,7 @@ export namespace Prisma {
     templateId?: StringFieldUpdateOperationsInput | string
     version?: IntFieldUpdateOperationsInput | number
     spells?: TemplateVersionUpdatespellsInput | InputJsonValue[]
+    metadata?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -16904,6 +16949,7 @@ export namespace Prisma {
     public?: SortOrder
     userId?: SortOrder
     usageCount?: SortOrder
+    ogAgentId?: SortOrder
   }
 
   export type TemplateAvgOrderByAggregateInput = {
@@ -16922,6 +16968,7 @@ export namespace Prisma {
     public?: SortOrder
     userId?: SortOrder
     usageCount?: SortOrder
+    ogAgentId?: SortOrder
   }
 
   export type TemplateMinOrderByAggregateInput = {
@@ -16936,6 +16983,7 @@ export namespace Prisma {
     public?: SortOrder
     userId?: SortOrder
     usageCount?: SortOrder
+    ogAgentId?: SortOrder
   }
 
   export type TemplateSumOrderByAggregateInput = {
@@ -17047,6 +17095,7 @@ export namespace Prisma {
     templateId?: SortOrder
     version?: SortOrder
     spells?: SortOrder
+    metadata?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -18348,6 +18397,7 @@ export namespace Prisma {
     id?: string
     version: number
     spells?: TemplateVersionCreatespellsInput | InputJsonValue[]
+    metadata?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -18356,6 +18406,7 @@ export namespace Prisma {
     id?: string
     version: number
     spells?: TemplateVersionCreatespellsInput | InputJsonValue[]
+    metadata?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -18422,6 +18473,7 @@ export namespace Prisma {
     templateId?: StringFilter<"TemplateVersion"> | string
     version?: IntFilter<"TemplateVersion"> | number
     spells?: JsonNullableListFilter<"TemplateVersion">
+    metadata?: JsonNullableFilter<"TemplateVersion">
     createdAt?: DateTimeFilter<"TemplateVersion"> | Date | string
     updatedAt?: DateTimeFilter<"TemplateVersion"> | Date | string
   }
@@ -18469,6 +18521,7 @@ export namespace Prisma {
     public?: boolean
     userId?: string | null
     usageCount?: number
+    ogAgentId?: string | null
     templateCollections?: TemplateCollectionCreateNestedManyWithoutTemplateInput
   }
 
@@ -18486,6 +18539,7 @@ export namespace Prisma {
     public?: boolean
     userId?: string | null
     usageCount?: number
+    ogAgentId?: string | null
     templateCollections?: TemplateCollectionUncheckedCreateNestedManyWithoutTemplateInput
   }
 
@@ -18519,6 +18573,7 @@ export namespace Prisma {
     public?: BoolFieldUpdateOperationsInput | boolean
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     usageCount?: IntFieldUpdateOperationsInput | number
+    ogAgentId?: NullableStringFieldUpdateOperationsInput | string | null
     templateCollections?: TemplateCollectionUpdateManyWithoutTemplateNestedInput
   }
 
@@ -18536,6 +18591,7 @@ export namespace Prisma {
     public?: BoolFieldUpdateOperationsInput | boolean
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     usageCount?: IntFieldUpdateOperationsInput | number
+    ogAgentId?: NullableStringFieldUpdateOperationsInput | string | null
     templateCollections?: TemplateCollectionUncheckedUpdateManyWithoutTemplateNestedInput
   }
 
@@ -18553,6 +18609,7 @@ export namespace Prisma {
     public?: boolean
     userId?: string | null
     usageCount?: number
+    ogAgentId?: string | null
     templateVersions?: TemplateVersionCreateNestedManyWithoutTemplateInput
   }
 
@@ -18570,6 +18627,7 @@ export namespace Prisma {
     public?: boolean
     userId?: string | null
     usageCount?: number
+    ogAgentId?: string | null
     templateVersions?: TemplateVersionUncheckedCreateNestedManyWithoutTemplateInput
   }
 
@@ -18603,6 +18661,7 @@ export namespace Prisma {
     public?: BoolFieldUpdateOperationsInput | boolean
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     usageCount?: IntFieldUpdateOperationsInput | number
+    ogAgentId?: NullableStringFieldUpdateOperationsInput | string | null
     templateVersions?: TemplateVersionUpdateManyWithoutTemplateNestedInput
   }
 
@@ -18620,6 +18679,7 @@ export namespace Prisma {
     public?: BoolFieldUpdateOperationsInput | boolean
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     usageCount?: IntFieldUpdateOperationsInput | number
+    ogAgentId?: NullableStringFieldUpdateOperationsInput | string | null
     templateVersions?: TemplateVersionUncheckedUpdateManyWithoutTemplateNestedInput
   }
 
@@ -18999,6 +19059,7 @@ export namespace Prisma {
     id?: string
     version: number
     spells?: TemplateVersionCreatespellsInput | InputJsonValue[]
+    metadata?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -19016,6 +19077,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     version?: IntFieldUpdateOperationsInput | number
     spells?: TemplateVersionUpdatespellsInput | InputJsonValue[]
+    metadata?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -19024,6 +19086,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     version?: IntFieldUpdateOperationsInput | number
     spells?: TemplateVersionUpdatespellsInput | InputJsonValue[]
+    metadata?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -19032,6 +19095,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     version?: IntFieldUpdateOperationsInput | number
     spells?: TemplateVersionUpdatespellsInput | InputJsonValue[]
+    metadata?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
