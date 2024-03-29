@@ -53,7 +53,7 @@ export const templatesRouter = createTRPCRouter({
         ...input,
         userId: ctx.auth.userId,
         type:
-          user.publicMetadata?.role === 'ADMIN'
+          user.publicMetadata?.['role'] === 'ADMIN'
             ? input.type
             : TemplateType.COMMUNITY,
         public: input.public ?? false,
