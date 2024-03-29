@@ -41,6 +41,14 @@ export const templatesRouter = createTRPCRouter({
           updatedAt: true,
           userId: true,
           public: true,
+          templateVersions: {
+            take: 1,
+            orderBy: { version: 'desc' },
+            select: {
+              version: true,
+              metadata: true,
+            },
+          },
         },
       })
     }),
