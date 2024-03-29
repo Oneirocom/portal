@@ -1,5 +1,6 @@
 import { prismaCore } from '@magickml/server-db'
 import { prismaPortal, type Prisma, TemplateType } from '@magickml/portal-db'
+import { generateSpellMetadata } from '../../utils/metadata'
 
 /**
  * Represents the input data for creating a template from an agent.
@@ -45,6 +46,7 @@ export const createFromAgent = async (input: CreateFromAgentInput) => {
         {
           version: 1,
           spells,
+          metadata: generateSpellMetadata(spells),
         },
       ],
     },
