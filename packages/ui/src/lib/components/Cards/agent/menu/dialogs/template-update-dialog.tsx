@@ -5,6 +5,7 @@ import {
   PortalDialog,
   InputWithLabel,
   TextareaWithLabel,
+  SwitchWithLabel,
 } from '@magickml/client-ui'
 
 type UpdateTemplateDialogProps = {
@@ -13,11 +14,13 @@ type UpdateTemplateDialogProps = {
   templateId: string
   initialName: string
   initialDescription: string
+  initialPublic: boolean
 }
 
 type UpdateTemplateState = {
   name: string
   description: string
+  public: boolean
 }
 
 export const UpdateTemplateDialog: React.FC<UpdateTemplateDialogProps> = ({
@@ -26,17 +29,22 @@ export const UpdateTemplateDialog: React.FC<UpdateTemplateDialogProps> = ({
   templateId,
   initialName,
   initialDescription,
+  initialPublic,
 }) => {
+  const utils = api.useContext()
+
   const [templateState, setTemplateState] = useState<UpdateTemplateState>({
     name: initialName,
     description: initialDescription,
+    public: initialPublic,
   })
 
   const { mutateAsync: updateTemplate, isLoading: isUpdateTemplateLoading } =
     api.templates.update.useMutation({
-      onSuccess: () => {
+      onSuccess: async payload => {
         toast.success('Template updated')
         setIsOpen(false)
+        await utils.templates.invalidate()
       },
       onError: e => {
         toast.error(e.message)
@@ -49,6 +57,7 @@ export const UpdateTemplateDialog: React.FC<UpdateTemplateDialogProps> = ({
       templateId,
       name: templateState.name,
       description: templateState.description,
+      public: templateState.public,
     })
   }
 
@@ -90,6 +99,18 @@ export const UpdateTemplateDialog: React.FC<UpdateTemplateDialogProps> = ({
           }
           placeholder="Enter a description for the template"
           rows={4}
+        />
+        <SwitchWithLabel
+          id="template-type"
+          label="Make this template public?"
+          className="-[state=unchecked]:bg-ds-card-alt data-[state=unchecked]:border-ds-neutral data-[state=unchecked]:border"
+          checked={templateState.public}
+          onCheckedChange={checked =>
+            setTemplateState({
+              ...templateState,
+              public: checked,
+            })
+          }
         />
       </div>
     </PortalDialog>
