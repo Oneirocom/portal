@@ -15,7 +15,7 @@ const header: PageHeaderProps = {
 }
 
 export const CreateAgentPage = () => {
-  const { user, isSignedIn } = useUser()
+  const { isSignedIn } = useUser()
 
   const { data: officalTemplates, ...officialQuery } =
     api.templates.find.useQuery({

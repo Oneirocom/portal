@@ -1,6 +1,10 @@
 import { S3Client, PutObjectCommand, PutObjectOutput } from '@aws-sdk/client-s3'
 
-export type UploadImageType = 'userAvatar' | 'userBanner' | 'projectAvatar' | 'agentAvatar'
+export type UploadImageType =
+  | 'userAvatar'
+  | 'userBanner'
+  | 'projectAvatar'
+  | 'agentAvatar'
 
 const typeToFolderAndFileKeyMap: Record<
   UploadImageType,
@@ -14,8 +18,8 @@ const typeToFolderAndFileKeyMap: Record<
 
 const s3 = new S3Client({
   credentials: {
-    accessKeyId: process.env?.['NEXT_AWS_ACCESS_KEY']!,
-    secretAccessKey: process.env?.['NEXT_AWS_SECRET_KEY']!,
+    accessKeyId: process.env?.['NEXT_AWS_ACCESS_KEY'] || '',
+    secretAccessKey: process.env?.['NEXT_AWS_SECRET_KEY'] || '',
   },
   region: process.env?.['NEXT_AWS_REGION'],
   endpoint: process.env?.['NEXT_AWS_BUCKET_ENDPOINT'],
@@ -34,7 +38,7 @@ export const uploadImage = async (
   const buffer = createBufferFromImage(image)
 
   const s3Params = {
-    Bucket: process.env?.['NEXT_AWS_BUCKET_NAME']!,
+    Bucket: process.env?.['NEXT_AWS_BUCKET_NAME'],
     Key: `${folder}/${id}/${fileKey}`,
     Body: buffer,
     ContentEncoding: 'base64',

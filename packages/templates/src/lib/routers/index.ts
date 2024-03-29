@@ -1,5 +1,3 @@
-import { createTRPCRouter } from '@magickml/portal-server-core'
-
 import { templatesRouter } from './template.router'
 import { templateVersionRouter } from './template-version.router'
 import { templateRatingRouter } from './template-rating.router'

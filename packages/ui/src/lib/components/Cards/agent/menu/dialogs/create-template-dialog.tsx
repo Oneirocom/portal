@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { api, type RouterInputs } from '@magickml/portal-api-client'
+import { api } from '@magickml/portal-api-client'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/router'
 import {
