@@ -1,5 +1,6 @@
 import { type Prisma } from '@magickml/portal-db'
 import knowledgeBotSpell from './knowledge-bot.spell.json'
+import { generateSpellMetadata } from '../../utils/metadata'
 
 export const knowledgeBotTemplate: Prisma.TemplateCreateInput = {
   id: 'knowledge-bot',
@@ -11,6 +12,7 @@ export const knowledgeBotTemplate: Prisma.TemplateCreateInput = {
       {
         version: 1,
         spells: [knowledgeBotSpell],
+        metadata: generateSpellMetadata([knowledgeBotSpell]),
       },
     ],
   },

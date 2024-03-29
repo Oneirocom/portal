@@ -1,6 +1,7 @@
 import { type Prisma } from '@magickml/portal-db'
 import slackDiscordSpell from './slack.spell.json'
 import discordSpell from './discord.spell.json'
+import { generateSpellMetadata } from '../../utils/metadata'
 
 export const slackDiscordTemplate: Prisma.TemplateCreateInput = {
   id: 'slack-discord',
@@ -12,6 +13,7 @@ export const slackDiscordTemplate: Prisma.TemplateCreateInput = {
       {
         version: 1,
         spells: [slackDiscordSpell, discordSpell],
+        metadata: generateSpellMetadata([slackDiscordSpell, discordSpell]),
       },
     ],
   },

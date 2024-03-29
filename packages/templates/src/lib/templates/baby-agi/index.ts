@@ -1,5 +1,6 @@
 import { type Prisma } from '@magickml/portal-db'
 import babyAGISpell from './baby-agi.spell.json'
+import { generateSpellMetadata } from '../../utils/metadata'
 
 export const babyAGITemplate: Prisma.TemplateCreateInput = {
   id: 'baby-agi',
@@ -11,6 +12,7 @@ export const babyAGITemplate: Prisma.TemplateCreateInput = {
       {
         version: 1,
         spells: [babyAGISpell],
+        metadata: generateSpellMetadata([babyAGISpell]),
       },
     ],
   },
