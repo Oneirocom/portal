@@ -43,6 +43,10 @@ export const AgentsPage = ({ initialData }) => {
     <>
       <Head>
         <title>Agents | MagickML</title>
+        <meta
+          name="description"
+          content="Choose from your Agents to access the Development Environment, where you can edit it's Spell."
+        />
       </Head>
 
       <PageHeader {...header} loading={isLoading} />
