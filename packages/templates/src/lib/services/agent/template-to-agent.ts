@@ -25,8 +25,6 @@ interface CreateFromTemplateInput {
 export const createFromTemplate = async (input: CreateFromTemplateInput) => {
   const { projectName, agentName, templateId, owner } = input
 
-  console.log('Creating from template:', projectName, agentName, templateId)
-
   const template = await prismaPortal.template.findUnique({
     where: { id: templateId },
   })
@@ -34,8 +32,6 @@ export const createFromTemplate = async (input: CreateFromTemplateInput) => {
   if (!template) {
     throw new Error('Template not found')
   }
-
-  console.log('Creating project')
 
   const project = await prismaPortal.project.create({
     data: {
@@ -46,8 +42,6 @@ export const createFromTemplate = async (input: CreateFromTemplateInput) => {
       createdAt: new Date().toISOString(),
     },
   })
-
-  console.log('Initializing project')
 
   const app = makeClient(ideServerUrl)
 
@@ -62,16 +56,16 @@ export const createFromTemplate = async (input: CreateFromTemplateInput) => {
     throw new Error('No template version found')
   }
 
-  const templateSpells = latestTemplateVersion.spells as any
+  const templateSpells = latestTemplateVersion.spells
 
   let i = 1
-  for (const tspell of templateSpells) {
-    const graph = tspell?.graph || {
-      nodes: [],
-      values: [],
-      customEvents: [],
-    }
-    const name = tspell?.name || `${agentName}-spell-${i}`
+  for (const tspell of templateSpells as any[]) {
+    const graph =
+      'graph' in tspell
+        ? tspell.graph
+        : { nodes: [], variables: [], customEvents: [] }
+
+    const name = 'name' in tspell ? tspell.name : `Spell ${i}`
 
     const input = {
       id: v4(),

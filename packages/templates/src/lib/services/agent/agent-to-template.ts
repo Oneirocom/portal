@@ -23,17 +23,38 @@ export interface CreateFromAgentInput {
  */
 export const createFromAgent = async (input: CreateFromAgentInput) => {
   const agent = await prismaCore.agents.findUnique({
-    where: { id: input.agentId },
-    select: { projectId: true },
+    where: { id: input.agentId, isDraft: false },
+    select: {
+      currentSpellReleaseId: true,
+    },
   })
 
   if (!agent) {
     throw new Error('Agent not found')
   }
 
-  const spells = await prismaCore.spells.findMany({
-    where: { projectId: agent.projectId },
+  if (!agent.currentSpellReleaseId) {
+    throw new Error(
+      'You cannot create a template from an agent without a spell release'
+    )
+  }
+
+  const release = await prismaCore.spellReleases.findUnique({
+    where: {
+      id: agent.currentSpellReleaseId,
+    },
+    select: {
+      spells: true,
+    },
   })
+
+  if (!release) {
+    throw new Error(
+      'You cannot create a template from an agent without a spell release'
+    )
+  }
+
+  const spells = release.spells
 
   const template: Prisma.TemplateCreateInput = {
     name: input.name,
@@ -41,6 +62,7 @@ export const createFromAgent = async (input: CreateFromAgentInput) => {
     userId: input.userId,
     type: input.type || TemplateType.COMMUNITY,
     public: input.public || false,
+    ogAgentId: input.agentId,
     templateVersions: {
       create: [
         {
