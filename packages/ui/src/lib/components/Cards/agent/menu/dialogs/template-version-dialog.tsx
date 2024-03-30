@@ -20,7 +20,7 @@ export const TemplateVersionDialog: React.FC<TemplateVersionDialogProps> = ({
     isLoading: isTemplateVersionLoading,
   } = api.templateVersions.update.useMutation({
     onSuccess: async () => {
-      await utils.agents.invalidate()
+      await utils.templates.invalidate()
       toast.success('Template updated')
       setIsOpen(false)
     },
