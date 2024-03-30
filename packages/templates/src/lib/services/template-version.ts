@@ -2,44 +2,67 @@ import { prismaPortal } from '@magickml/portal-db'
 import { prismaCore } from '@magickml/server-db'
 import { generateSpellMetadata } from '../utils/metadata'
 
+interface UpdateTemplateVersionInput {
+  templateId: string
+  ogAgentId: string
+}
 /**
  * Updates the version of a template by creating a new version with the provided spells.
  *
  * @param templateId - The ID of the template to update.
+ * @param ogAgentId - The ID of the agent the template was created from.
  * @returns The newly created template version.
  */
-export const updateTemplateVersion = async (templateId: string) => {
-  const template = await prismaPortal.template.findUnique({
-    where: { id: templateId },
-    select: { ogAgentId: true },
+export const updateTemplateVersion = async ({
+  templateId,
+  ogAgentId,
+}: UpdateTemplateVersionInput) => {
+  const agent = await prismaCore.agents.findUnique({
+    where: { id: ogAgentId, isDraft: false },
+    select: {
+      currentSpellReleaseId: true,
+    },
   })
 
-  if (!template) {
-    throw new Error('Template does not exist. Cannot update version.')
+  if (!agent) {
+    throw new Error('Agent not found')
   }
 
-  const spells = await prismaCore.spells.findMany({
-    where: { projectId: template.ogAgentId },
-    select: { id: true, graph: true },
+  if (!agent.currentSpellReleaseId) {
+    throw new Error(
+      'You cannot create a template from an agent without a spell release'
+    )
+  }
+
+  const release = await prismaCore.spellReleases.findUnique({
+    where: {
+      id: agent.currentSpellReleaseId,
+    },
+    select: {
+      spells: true,
+    },
   })
 
-  const graphs = spells.map(({ graph }) =>
-    graph ? graph : { nodes: [], variables: [], customEvents: [] }
-  )
+  if (!release) {
+    throw new Error(
+      'You cannot create a template from an agent without a spell release'
+    )
+  }
 
-  const latestVersion = await prismaPortal.templateVersion.findFirst({
+  const spells = release.spells
+
+  const currentVersion = await prismaPortal.templateVersion.findFirst({
     where: { templateId },
-    select: { version: true },
     orderBy: { version: 'desc' },
   })
 
-  const newVersion = (latestVersion?.version || 0) + 1
+  const newVersion = (currentVersion?.version || 0) + 1
 
   return prismaPortal.templateVersion.create({
     data: {
       templateId,
       version: newVersion,
-      spells: graphs,
+      spells,
       metadata: generateSpellMetadata(spells),
     },
   })

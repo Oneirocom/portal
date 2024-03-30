@@ -15,17 +15,25 @@ export const templateVersionRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const template = await prismaPortal.template.findUnique({
         where: { id: input.templateId },
+        select: { userId: true, ogAgentId: true },
       })
 
       if (!template) {
         throw new Error('Template not found')
       }
 
+      if (!template.ogAgentId) {
+        throw new Error('Template was not created from an agent')
+      }
+
       if (template.userId !== ctx.auth.userId) {
         throw new Error('You are not authorized to update this template')
       }
 
-      return await updateTemplateVersion(input.templateId)
+      return await updateTemplateVersion({
+        ogAgentId: template.ogAgentId,
+        templateId: input.templateId,
+      })
     }),
   find: protectedProcedure
     .input(getTemplateVersionSchema)
