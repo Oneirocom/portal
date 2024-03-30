@@ -23,7 +23,7 @@ export const BaseAgentCard: React.FC<BaseAgentCardProps> = ({
   menu,
   footer,
 }) => {
-  const { id, name, image, description } = agent
+  const { id, name, image, description, version } = agent
 
   return (
     <Card
@@ -45,8 +45,13 @@ export const BaseAgentCard: React.FC<BaseAgentCardProps> = ({
         />
       </div>
       <CardHeader className="p-0 pt-2.5 h-[35%] text-center text-pretty grow">
-        <CardTitle className="font-montserrat text-sm lg:text-base font-medium">
+        <CardTitle className="font-montserrat text-sm lg:text-base font-medium inline-flex items-center justify-center">
           {name}
+          {version && (
+            <span className="ml-2 text-[10px] font-montserrat leading-none  text-ds-primary-p dark:text-ds-primary-m">
+              {`V${version}`}
+            </span>
+          )}
         </CardTitle>
         {description && (
           <CardDescription className="mx-2 line-clamp-2 text-xs lg:text-base text-center dark:!text-ds-white !text-ds-black">

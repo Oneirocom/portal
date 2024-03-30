@@ -68,8 +68,13 @@ export const AgentCardFooter: React.FC<AgentCardFooterProps> = ({
         onPointerDownOutside={e => e.preventDefault()}
         className="max-w-xs lg:max-w-2xl w-full text-ds-black dark:text-ds-white p-8"
       >
-        <h2 className="text-2xl font-bold !font-montAlt capitalize">
+        <h2 className="text-2xl font-bold !font-montAlt capitalize inline-flex items-center justify-start">
           {agent.name}
+          {agent.version && (
+            <span className="ml-2 mt-1 text-[10px] font-montserrat leading-none  text-ds-primary-p dark:text-ds-primary-m">
+              {`V${agent.version}`}
+            </span>
+          )}
         </h2>
         <div className="flex flex-col lg:flex-row gap-2 items-start justify-start">
           <div className="aspect-square font-montserrat relative w-full h-full rounded-t-xl overflow-hidden m-0 p-0 basis-1/3">

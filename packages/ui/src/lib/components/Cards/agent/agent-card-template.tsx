@@ -9,7 +9,8 @@ import { useUser } from '@clerk/nextjs'
 
 type AgentCardTemplateProps = AgentCardInfo & {
   metadata?: any
-  ogAgentId: string | null
+  ogAgentId?: string | null
+  version?: string | null
 }
 
 export const AgentCardTemplate: React.FC<AgentCardTemplateProps> = template => {

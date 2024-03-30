@@ -70,6 +70,7 @@ export const CreateAgentPage = () => {
               creator={t.userId}
               metadata={t.templateVersions[0]?.metadata ?? null}
               ogAgentId={t.ogAgentId}
+              version={t.templateVersions[0]?.version.toString() ?? null}
             />
           ))}
       </PageSection>
@@ -91,6 +92,7 @@ export const CreateAgentPage = () => {
               creator={t.userId}
               metadata={t.templateVersions[0]?.metadata ?? null}
               ogAgentId={t.ogAgentId}
+              version={t.templateVersions[0]?.version.toString() ?? null}
             />
           ))}
       </PageSection>
@@ -109,6 +111,7 @@ export const CreateAgentPage = () => {
               creator={t.userId}
               metadata={t.templateVersions[0]?.metadata ?? null}
               ogAgentId={t.ogAgentId}
+              version={t.templateVersions[0]?.version.toString() ?? null}
             />
           ))}
       </PageSection>
