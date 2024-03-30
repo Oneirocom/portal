@@ -7,6 +7,7 @@ export type AgentCardInfo = {
   description: string | null
   isPublic?: boolean | null
   creator?: string | null
+  version?: string | null
 }
 
 export type FindTemplateOutput = RouterOutputs['templates']['find']
