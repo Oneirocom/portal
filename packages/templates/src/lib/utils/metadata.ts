@@ -19,6 +19,9 @@ export function generateSpellMetadata(
    */
   function traverseNodes(nodes: any[]): void {
     for (const node of nodes) {
+      if (!node) {
+        continue
+      }
       if (node.type === 'magick/generateText' && node.configuration.model) {
         models.push(node.configuration.model)
       } else if (
