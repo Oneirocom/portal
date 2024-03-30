@@ -41,7 +41,7 @@ export const BaseAgentCard: React.FC<BaseAgentCardProps> = ({
           })}
           alt={name ?? 'Placeholder'}
           layout="fill"
-          className="object-cover"
+          className="object-cover bg-ds-card-alt"
         />
       </div>
       <CardHeader className="p-0 pt-2.5 h-[35%] text-center text-pretty grow">
