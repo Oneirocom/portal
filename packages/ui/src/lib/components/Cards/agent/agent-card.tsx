@@ -12,9 +12,8 @@ export const AgentCard: React.FC<AgentCardProps> = agent => {
   const footerRef = useRef<HTMLButtonElement>(null)
   const footerState = useState(false)
   const menuState = useState(false)
+  const updateModalState = useState(false)
   const deleteModalState = useState(false)
-  const renameModalState = useState(false)
-  const imageModalState = useState(false)
   const templateModalState = useState(false)
 
   const isFooterActive = (e: MouseEvent) => {
@@ -29,9 +28,8 @@ export const AgentCard: React.FC<AgentCardProps> = agent => {
       isFooterActive(e.nativeEvent) ||
       footerState[0] ||
       menuState[0] ||
+      updateModalState[0] ||
       deleteModalState[0] ||
-      renameModalState[0] ||
-      imageModalState[0] ||
       templateModalState[0]
     ) {
       e.stopPropagation()
@@ -56,9 +54,8 @@ export const AgentCard: React.FC<AgentCardProps> = agent => {
           projectId={agent.projectId}
           isPublic={true} // TODO: get from API
           openState={menuState}
+          updateModalState={updateModalState}
           deleteModalState={deleteModalState}
-          renameModalState={renameModalState}
-          imageModalState={imageModalState}
           templateModalState={templateModalState}
         />
       }

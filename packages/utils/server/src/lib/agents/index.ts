@@ -283,6 +283,7 @@ export async function getInfiniteAgents({
       image: true,
       id: true,
       projectId: true,
+      description: true,
     },
   })
 
@@ -308,7 +309,6 @@ export async function getInfiniteAgents({
     return {
       ...a,
       publicAgentId: publicAgent?.id,
-      description: publicAgent?.description,
     }
   })
 }

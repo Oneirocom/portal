@@ -9,39 +9,36 @@ import {
   Button,
 } from '@magickml/client-ui'
 
-import { RenameDialog } from './dialogs/agent-rename-dialog'
 import { DeleteDialog } from './dialogs/agent-delete-dialog'
-import { ImageDialog } from './dialogs/agent-image-dialog'
 import { TemplateDialog } from './dialogs/create-template-dialog'
 import Link from 'next/link'
+import { AgentUpdateDialog } from './dialogs/agent-update-dialog'
 
 type AgentCardMenuProps = {
   agentId: string | null
   agentName: string | null
+  agentDescription: string | null
   projectId: string | null
   isPublic: boolean | null
-  agentDescription: string | null
   openState: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
   deleteModalState: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
-  renameModalState: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
-  imageModalState: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
   templateModalState: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
+  updateModalState: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
 }
 
 export const AgentCardMenu: React.FC<AgentCardMenuProps> = ({
   agentId,
   agentName,
+  agentDescription,
   projectId,
   openState,
+  updateModalState,
   deleteModalState,
-  renameModalState,
-  imageModalState,
   templateModalState,
 }) => {
   const [isOpen, setIsOpen] = openState
+  const [isUpdateDialogOpen, setIsUpdateDialogOpen] = updateModalState
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = deleteModalState
-  const [isRenameDialogOpen, setIsRenameDialogOpen] = renameModalState
-  const [isImageDialogOpen, setIsImageDialogOpen] = imageModalState
   const [isTemplateDialogOpen, setIsTemplateDialogOpen] = templateModalState
 
   const menuItems = [
@@ -69,14 +66,8 @@ export const AgentCardMenu: React.FC<AgentCardMenuProps> = ({
       enabled: false,
     },
     {
-      name: 'Update Image',
-      action: () => setIsImageDialogOpen(true),
-      type: 'button',
-      enabled: true,
-    },
-    {
-      name: 'Rename',
-      action: () => setIsRenameDialogOpen(true),
+      name: 'Update Agent',
+      action: () => setIsUpdateDialogOpen(true),
       type: 'button',
       enabled: true,
     },
@@ -96,16 +87,12 @@ export const AgentCardMenu: React.FC<AgentCardMenuProps> = ({
 
   return (
     <>
-      <ImageDialog
-        isOpen={isImageDialogOpen}
-        setIsOpen={setIsImageDialogOpen}
+      <AgentUpdateDialog
+        isOpen={isUpdateDialogOpen}
+        setIsOpen={setIsUpdateDialogOpen}
         agentId={agentId}
-      />
-      <RenameDialog
-        isOpen={isRenameDialogOpen}
-        setIsOpen={setIsRenameDialogOpen}
-        agentId={agentId}
-        agentName={agentName}
+        initialName={agentName}
+        initialDescription={agentDescription}
       />
       <TemplateDialog
         isOpen={isTemplateDialogOpen}
