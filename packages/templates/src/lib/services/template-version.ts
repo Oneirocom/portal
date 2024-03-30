@@ -1,18 +1,35 @@
 import { prismaPortal } from '@magickml/portal-db'
+import { prismaCore } from '@magickml/server-db'
+import { generateSpellMetadata } from '../utils/metadata'
 
 /**
  * Updates the version of a template by creating a new version with the provided spells.
  *
  * @param templateId - The ID of the template to update.
- * @param spells - The array of spells for the new version.
  * @returns The newly created template version.
  */
-export const updateTemplateVersion = async (
-  templateId: string,
-  spells: string[]
-) => {
+export const updateTemplateVersion = async (templateId: string) => {
+  const template = await prismaPortal.template.findUnique({
+    where: { id: templateId },
+    select: { ogAgentId: true },
+  })
+
+  if (!template) {
+    throw new Error('Template does not exist. Cannot update version.')
+  }
+
+  const spells = await prismaCore.spells.findMany({
+    where: { projectId: template.ogAgentId },
+    select: { id: true, graph: true },
+  })
+
+  const graphs = spells.map(({ graph }) =>
+    graph ? graph : { nodes: [], variables: [], customEvents: [] }
+  )
+
   const latestVersion = await prismaPortal.templateVersion.findFirst({
     where: { templateId },
+    select: { version: true },
     orderBy: { version: 'desc' },
   })
 
@@ -22,7 +39,8 @@ export const updateTemplateVersion = async (
     data: {
       templateId,
       version: newVersion,
-      spells,
+      spells: graphs,
+      metadata: generateSpellMetadata(spells),
     },
   })
 }

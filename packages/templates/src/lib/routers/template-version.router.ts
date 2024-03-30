@@ -1,4 +1,7 @@
-import { createTRPCRouter, protectedProcedure } from '@magickml/portal-server-core'
+import {
+  createTRPCRouter,
+  protectedProcedure,
+} from '@magickml/portal-server-core'
 import { prismaPortal } from '@magickml/portal-db'
 import { updateTemplateVersion, getTemplateVersion } from '../services'
 import {
@@ -22,7 +25,7 @@ export const templateVersionRouter = createTRPCRouter({
         throw new Error('You are not authorized to update this template')
       }
 
-      await updateTemplateVersion(input.templateId, input.spells as any)
+      return await updateTemplateVersion(input.templateId)
     }),
   find: protectedProcedure
     .input(getTemplateVersionSchema)
