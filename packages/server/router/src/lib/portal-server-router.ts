@@ -21,6 +21,7 @@ export const portalRouter = createTRPCRouter({
   anonUsers: anonUserRouter,
   billing: billingRouter,
   templates: templateRouters.base,
+  templateVersions: templateRouters.version,
   chatv2: chatRouterV2,
 })
 
