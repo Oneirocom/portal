@@ -19,8 +19,10 @@ import {
 } from '@magickml/portal-utils-shared'
 import { makeClient } from 'ideClient'
 import { createFromTemplate } from '@magickml/portal-templates'
-import { uploadImage } from '../utils/upload'
-import { UploadImageType } from 'server-storage'
+import {
+  publicPresigner,
+  UploadPresignType,
+} from 'server-storage'
 
 const ideServerUrl = process.env?.['IDE_SERVER_URL'] || 'http://localhost:3030'
 
@@ -108,15 +110,52 @@ export const agentsRouter = createTRPCRouter({
       return deletedAgent
     }),
 
+  getPresignedUrl: protectedProcedure
+    .input(
+      z.object({
+        agentId: z.string(),
+        type: z.nativeEnum(UploadPresignType),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { agentId: id, type } = input
+
+      const agent = await prismaCore.agents.findUnique({
+        where: { id },
+        select: { projectId: true },
+      })
+
+      if (!agent?.projectId) {
+        throw new Error('Agent project not found')
+      }
+
+      const access = await hasAccess({
+        projectId: agent.projectId,
+        user: ctx.auth,
+      })
+
+      if (!access) {
+        throw new Error('No access to the specified workspace')
+      }
+
+      try {
+        const presignedUrl = await publicPresigner.getPresignedUrl(id, type)
+
+        return presignedUrl
+      } catch (error) {
+        return null
+      }
+    }),
+
   updateAgent: protectedProcedure
     .input(
       z.object({
         name: z.string().optional(),
         description: z.string().optional(),
-        publicVariables: z.string().optional(),
-        variables: z.string().optional(),
+        publicVariables: z.string().optional(), // unused now leaving for old code
+        variables: z.string().optional(), // unused now, will probably be done in a different way
         image: z.string().optional().nullable(),
-        data: z.any().optional().nullable(),
+        data: z.any().optional().nullable(), // unused now leaving for old code
         agentId: z.string(),
         updateDraft: z.boolean().optional(),
       })
@@ -139,33 +178,12 @@ export const agentsRouter = createTRPCRouter({
         throw new Error('No access to the specified workspace')
       }
 
-      // If an image is provided, upload it and get the path
-      if (input.image) {
-        const imgResponse = await uploadImage(
-          input.agentId,
-          input.image,
-          UploadImageType.AGENT_AVATAR
-        )
-        input.image = `/agents/${agent.id}/avatar.jpg?${imgResponse.VersionId}`
-      }
-
       const performUpdate = async (agentIdToUpdate: string) => {
-        const validFields = [
-          'name',
-          'description',
-          'publicVariables',
-          'variables',
-          'data',
-          'image',
-          'draftAgentId',
-        ]
-        const updateData = Object.entries(input)
-          .filter(
-            ([key, value]) => validFields.includes(key) && value !== undefined
-          )
-          .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {})
-
-        await app.service('agents').patch(agentIdToUpdate, updateData)
+        await app.service('agents').patch(agent.id, {
+          name: input?.name || undefined,
+          description: input?.description || undefined,
+          image: input?.image || undefined,
+        })
 
         trackServerEvent(
           PrivateEventTypes.AGENT_PRIVATE_UPDATE,
