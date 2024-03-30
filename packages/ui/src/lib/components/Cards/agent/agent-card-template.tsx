@@ -22,6 +22,7 @@ export const AgentCardTemplate: React.FC<AgentCardTemplateProps> = template => {
   const footerState = useState(false)
   const createState = useState(false)
   const updateState = useState(false)
+  const updateVersionState = useState(false)
   const deleteState = useState(false)
 
   const isFooterActive = (e: MouseEvent) => {
@@ -38,6 +39,7 @@ export const AgentCardTemplate: React.FC<AgentCardTemplateProps> = template => {
       footerState[0] ||
       createState[0] ||
       updateState[0] ||
+      updateVersionState[0] ||
       deleteState[0]
     ) {
       e.stopPropagation()
@@ -68,6 +70,7 @@ export const AgentCardTemplate: React.FC<AgentCardTemplateProps> = template => {
             isPublic={template?.isPublic || false}
             openState={menuState}
             updateDialogState={updateState}
+            updateVersionDialogState={updateVersionState}
             deleteDialogState={deleteState}
           />
         )
