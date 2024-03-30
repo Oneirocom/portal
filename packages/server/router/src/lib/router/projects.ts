@@ -1,9 +1,13 @@
 import { z } from 'zod'
-import { createTRPCRouter, protectedProcedure } from '@magickml/portal-server-core'
+import {
+  createTRPCRouter,
+  protectedProcedure,
+} from '@magickml/portal-server-core'
 import { prismaPortal } from '@magickml/portal-db'
 import { hasAccess, prepareToken } from '../utils/shared'
 import { uploadImage } from '../utils/upload'
 import { v4 } from 'uuid'
+import { UploadImageType } from 'server-storage'
 
 export const projectsRouter = createTRPCRouter({
   // Create a project
@@ -23,7 +27,11 @@ export const projectsRouter = createTRPCRouter({
 
       // Handle the base64 image data
       if (base64Image) {
-        const imgResponse = await uploadImage(id, base64Image, 'projectAvatar')
+        const imgResponse = await uploadImage(
+          id,
+          base64Image,
+          UploadImageType.PROJECT_AVATAR
+        )
         filePath = `/projects/${id}/avatar.jpg?${imgResponse.VersionId}`
       }
 

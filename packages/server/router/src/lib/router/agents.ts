@@ -20,6 +20,7 @@ import {
 import { makeClient } from 'ideClient'
 import { createFromTemplate } from '@magickml/portal-templates'
 import { uploadImage } from '../utils/upload'
+import { UploadImageType } from 'server-storage'
 
 const ideServerUrl = process.env?.['IDE_SERVER_URL'] || 'http://localhost:3030'
 
@@ -143,7 +144,7 @@ export const agentsRouter = createTRPCRouter({
         const imgResponse = await uploadImage(
           input.agentId,
           input.image,
-          'agentAvatar'
+          UploadImageType.AGENT_AVATAR
         )
         input.image = `/agents/${agent.id}/avatar.jpg?${imgResponse.VersionId}`
       }
