@@ -85,6 +85,8 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
         ...shape.data,
         zodError:
           error.cause instanceof ZodError ? error.cause.flatten() : null,
+        message: error.message,
+        stack: process.env.NODE_ENV === 'development' ? error.stack : undefined,
       },
     }
   },
