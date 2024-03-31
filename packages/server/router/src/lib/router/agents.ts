@@ -139,7 +139,7 @@ export const agentsRouter = createTRPCRouter({
       }
 
       try {
-        const presignedUrl = await publicPresigner.getPresignedUrl(id, type)
+        const presignedUrl = await publicPresigner.getPresignedUrl(id, 'avatar.jpg', type)
 
         return presignedUrl
       } catch (error) {
