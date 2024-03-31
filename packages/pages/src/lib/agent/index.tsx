@@ -64,7 +64,11 @@ export const AgentsPage = ({ initialData }) => {
                 projectId={agent.projectId ?? ''}
                 isPublic={null}
                 name={agent.name ?? 'Untitled'}
-                image={agent.image}
+                image={
+                  agent.image
+                    ? `${process.env.NEXT_PUBLIC_BUCKET_PREFIX}/${agent?.image}`
+                    : null
+                }
                 description={agent.description ?? ''}
               />
             ))}

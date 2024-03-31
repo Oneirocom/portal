@@ -64,7 +64,7 @@ export const AgentUpdateDialog: React.FC<AgentUpdateDialogProps> = ({
         return
       }
 
-      const res = await axios.put(presignedUrl, imageFile, {
+      const res = await axios.put(presignedUrl.url, imageFile, {
         headers: {
           'Content-Type': imageFile.type,
         },
@@ -77,7 +77,7 @@ export const AgentUpdateDialog: React.FC<AgentUpdateDialogProps> = ({
         toast.error('Failed to upload image. Please try a different image.')
         image = undefined
       } else {
-        image = res.config.url
+        image = presignedUrl.key
       }
     }
 
