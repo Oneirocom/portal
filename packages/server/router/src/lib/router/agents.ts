@@ -21,7 +21,7 @@ import { makeClient } from 'ideClient'
 import { createFromTemplate } from '@magickml/portal-templates'
 import {
   publicPresigner,
-  UploadPresignType,
+  PublicPresignType,
 } from 'server-storage'
 
 const ideServerUrl = process.env?.['IDE_SERVER_URL'] || 'http://localhost:3030'
@@ -114,7 +114,7 @@ export const agentsRouter = createTRPCRouter({
     .input(
       z.object({
         agentId: z.string(),
-        type: z.nativeEnum(UploadPresignType),
+        type: z.nativeEnum(PublicPresignType),
       })
     )
     .mutation(async ({ input, ctx }) => {
