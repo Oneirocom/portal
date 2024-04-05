@@ -154,14 +154,31 @@ export class StripeService {
     customer,
     userId,
     name,
+    coupon,
   }: {
     priceId: string
     customer: string
     userId: string
     name: string
+    coupon?: string
   }): Promise<Stripe.Response<Stripe.Checkout.Session>> {
     try {
-      const session = await this.stripe.checkout.sessions.create({
+      if (coupon) {
+        // Check if the promotion code is valid for this user and not used
+        const promotionCode = await prismaPortal.promotionCode.findFirst({
+          where: {
+            couponId: coupon,
+            userId,
+            isUsed: false,
+          },
+        })
+
+        if (!promotionCode) {
+          throw new Error('Invalid or used promotion code')
+        }
+      }
+
+      const sessionParams: Stripe.Checkout.SessionCreateParams = {
         mode: 'subscription',
         payment_method_types: ['card'],
         billing_address_collection: 'required',
@@ -179,7 +196,21 @@ export class StripeService {
         },
         success_url: `${this.getAppURL()}/billing`,
         cancel_url: `${this.getAppURL()}/billing`,
-      })
+      }
+
+      if (coupon) {
+        sessionParams.discounts = [{ coupon }]
+      }
+
+      const session = await this.stripe.checkout.sessions.create(sessionParams)
+
+      if (coupon) {
+        // Mark the promotion code as used
+        await prismaPortal.promotionCode.update({
+          where: { id: coupon },
+          data: { isUsed: true },
+        })
+      }
 
       return session
     } catch (error) {
