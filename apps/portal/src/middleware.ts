@@ -21,6 +21,7 @@ export default authMiddleware({
     '/api/magick/budget/get_budget',
     '/api/magick/user',
     '/api/magick/user(.*)',
+    '/templates/(.*)',
   ],
 })
 
