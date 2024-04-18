@@ -47,6 +47,7 @@ export const templatesGetStaticProps: GetStaticProps = async ({ params }) => {
       description: true,
       createdAt: true,
       updatedAt: true,
+      usageCount: true,
       templateVersions: parsedParams.version
         ? {
             where: {
