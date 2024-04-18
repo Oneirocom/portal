@@ -6,6 +6,7 @@ import React from 'react'
 import { CreateAgentDialog } from './create-agent-dialog'
 import { TemplateCardMenu } from './menu/agent-card-template-menu'
 import { useUser } from '@clerk/nextjs'
+import { useRouter } from 'next/router'
 
 type AgentCardTemplateProps = AgentCardInfo & {
   metadata?: any
@@ -15,6 +16,7 @@ type AgentCardTemplateProps = AgentCardInfo & {
 
 export const AgentCardTemplate: React.FC<AgentCardTemplateProps> = template => {
   const { user, isSignedIn } = useUser()
+  const { push } = useRouter()
   const isAdmin = (role: unknown) => role === 'ADMIN'
   const isCreator = (creator: string | null | undefined) => creator === user?.id
 
@@ -54,6 +56,14 @@ export const AgentCardTemplate: React.FC<AgentCardTemplateProps> = template => {
     createState[1](true)
   }
 
+  const handleSecondaryClick: React.MouseEventHandler<
+    HTMLButtonElement
+  > = e => {
+    e.preventDefault()
+    if (!window) return
+    window.open(`/templates/${template.id}`, '_blank')
+  }
+
   return (
     <BaseAgentCard
       agent={template}
@@ -83,6 +93,8 @@ export const AgentCardTemplate: React.FC<AgentCardTemplateProps> = template => {
             state={footerState}
             buttonRef={footerRef}
             submitText="Build"
+            secondaryText="Preview"
+            onSecondaryClick={handleSecondaryClick}
             onSubmit={handleFooterSubmit}
             metadata={template.metadata}
           />

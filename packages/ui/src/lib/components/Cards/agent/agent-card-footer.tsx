@@ -26,6 +26,8 @@ export type AgentCardFooterProps = {
   buttonRef: React.RefObject<HTMLButtonElement>
   submitText: string
   onSubmit: () => void | Promise<void> | null
+  secondaryText?: string
+  onSecondaryClick?: React.MouseEventHandler<HTMLButtonElement> | null
   metadata?: any
 }
 
@@ -35,6 +37,8 @@ export const AgentCardFooter: React.FC<AgentCardFooterProps> = ({
   buttonRef,
   submitText,
   onSubmit,
+  secondaryText,
+  onSecondaryClick,
   metadata,
 }) => {
   const [open, setOpen] = state
@@ -111,13 +115,13 @@ export const AgentCardFooter: React.FC<AgentCardFooterProps> = ({
             )}
             <div className="inline-flex gap-2">
               {castedMetadata?.discord && (
-                <Avatar className='h-6 w-6'>
+                <Avatar className="h-6 w-6">
                   <AvatarImage src={discordCredentials?.icon} alt="discord" />
                   <AvatarFallback>D</AvatarFallback>
                 </Avatar>
               )}
               {castedMetadata?.slack && (
-                <Avatar className='h-6 w-6'>
+                <Avatar className="h-6 w-6">
                   <AvatarImage src={slackCredentials?.icon} alt="slack" />
                   <AvatarFallback>S</AvatarFallback>
                 </Avatar>
@@ -133,7 +137,12 @@ export const AgentCardFooter: React.FC<AgentCardFooterProps> = ({
           </div>
         </div>
 
-        <DialogFooter className="pt-8">
+        <DialogFooter className="pt-8 gap-x-2">
+          {secondaryText && onSecondaryClick && (
+            <Button onClick={onSecondaryClick} variant="portal-neutral">
+              {secondaryText}
+            </Button>
+          )}
           <Button onClick={onSubmit} variant="portal-primary">
             {submitText}
           </Button>
