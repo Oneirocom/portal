@@ -1,4 +1,7 @@
-import { createTRPCRouter, protectedProcedure } from '@magickml/portal-server-core'
+import {
+  createTRPCRouter,
+  protectedProcedure,
+} from '@magickml/portal-server-core'
 import { stripeService } from '@magickml/portal-billing'
 import { z } from 'zod'
 import { prismaPortal, type Transaction } from '@magickml/portal-db'
@@ -156,5 +159,37 @@ export const billingRouter = createTRPCRouter({
       }
 
       return paginateItems(transactions, limit)
+    }),
+
+  redeemCode: protectedProcedure
+    .input(z.object({ code: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const promotionCode = await prismaPortal.promotionCode.findUnique({
+        where: { code: input.code },
+      })
+
+      if (!promotionCode) {
+        throw new Error('Invalid promotion code')
+      }
+
+      const user = await getFullUser(ctx.auth.userId)
+
+      if (!user.customer) {
+        throw new Error('Stripe customer not found')
+      }
+
+      const checkoutSession = await stripeService.createSubscriptionCheckout({
+        priceId: '{{PRICE_ID}}',
+        customer: user.customer,
+        userId: ctx.auth.userId,
+        name: 'Promotion',
+        coupon: promotionCode.couponId,
+      })
+
+      if (!checkoutSession) {
+        throw new Error('Failed to create Stripe checkout session.')
+      }
+
+      return { checkoutSession }
     }),
 })

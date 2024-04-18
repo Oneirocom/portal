@@ -398,5 +398,66 @@ const SectionContent: React.FC<SectionProps> = ({ children }) => {
   )
 }
 
+const PromotionCodeSection = () => {
+  const [code, setCode] = useState('')
+  const [error, setError] = useState<string | undefined>()
+  const router = useRouter()
+
+  const { mutateAsync: redeemPromotionCode } =
+    api.billing.redeemCode.useMutation({
+      onSuccess: data => {
+        typeof data.checkoutSession.url === 'string'
+          ? router.push(data.checkoutSession.url)
+          : toast.error('Something went wrong')
+      },
+      onError: error => {
+        toast.error(error.message || 'Error redeeming promotion code')
+      },
+    })
+
+  const handleRedeemCode = async () => {
+    try {
+      await redeemPromotionCode({ code })
+    } catch (error) {
+      console.error(error)
+      toast.error('Error redeeming promotion code')
+    }
+  }
+
+  return (
+    <div className="w-full bg-ds-card-alt p-6 rounded-lg lg:inline-flex lg:mt-2">
+      <div className="grow items-start gap-1 flex flex-col">
+        <div className="text-lg font-semibold ">Redeem Promotion Code</div>
+        <div className="text-ds-secondary-p dark:text-ds-secondary-m text-sm font-normal ">
+          Enter your promotion code to apply a discount to your subscription.
+        </div>
+      </div>
+      <div className="inline-flex items-baseline gap-2 lg:inline-flex">
+        <div className="flex flex-col">
+          <Input
+            type="text"
+            placeholder="Enter code"
+            value={code}
+            onChange={e => setCode(e.target.value)}
+            className="relative lg:grow lg:shrink lg:basis-0 lg:w-96 h-10 px-6 py-2 bg-ds-card border-ds-secondary rounded-lg border"
+          />
+
+          {error && (
+            <span className="text-ds-error text-xs mt-1 text-center">
+              {error}
+            </span>
+          )}
+        </div>
+        <button
+          onClick={handleRedeemCode}
+          className="w-24 lg:ml-6 px-4 py-2 text-center white text-base font-normal bg-ds-card rounded-lg border border-neutral-700 justify-center items-center gap-1 flex"
+        >
+          Redeem
+        </button>
+      </div>
+    </div>
+  )
+}
+
 Section.Wrapper = SectionWrapper
 Section.Content = SectionContent
