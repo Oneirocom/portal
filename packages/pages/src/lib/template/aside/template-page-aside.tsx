@@ -5,7 +5,7 @@ import type { TemplateGetStaticProps } from '../template-page-isr'
 import { Avatar, AvatarImage, cn } from '@magickml/client-ui'
 import { TemplatePageAsideItem } from './template-page-aside-item'
 import { WizardHatIcon, MagickWandIcon, CrystalBallIcon } from '../icons'
-import { Psychology, Update } from '@mui/icons-material'
+import { Psychology, Update, PlayArrow, Favorite } from '@mui/icons-material'
 
 type TemplatePageSideProps = {
   template: TemplateGetStaticProps['template']
@@ -22,8 +22,8 @@ export const TemplatePageSide = (
   const models = (metadata?.models as string[]) ?? []
 
   return (
-    <aside className="px-5 max-w-96 w-full flex-col justify-start items-start hidden md:inline-flex gap-10">
-      <Avatar className="w-full aspect-square max-w-96 h-auto !rounded-[10px] mx-auto">
+    <aside className="px-5 max-w-96 w-full h-full overflow-y-auto flex-col justify-start items-start hidden md:inline-flex gap-10">
+      <Avatar className="w-full aspect-square max-w-72 h-auto !rounded-[10px] mx-auto">
         <AvatarImage
           className="h-full w-full !rounded-[10px]"
           src={getImage({
@@ -56,13 +56,15 @@ export const TemplatePageSide = (
           </div>
         </TemplatePageAsideItem>
 
-        {/* <TemplatePageAsideItem title="Interactions">
-          <p className="text-white text-base font-medium">93</p>
+        <TemplatePageAsideItem title="Template Uses" Icon={PlayArrow}>
+          <p className="text-white text-base font-medium">
+            {template?.usageCount ?? 'n/a'}
+          </p>
         </TemplatePageAsideItem>
 
-        <TemplatePageAsideItem title="Likes">
+        <TemplatePageAsideItem title="Likes" Icon={Favorite}>
           <p className="text-white text-base font-medium">7</p>
-        </TemplatePageAsideItem> */}
+        </TemplatePageAsideItem>
 
         <TemplatePageAsideItem title="Current Version" Icon={Psychology}>
           <p className="font-medium">
@@ -85,7 +87,7 @@ export const TemplatePageSide = (
         <TemplatePageAsideItem
           title="Models Used"
           Icon={CrystalBallIcon}
-          className="flex flex-col items-start justify-start gap-y-2 w-full"
+          className="flex flex-col items-start justify-start gap-y-2 w-full border-none"
           constainerProps={{
             className: cn('w-full flex flex-row-wrap'),
           }}

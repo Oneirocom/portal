@@ -39,7 +39,7 @@ export const TemplatePageMain = (props: TemplatePageMainProps) => {
   )
 
   return (
-    <main className="w-full px-10 items-start gap-8 flex flex-col">
+    <main className="w-full px-10 items-start gap-8 flex flex-col h-full overflow-y-auto">
       <TemplatePageHeader template={template} />
 
       <TemplatePageSubHeader template={template} />
@@ -49,7 +49,7 @@ export const TemplatePageMain = (props: TemplatePageMainProps) => {
 
         <div
           ref={parentRef}
-          className="w-full h-full max-h-[400px] max-w-7xl bg-ds-card-alt rounded-[5px] border border-ds-primary-m dark:ds-primary-p overflow-hidden"
+          className="w-full h-full max-h-[400px] max-w-7xl bg-ds-card-alt rounded-[5px] border border-ds-primary-p dark:ds-primary-m overflow-hidden"
           // className="flex flex-col gap-y-4 w-full bg-ds-card-alt p-4 rounded-lg">
         >
           {spells && (
@@ -58,19 +58,20 @@ export const TemplatePageMain = (props: TemplatePageMainProps) => {
                 <p className="text-ellipsis text-nowrap">Spells</p>
               </span>
               {spells.map(spell => (
-                <span
+                <button
                   key={spell.id}
                   className={cn(
                     'flex items-center border-r font-light border-r-ds-neutral overflow-hidden justify-start max-w-fit h-12 px-4 text-ds-neutral',
                     {
-                      'text-ds-primary-p dark:text-ds-primary-m': activeSpell?.id === spell.id,
+                      'text-ds-primary-p dark:text-ds-primary-m':
+                        activeSpell?.id === spell.id,
                       '': activeSpell?.id === spell.id,
                     }
                   )}
                   onClick={() => setActiveSpell(spell)}
                 >
                   <p className="text-ellipsis text-nowrap">{spell.name}</p>
-                </span>
+                </button>
               ))}
             </div>
           )}
