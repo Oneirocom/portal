@@ -42,10 +42,10 @@ export const TemplatePageHeader = (props: TemplatePageHeaderProps) => {
           {template?.name || 'Unnamed Template'}
         </h1>
 
-        <div className="inline-flex">
+        <div className="inline-flex p-2 bg-ds-card-alt rounded-lg gap-2">
           <Button
-            variant="portal-neutral"
-            className="mr-4"
+            variant="ghost"
+            className="mr-4 hover:border-none"
             onClick={copyToClipboard}
           >
             Share
