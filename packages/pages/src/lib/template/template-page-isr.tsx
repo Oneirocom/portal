@@ -28,7 +28,6 @@ const parseParams = (
 }
 
 export const templatesGetStaticProps: GetStaticProps = async ({ params }) => {
-  console.log('params', params)
   const parsedParams = parseParams(params)
 
   if (!parsedParams) {
@@ -102,6 +101,7 @@ export const templatesGetStaticProps: GetStaticProps = async ({ params }) => {
       },
     },
     revalidate: 600, // Revalidate every 10 minutes (600 seconds)
+    // TODO: change to revalidate based on the version
   }
 }
 

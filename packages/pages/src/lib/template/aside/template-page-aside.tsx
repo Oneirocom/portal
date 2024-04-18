@@ -21,7 +21,7 @@ export const TemplatePageSide = (
   const models = (metadata?.models as string[]) ?? []
 
   return (
-    <aside className="px-5 w-96 pb-4 flex-col justify-center items-start gap-y-10 inline-flex">
+    <aside className="px-5 w-96 pb-4 flex-col justify-center items-start gap-y-10 hidden md:inline-flex">
       <Image
         src={getImage({
           id: template?.id ?? '1',
@@ -39,7 +39,7 @@ export const TemplatePageSide = (
           <div className="inline-flex items-center gap-x-1 justify-start">
             <Avatar>
               <AvatarImage
-                className="object-cover w-full h-full rounded-full"
+                className=" w-full h-full rounded-full"
                 src={getImage({
                   id: template?.id ?? '1',
                   image: template?.image ?? '',
