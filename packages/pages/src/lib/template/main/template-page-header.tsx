@@ -5,6 +5,7 @@ import { CreateAgentDialog } from '@magickml/portal-ui'
 import { useState } from 'react'
 import toast from 'react-hot-toast'
 import { useUser } from '@clerk/nextjs'
+import { Reply, AccountTreeOutlined } from '@mui/icons-material'
 
 type TemplatePageHeaderProps = {
   template: TemplateGetStaticProps['template']
@@ -48,10 +49,12 @@ export const TemplatePageHeader = (props: TemplatePageHeaderProps) => {
             className="mr-4 hover:border-none"
             onClick={copyToClipboard}
           >
+            <Reply className="!h-5 !w-5 mr-1 transform -scale-x-100" />
             Share
           </Button>
 
           <Button variant="portal-primary" onClick={openCreateDialog}>
+            <AccountTreeOutlined className="!h-5 !w-5 mr-1" />
             Build in Magick
           </Button>
         </div>
