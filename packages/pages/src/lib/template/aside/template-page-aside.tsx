@@ -82,7 +82,11 @@ export const TemplatePageSide = (
           </p>
         </TemplatePageAsideItem>
 
-        <TemplatePageAsideItem title="Models Used" Icon={CrystalBallIcon}>
+        <TemplatePageAsideItem
+          title="Models Used"
+          Icon={CrystalBallIcon}
+          className="flex-col items-start justify-start"
+        >
           {models.map(model => (
             <p key={model} className="text-gray-100  font-normal">
               {model}
