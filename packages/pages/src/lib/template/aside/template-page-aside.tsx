@@ -65,19 +65,19 @@ export const TemplatePageSide = (
         </TemplatePageAsideItem> */}
 
         <TemplatePageAsideItem title="Current Version" Icon={Psychology}>
-          <p className="text-white  font-medium">
+          <p className="font-medium">
             {`Version ${template?.templateVersions?.[0].version ?? '1'}`}
           </p>
         </TemplatePageAsideItem>
 
         <TemplatePageAsideItem title="Created" Icon={MagickWandIcon}>
-          <p className="text-white  font-medium">
+          <p className="font-medium">
             {new Date(template?.createdAt ?? '').toLocaleDateString()}
           </p>
         </TemplatePageAsideItem>
 
         <TemplatePageAsideItem title="Last Updated" Icon={Update}>
-          <p className="text-white  font-medium">
+          <p className="font-medium">
             {new Date(template?.updatedAt ?? '').toLocaleDateString()}
           </p>
         </TemplatePageAsideItem>
