@@ -1,7 +1,7 @@
 import { ImageType } from '@magickml/portal-utils-shared'
 import Image from 'next/image'
 import { PropsWithChildren } from 'react'
-import {  getImage } from 'shared/utils'
+import { getImage } from 'shared/utils'
 import type { TemplateGetStaticProps } from '../template-page-isr'
 import { Avatar, AvatarImage } from '@magickml/client-ui'
 import { TemplatePageAsideItem } from './template-page-aside-item'

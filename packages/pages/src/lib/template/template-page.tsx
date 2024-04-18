@@ -4,12 +4,15 @@ import type { TemplateGetStaticProps } from './template-page-isr'
 import { TemplatePageContainer } from './template-container'
 import { TemplatePageSide } from './aside/template-page-aside'
 import { TemplatePageMain } from './main/template-page-main'
+import { ReactFlowProvider } from 'reactflow'
 
 export function TemplatePage({ template }: TemplateGetStaticProps) {
   return (
     <TemplatePageContainer>
       <TemplatePageSide template={template} />
-      <TemplatePageMain template={template} />
+      <ReactFlowProvider>
+        <TemplatePageMain template={template} />
+      </ReactFlowProvider>
     </TemplatePageContainer>
   )
 }
