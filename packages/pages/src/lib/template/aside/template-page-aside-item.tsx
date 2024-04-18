@@ -20,7 +20,7 @@ export const TemplatePageAsideItem = (props: TemplatePageAsideItemProps) => {
   return (
     <div
       className={cn(
-        'inline-flex justify-between items-center w-full h-fit',
+        'inline-flex justify-between items-center w-full h-fit py-4',
         props.noBorder ? '' : 'border-b border-zinc-600',
         className
       )}

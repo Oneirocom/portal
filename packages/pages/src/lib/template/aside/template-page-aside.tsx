@@ -22,10 +22,10 @@ export const TemplatePageSide = (
   const models = (metadata?.models as string[]) ?? []
 
   return (
-    <aside className="px-5 min-w-96 flex-col justify-start items-start hidden md:inline-flex gap-10">
-      <Avatar className="w-48 h-48 mx-auto">
+    <aside className="px-5 max-w-96 w-full flex-col justify-start items-start hidden md:inline-flex gap-10">
+      <Avatar className="w-full aspect-square max-w-96 h-auto !rounded-[10px] mx-auto">
         <AvatarImage
-          className="h-full w-full rounded-[10px]"
+          className="h-full w-full !rounded-[10px]"
           src={getImage({
             id: template?.id ?? '1',
             image: template?.image ?? '',
@@ -36,7 +36,7 @@ export const TemplatePageSide = (
         {template?.image ? template.name?.at(0) || 'A' : null}
       </Avatar>
 
-      <div className="inline-flex flex-col w-full gap-5">
+      <div className="inline-flex flex-col w-full">
         <TemplatePageAsideItem title="Built By" Icon={WizardHatIcon}>
           <div className="inline-flex w-full items-center justify-start gap-x-1">
             <Avatar className="w-8 h-8 items-start justify-start">
@@ -85,12 +85,26 @@ export const TemplatePageSide = (
         <TemplatePageAsideItem
           title="Models Used"
           Icon={CrystalBallIcon}
-          className="flex-col items-start justify-start"
+          className="flex flex-col items-start justify-start gap-y-2 w-full"
+          constainerProps={{
+            className: cn('w-full flex flex-row-wrap'),
+          }}
         >
           {models.map(model => (
-            <p key={model} className="text-gray-100  font-normal">
-              {model}
-            </p>
+            <div className="inline-flex gap-x-1 basis-1/2">
+              <Avatar key={model} className="w-8 h-8 items-start justify-start">
+                <AvatarImage
+                  className="h-full w-full rounded-full"
+                  alt={model}
+                  src={getImage({
+                    id: template?.id ?? '1',
+                    image: template?.image ?? '',
+                    type: ImageType.IMAGE,
+                  })}
+                />
+              </Avatar>
+              <span>Model Org</span>
+            </div>
           ))}
         </TemplatePageAsideItem>
       </div>
