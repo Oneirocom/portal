@@ -74,6 +74,11 @@ export type Budget = $Result.DefaultSelection<Prisma.$BudgetPayload>
  */
 export type Promotion = $Result.DefaultSelection<Prisma.$PromotionPayload>
 /**
+ * Model PromotionCode
+ * 
+ */
+export type PromotionCode = $Result.DefaultSelection<Prisma.$PromotionCodePayload>
+/**
  * Model Transaction
  * 
  */
@@ -362,6 +367,16 @@ export class PrismaClient<
     * ```
     */
   get promotion(): Prisma.PromotionDelegate<ExtArgs>;
+
+  /**
+   * `prisma.promotionCode`: Exposes CRUD operations for the **PromotionCode** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more PromotionCodes
+    * const promotionCodes = await prisma.promotionCode.findMany()
+    * ```
+    */
+  get promotionCode(): Prisma.PromotionCodeDelegate<ExtArgs>;
 
   /**
    * `prisma.transaction`: Exposes CRUD operations for the **Transaction** model.
@@ -854,6 +869,7 @@ export namespace Prisma {
     AnonymousUser: 'AnonymousUser',
     Budget: 'Budget',
     Promotion: 'Promotion',
+    PromotionCode: 'PromotionCode',
     Transaction: 'Transaction'
   };
 
@@ -871,7 +887,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     meta: {
-      modelProps: 'project' | 'template' | 'templateVersion' | 'templateCollection' | 'templateRating' | 'publicAgent' | 'reports' | 'likes' | 'comments' | 'anonymousUser' | 'budget' | 'promotion' | 'transaction'
+      modelProps: 'project' | 'template' | 'templateVersion' | 'templateCollection' | 'templateRating' | 'publicAgent' | 'reports' | 'likes' | 'comments' | 'anonymousUser' | 'budget' | 'promotion' | 'promotionCode' | 'transaction'
       txIsolationLevel: Prisma.TransactionIsolationLevel
     },
     model: {
@@ -1664,6 +1680,72 @@ export namespace Prisma {
           count: {
             args: Prisma.PromotionCountArgs<ExtArgs>,
             result: $Utils.Optional<PromotionCountAggregateOutputType> | number
+          }
+        }
+      }
+      PromotionCode: {
+        payload: Prisma.$PromotionCodePayload<ExtArgs>
+        fields: Prisma.PromotionCodeFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PromotionCodeFindUniqueArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$PromotionCodePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PromotionCodeFindUniqueOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$PromotionCodePayload>
+          }
+          findFirst: {
+            args: Prisma.PromotionCodeFindFirstArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$PromotionCodePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PromotionCodeFindFirstOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$PromotionCodePayload>
+          }
+          findMany: {
+            args: Prisma.PromotionCodeFindManyArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$PromotionCodePayload>[]
+          }
+          create: {
+            args: Prisma.PromotionCodeCreateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$PromotionCodePayload>
+          }
+          createMany: {
+            args: Prisma.PromotionCodeCreateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          delete: {
+            args: Prisma.PromotionCodeDeleteArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$PromotionCodePayload>
+          }
+          update: {
+            args: Prisma.PromotionCodeUpdateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$PromotionCodePayload>
+          }
+          deleteMany: {
+            args: Prisma.PromotionCodeDeleteManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PromotionCodeUpdateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          upsert: {
+            args: Prisma.PromotionCodeUpsertArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$PromotionCodePayload>
+          }
+          aggregate: {
+            args: Prisma.PromotionCodeAggregateArgs<ExtArgs>,
+            result: $Utils.Optional<AggregatePromotionCode>
+          }
+          groupBy: {
+            args: Prisma.PromotionCodeGroupByArgs<ExtArgs>,
+            result: $Utils.Optional<PromotionCodeGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PromotionCodeCountArgs<ExtArgs>,
+            result: $Utils.Optional<PromotionCodeCountAggregateOutputType> | number
           }
         }
       }
@@ -13387,6 +13469,909 @@ export namespace Prisma {
 
 
   /**
+   * Model PromotionCode
+   */
+
+  export type AggregatePromotionCode = {
+    _count: PromotionCodeCountAggregateOutputType | null
+    _min: PromotionCodeMinAggregateOutputType | null
+    _max: PromotionCodeMaxAggregateOutputType | null
+  }
+
+  export type PromotionCodeMinAggregateOutputType = {
+    id: string | null
+    code: string | null
+    description: string | null
+    couponId: string | null
+    userId: string | null
+    isUsed: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type PromotionCodeMaxAggregateOutputType = {
+    id: string | null
+    code: string | null
+    description: string | null
+    couponId: string | null
+    userId: string | null
+    isUsed: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type PromotionCodeCountAggregateOutputType = {
+    id: number
+    code: number
+    description: number
+    couponId: number
+    userId: number
+    isUsed: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type PromotionCodeMinAggregateInputType = {
+    id?: true
+    code?: true
+    description?: true
+    couponId?: true
+    userId?: true
+    isUsed?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type PromotionCodeMaxAggregateInputType = {
+    id?: true
+    code?: true
+    description?: true
+    couponId?: true
+    userId?: true
+    isUsed?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type PromotionCodeCountAggregateInputType = {
+    id?: true
+    code?: true
+    description?: true
+    couponId?: true
+    userId?: true
+    isUsed?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type PromotionCodeAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PromotionCode to aggregate.
+     */
+    where?: PromotionCodeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PromotionCodes to fetch.
+     */
+    orderBy?: PromotionCodeOrderByWithRelationAndSearchRelevanceInput | PromotionCodeOrderByWithRelationAndSearchRelevanceInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PromotionCodeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PromotionCodes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PromotionCodes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned PromotionCodes
+    **/
+    _count?: true | PromotionCodeCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PromotionCodeMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PromotionCodeMaxAggregateInputType
+  }
+
+  export type GetPromotionCodeAggregateType<T extends PromotionCodeAggregateArgs> = {
+        [P in keyof T & keyof AggregatePromotionCode]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePromotionCode[P]>
+      : GetScalarType<T[P], AggregatePromotionCode[P]>
+  }
+
+
+
+
+  export type PromotionCodeGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PromotionCodeWhereInput
+    orderBy?: PromotionCodeOrderByWithAggregationInput | PromotionCodeOrderByWithAggregationInput[]
+    by: PromotionCodeScalarFieldEnum[] | PromotionCodeScalarFieldEnum
+    having?: PromotionCodeScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PromotionCodeCountAggregateInputType | true
+    _min?: PromotionCodeMinAggregateInputType
+    _max?: PromotionCodeMaxAggregateInputType
+  }
+
+  export type PromotionCodeGroupByOutputType = {
+    id: string
+    code: string
+    description: string | null
+    couponId: string
+    userId: string
+    isUsed: boolean
+    createdAt: Date
+    updatedAt: Date
+    _count: PromotionCodeCountAggregateOutputType | null
+    _min: PromotionCodeMinAggregateOutputType | null
+    _max: PromotionCodeMaxAggregateOutputType | null
+  }
+
+  type GetPromotionCodeGroupByPayload<T extends PromotionCodeGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PromotionCodeGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PromotionCodeGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PromotionCodeGroupByOutputType[P]>
+            : GetScalarType<T[P], PromotionCodeGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PromotionCodeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    code?: boolean
+    description?: boolean
+    couponId?: boolean
+    userId?: boolean
+    isUsed?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["promotionCode"]>
+
+  export type PromotionCodeSelectScalar = {
+    id?: boolean
+    code?: boolean
+    description?: boolean
+    couponId?: boolean
+    userId?: boolean
+    isUsed?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+
+  export type $PromotionCodePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "PromotionCode"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      code: string
+      description: string | null
+      couponId: string
+      userId: string
+      isUsed: boolean
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["promotionCode"]>
+    composites: {}
+  }
+
+
+  type PromotionCodeGetPayload<S extends boolean | null | undefined | PromotionCodeDefaultArgs> = $Result.GetResult<Prisma.$PromotionCodePayload, S>
+
+  type PromotionCodeCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<PromotionCodeFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: PromotionCodeCountAggregateInputType | true
+    }
+
+  export interface PromotionCodeDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PromotionCode'], meta: { name: 'PromotionCode' } }
+    /**
+     * Find zero or one PromotionCode that matches the filter.
+     * @param {PromotionCodeFindUniqueArgs} args - Arguments to find a PromotionCode
+     * @example
+     * // Get one PromotionCode
+     * const promotionCode = await prisma.promotionCode.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends PromotionCodeFindUniqueArgs<ExtArgs>>(
+      args: SelectSubset<T, PromotionCodeFindUniqueArgs<ExtArgs>>
+    ): Prisma__PromotionCodeClient<$Result.GetResult<Prisma.$PromotionCodePayload<ExtArgs>, T, 'findUnique'> | null, null, ExtArgs>
+
+    /**
+     * Find one PromotionCode that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {PromotionCodeFindUniqueOrThrowArgs} args - Arguments to find a PromotionCode
+     * @example
+     * // Get one PromotionCode
+     * const promotionCode = await prisma.promotionCode.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends PromotionCodeFindUniqueOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, PromotionCodeFindUniqueOrThrowArgs<ExtArgs>>
+    ): Prisma__PromotionCodeClient<$Result.GetResult<Prisma.$PromotionCodePayload<ExtArgs>, T, 'findUniqueOrThrow'>, never, ExtArgs>
+
+    /**
+     * Find the first PromotionCode that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PromotionCodeFindFirstArgs} args - Arguments to find a PromotionCode
+     * @example
+     * // Get one PromotionCode
+     * const promotionCode = await prisma.promotionCode.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends PromotionCodeFindFirstArgs<ExtArgs>>(
+      args?: SelectSubset<T, PromotionCodeFindFirstArgs<ExtArgs>>
+    ): Prisma__PromotionCodeClient<$Result.GetResult<Prisma.$PromotionCodePayload<ExtArgs>, T, 'findFirst'> | null, null, ExtArgs>
+
+    /**
+     * Find the first PromotionCode that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PromotionCodeFindFirstOrThrowArgs} args - Arguments to find a PromotionCode
+     * @example
+     * // Get one PromotionCode
+     * const promotionCode = await prisma.promotionCode.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends PromotionCodeFindFirstOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, PromotionCodeFindFirstOrThrowArgs<ExtArgs>>
+    ): Prisma__PromotionCodeClient<$Result.GetResult<Prisma.$PromotionCodePayload<ExtArgs>, T, 'findFirstOrThrow'>, never, ExtArgs>
+
+    /**
+     * Find zero or more PromotionCodes that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PromotionCodeFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all PromotionCodes
+     * const promotionCodes = await prisma.promotionCode.findMany()
+     * 
+     * // Get first 10 PromotionCodes
+     * const promotionCodes = await prisma.promotionCode.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const promotionCodeWithIdOnly = await prisma.promotionCode.findMany({ select: { id: true } })
+     * 
+    **/
+    findMany<T extends PromotionCodeFindManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, PromotionCodeFindManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PromotionCodePayload<ExtArgs>, T, 'findMany'>>
+
+    /**
+     * Create a PromotionCode.
+     * @param {PromotionCodeCreateArgs} args - Arguments to create a PromotionCode.
+     * @example
+     * // Create one PromotionCode
+     * const PromotionCode = await prisma.promotionCode.create({
+     *   data: {
+     *     // ... data to create a PromotionCode
+     *   }
+     * })
+     * 
+    **/
+    create<T extends PromotionCodeCreateArgs<ExtArgs>>(
+      args: SelectSubset<T, PromotionCodeCreateArgs<ExtArgs>>
+    ): Prisma__PromotionCodeClient<$Result.GetResult<Prisma.$PromotionCodePayload<ExtArgs>, T, 'create'>, never, ExtArgs>
+
+    /**
+     * Create many PromotionCodes.
+     *     @param {PromotionCodeCreateManyArgs} args - Arguments to create many PromotionCodes.
+     *     @example
+     *     // Create many PromotionCodes
+     *     const promotionCode = await prisma.promotionCode.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
+     *     
+    **/
+    createMany<T extends PromotionCodeCreateManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, PromotionCodeCreateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a PromotionCode.
+     * @param {PromotionCodeDeleteArgs} args - Arguments to delete one PromotionCode.
+     * @example
+     * // Delete one PromotionCode
+     * const PromotionCode = await prisma.promotionCode.delete({
+     *   where: {
+     *     // ... filter to delete one PromotionCode
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends PromotionCodeDeleteArgs<ExtArgs>>(
+      args: SelectSubset<T, PromotionCodeDeleteArgs<ExtArgs>>
+    ): Prisma__PromotionCodeClient<$Result.GetResult<Prisma.$PromotionCodePayload<ExtArgs>, T, 'delete'>, never, ExtArgs>
+
+    /**
+     * Update one PromotionCode.
+     * @param {PromotionCodeUpdateArgs} args - Arguments to update one PromotionCode.
+     * @example
+     * // Update one PromotionCode
+     * const promotionCode = await prisma.promotionCode.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends PromotionCodeUpdateArgs<ExtArgs>>(
+      args: SelectSubset<T, PromotionCodeUpdateArgs<ExtArgs>>
+    ): Prisma__PromotionCodeClient<$Result.GetResult<Prisma.$PromotionCodePayload<ExtArgs>, T, 'update'>, never, ExtArgs>
+
+    /**
+     * Delete zero or more PromotionCodes.
+     * @param {PromotionCodeDeleteManyArgs} args - Arguments to filter PromotionCodes to delete.
+     * @example
+     * // Delete a few PromotionCodes
+     * const { count } = await prisma.promotionCode.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends PromotionCodeDeleteManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, PromotionCodeDeleteManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PromotionCodes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PromotionCodeUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many PromotionCodes
+     * const promotionCode = await prisma.promotionCode.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends PromotionCodeUpdateManyArgs<ExtArgs>>(
+      args: SelectSubset<T, PromotionCodeUpdateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one PromotionCode.
+     * @param {PromotionCodeUpsertArgs} args - Arguments to update or create a PromotionCode.
+     * @example
+     * // Update or create a PromotionCode
+     * const promotionCode = await prisma.promotionCode.upsert({
+     *   create: {
+     *     // ... data to create a PromotionCode
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the PromotionCode we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends PromotionCodeUpsertArgs<ExtArgs>>(
+      args: SelectSubset<T, PromotionCodeUpsertArgs<ExtArgs>>
+    ): Prisma__PromotionCodeClient<$Result.GetResult<Prisma.$PromotionCodePayload<ExtArgs>, T, 'upsert'>, never, ExtArgs>
+
+    /**
+     * Count the number of PromotionCodes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PromotionCodeCountArgs} args - Arguments to filter PromotionCodes to count.
+     * @example
+     * // Count the number of PromotionCodes
+     * const count = await prisma.promotionCode.count({
+     *   where: {
+     *     // ... the filter for the PromotionCodes we want to count
+     *   }
+     * })
+    **/
+    count<T extends PromotionCodeCountArgs>(
+      args?: Subset<T, PromotionCodeCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PromotionCodeCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a PromotionCode.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PromotionCodeAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PromotionCodeAggregateArgs>(args: Subset<T, PromotionCodeAggregateArgs>): Prisma.PrismaPromise<GetPromotionCodeAggregateType<T>>
+
+    /**
+     * Group by PromotionCode.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PromotionCodeGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PromotionCodeGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PromotionCodeGroupByArgs['orderBy'] }
+        : { orderBy?: PromotionCodeGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PromotionCodeGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPromotionCodeGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the PromotionCode model
+   */
+  readonly fields: PromotionCodeFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for PromotionCode.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PromotionCodeClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+
+
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>;
+  }
+
+
+
+  /**
+   * Fields of the PromotionCode model
+   */ 
+  interface PromotionCodeFieldRefs {
+    readonly id: FieldRef<"PromotionCode", 'String'>
+    readonly code: FieldRef<"PromotionCode", 'String'>
+    readonly description: FieldRef<"PromotionCode", 'String'>
+    readonly couponId: FieldRef<"PromotionCode", 'String'>
+    readonly userId: FieldRef<"PromotionCode", 'String'>
+    readonly isUsed: FieldRef<"PromotionCode", 'Boolean'>
+    readonly createdAt: FieldRef<"PromotionCode", 'DateTime'>
+    readonly updatedAt: FieldRef<"PromotionCode", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+
+  /**
+   * PromotionCode findUnique
+   */
+  export type PromotionCodeFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromotionCode
+     */
+    select?: PromotionCodeSelect<ExtArgs> | null
+    /**
+     * Filter, which PromotionCode to fetch.
+     */
+    where: PromotionCodeWhereUniqueInput
+  }
+
+
+  /**
+   * PromotionCode findUniqueOrThrow
+   */
+  export type PromotionCodeFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromotionCode
+     */
+    select?: PromotionCodeSelect<ExtArgs> | null
+    /**
+     * Filter, which PromotionCode to fetch.
+     */
+    where: PromotionCodeWhereUniqueInput
+  }
+
+
+  /**
+   * PromotionCode findFirst
+   */
+  export type PromotionCodeFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromotionCode
+     */
+    select?: PromotionCodeSelect<ExtArgs> | null
+    /**
+     * Filter, which PromotionCode to fetch.
+     */
+    where?: PromotionCodeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PromotionCodes to fetch.
+     */
+    orderBy?: PromotionCodeOrderByWithRelationAndSearchRelevanceInput | PromotionCodeOrderByWithRelationAndSearchRelevanceInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PromotionCodes.
+     */
+    cursor?: PromotionCodeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PromotionCodes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PromotionCodes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PromotionCodes.
+     */
+    distinct?: PromotionCodeScalarFieldEnum | PromotionCodeScalarFieldEnum[]
+  }
+
+
+  /**
+   * PromotionCode findFirstOrThrow
+   */
+  export type PromotionCodeFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromotionCode
+     */
+    select?: PromotionCodeSelect<ExtArgs> | null
+    /**
+     * Filter, which PromotionCode to fetch.
+     */
+    where?: PromotionCodeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PromotionCodes to fetch.
+     */
+    orderBy?: PromotionCodeOrderByWithRelationAndSearchRelevanceInput | PromotionCodeOrderByWithRelationAndSearchRelevanceInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PromotionCodes.
+     */
+    cursor?: PromotionCodeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PromotionCodes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PromotionCodes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PromotionCodes.
+     */
+    distinct?: PromotionCodeScalarFieldEnum | PromotionCodeScalarFieldEnum[]
+  }
+
+
+  /**
+   * PromotionCode findMany
+   */
+  export type PromotionCodeFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromotionCode
+     */
+    select?: PromotionCodeSelect<ExtArgs> | null
+    /**
+     * Filter, which PromotionCodes to fetch.
+     */
+    where?: PromotionCodeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PromotionCodes to fetch.
+     */
+    orderBy?: PromotionCodeOrderByWithRelationAndSearchRelevanceInput | PromotionCodeOrderByWithRelationAndSearchRelevanceInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing PromotionCodes.
+     */
+    cursor?: PromotionCodeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PromotionCodes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PromotionCodes.
+     */
+    skip?: number
+    distinct?: PromotionCodeScalarFieldEnum | PromotionCodeScalarFieldEnum[]
+  }
+
+
+  /**
+   * PromotionCode create
+   */
+  export type PromotionCodeCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromotionCode
+     */
+    select?: PromotionCodeSelect<ExtArgs> | null
+    /**
+     * The data needed to create a PromotionCode.
+     */
+    data: XOR<PromotionCodeCreateInput, PromotionCodeUncheckedCreateInput>
+  }
+
+
+  /**
+   * PromotionCode createMany
+   */
+  export type PromotionCodeCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many PromotionCodes.
+     */
+    data: PromotionCodeCreateManyInput | PromotionCodeCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+
+  /**
+   * PromotionCode update
+   */
+  export type PromotionCodeUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromotionCode
+     */
+    select?: PromotionCodeSelect<ExtArgs> | null
+    /**
+     * The data needed to update a PromotionCode.
+     */
+    data: XOR<PromotionCodeUpdateInput, PromotionCodeUncheckedUpdateInput>
+    /**
+     * Choose, which PromotionCode to update.
+     */
+    where: PromotionCodeWhereUniqueInput
+  }
+
+
+  /**
+   * PromotionCode updateMany
+   */
+  export type PromotionCodeUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update PromotionCodes.
+     */
+    data: XOR<PromotionCodeUpdateManyMutationInput, PromotionCodeUncheckedUpdateManyInput>
+    /**
+     * Filter which PromotionCodes to update
+     */
+    where?: PromotionCodeWhereInput
+  }
+
+
+  /**
+   * PromotionCode upsert
+   */
+  export type PromotionCodeUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromotionCode
+     */
+    select?: PromotionCodeSelect<ExtArgs> | null
+    /**
+     * The filter to search for the PromotionCode to update in case it exists.
+     */
+    where: PromotionCodeWhereUniqueInput
+    /**
+     * In case the PromotionCode found by the `where` argument doesn't exist, create a new PromotionCode with this data.
+     */
+    create: XOR<PromotionCodeCreateInput, PromotionCodeUncheckedCreateInput>
+    /**
+     * In case the PromotionCode was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PromotionCodeUpdateInput, PromotionCodeUncheckedUpdateInput>
+  }
+
+
+  /**
+   * PromotionCode delete
+   */
+  export type PromotionCodeDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromotionCode
+     */
+    select?: PromotionCodeSelect<ExtArgs> | null
+    /**
+     * Filter which PromotionCode to delete.
+     */
+    where: PromotionCodeWhereUniqueInput
+  }
+
+
+  /**
+   * PromotionCode deleteMany
+   */
+  export type PromotionCodeDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PromotionCodes to delete
+     */
+    where?: PromotionCodeWhereInput
+  }
+
+
+  /**
+   * PromotionCode without action
+   */
+  export type PromotionCodeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromotionCode
+     */
+    select?: PromotionCodeSelect<ExtArgs> | null
+  }
+
+
+
+  /**
    * Model Transaction
    */
 
@@ -14500,6 +15485,20 @@ export namespace Prisma {
   export type PromotionScalarFieldEnum = (typeof PromotionScalarFieldEnum)[keyof typeof PromotionScalarFieldEnum]
 
 
+  export const PromotionCodeScalarFieldEnum: {
+    id: 'id',
+    code: 'code',
+    description: 'description',
+    couponId: 'couponId',
+    userId: 'userId',
+    isUsed: 'isUsed',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type PromotionCodeScalarFieldEnum = (typeof PromotionCodeScalarFieldEnum)[keyof typeof PromotionCodeScalarFieldEnum]
+
+
   export const TransactionScalarFieldEnum: {
     id: 'id',
     userId: 'userId',
@@ -14676,6 +15675,17 @@ export namespace Prisma {
   };
 
   export type PromotionOrderByRelevanceFieldEnum = (typeof PromotionOrderByRelevanceFieldEnum)[keyof typeof PromotionOrderByRelevanceFieldEnum]
+
+
+  export const PromotionCodeOrderByRelevanceFieldEnum: {
+    id: 'id',
+    code: 'code',
+    description: 'description',
+    couponId: 'couponId',
+    userId: 'userId'
+  };
+
+  export type PromotionCodeOrderByRelevanceFieldEnum = (typeof PromotionCodeOrderByRelevanceFieldEnum)[keyof typeof PromotionCodeOrderByRelevanceFieldEnum]
 
 
   export const TransactionOrderByRelevanceFieldEnum: {
@@ -15663,6 +16673,74 @@ export namespace Prisma {
     updatedAt?: DateTimeNullableWithAggregatesFilter<"Promotion"> | Date | string | null
   }
 
+  export type PromotionCodeWhereInput = {
+    AND?: PromotionCodeWhereInput | PromotionCodeWhereInput[]
+    OR?: PromotionCodeWhereInput[]
+    NOT?: PromotionCodeWhereInput | PromotionCodeWhereInput[]
+    id?: StringFilter<"PromotionCode"> | string
+    code?: StringFilter<"PromotionCode"> | string
+    description?: StringNullableFilter<"PromotionCode"> | string | null
+    couponId?: StringFilter<"PromotionCode"> | string
+    userId?: StringFilter<"PromotionCode"> | string
+    isUsed?: BoolFilter<"PromotionCode"> | boolean
+    createdAt?: DateTimeFilter<"PromotionCode"> | Date | string
+    updatedAt?: DateTimeFilter<"PromotionCode"> | Date | string
+  }
+
+  export type PromotionCodeOrderByWithRelationAndSearchRelevanceInput = {
+    id?: SortOrder
+    code?: SortOrder
+    description?: SortOrderInput | SortOrder
+    couponId?: SortOrder
+    userId?: SortOrder
+    isUsed?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _relevance?: PromotionCodeOrderByRelevanceInput
+  }
+
+  export type PromotionCodeWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    code?: string
+    userId?: string
+    AND?: PromotionCodeWhereInput | PromotionCodeWhereInput[]
+    OR?: PromotionCodeWhereInput[]
+    NOT?: PromotionCodeWhereInput | PromotionCodeWhereInput[]
+    description?: StringNullableFilter<"PromotionCode"> | string | null
+    couponId?: StringFilter<"PromotionCode"> | string
+    isUsed?: BoolFilter<"PromotionCode"> | boolean
+    createdAt?: DateTimeFilter<"PromotionCode"> | Date | string
+    updatedAt?: DateTimeFilter<"PromotionCode"> | Date | string
+  }, "id" | "code" | "userId">
+
+  export type PromotionCodeOrderByWithAggregationInput = {
+    id?: SortOrder
+    code?: SortOrder
+    description?: SortOrderInput | SortOrder
+    couponId?: SortOrder
+    userId?: SortOrder
+    isUsed?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: PromotionCodeCountOrderByAggregateInput
+    _max?: PromotionCodeMaxOrderByAggregateInput
+    _min?: PromotionCodeMinOrderByAggregateInput
+  }
+
+  export type PromotionCodeScalarWhereWithAggregatesInput = {
+    AND?: PromotionCodeScalarWhereWithAggregatesInput | PromotionCodeScalarWhereWithAggregatesInput[]
+    OR?: PromotionCodeScalarWhereWithAggregatesInput[]
+    NOT?: PromotionCodeScalarWhereWithAggregatesInput | PromotionCodeScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"PromotionCode"> | string
+    code?: StringWithAggregatesFilter<"PromotionCode"> | string
+    description?: StringNullableWithAggregatesFilter<"PromotionCode"> | string | null
+    couponId?: StringWithAggregatesFilter<"PromotionCode"> | string
+    userId?: StringWithAggregatesFilter<"PromotionCode"> | string
+    isUsed?: BoolWithAggregatesFilter<"PromotionCode"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"PromotionCode"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"PromotionCode"> | Date | string
+  }
+
   export type TransactionWhereInput = {
     AND?: TransactionWhereInput | TransactionWhereInput[]
     OR?: TransactionWhereInput[]
@@ -16635,6 +17713,83 @@ export namespace Prisma {
     isUsed?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type PromotionCodeCreateInput = {
+    id?: string
+    code: string
+    description?: string | null
+    couponId: string
+    userId: string
+    isUsed?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PromotionCodeUncheckedCreateInput = {
+    id?: string
+    code: string
+    description?: string | null
+    couponId: string
+    userId: string
+    isUsed?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PromotionCodeUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    couponId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    isUsed?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PromotionCodeUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    couponId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    isUsed?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PromotionCodeCreateManyInput = {
+    id?: string
+    code: string
+    description?: string | null
+    couponId: string
+    userId: string
+    isUsed?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PromotionCodeUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    couponId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    isUsed?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PromotionCodeUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    couponId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    isUsed?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type TransactionCreateInput = {
@@ -17644,6 +18799,45 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumPromotionTypeFilter<$PrismaModel>
     _max?: NestedEnumPromotionTypeFilter<$PrismaModel>
+  }
+
+  export type PromotionCodeOrderByRelevanceInput = {
+    fields: PromotionCodeOrderByRelevanceFieldEnum | PromotionCodeOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type PromotionCodeCountOrderByAggregateInput = {
+    id?: SortOrder
+    code?: SortOrder
+    description?: SortOrder
+    couponId?: SortOrder
+    userId?: SortOrder
+    isUsed?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PromotionCodeMaxOrderByAggregateInput = {
+    id?: SortOrder
+    code?: SortOrder
+    description?: SortOrder
+    couponId?: SortOrder
+    userId?: SortOrder
+    isUsed?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PromotionCodeMinOrderByAggregateInput = {
+    id?: SortOrder
+    code?: SortOrder
+    description?: SortOrder
+    couponId?: SortOrder
+    userId?: SortOrder
+    isUsed?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type EnumTransactionSourceFilter<$PrismaModel = never> = {
@@ -19276,6 +20470,10 @@ export namespace Prisma {
      * @deprecated Use PromotionDefaultArgs instead
      */
     export type PromotionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = PromotionDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use PromotionCodeDefaultArgs instead
+     */
+    export type PromotionCodeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = PromotionCodeDefaultArgs<ExtArgs>
     /**
      * @deprecated Use TransactionDefaultArgs instead
      */

@@ -234,6 +234,17 @@ exports.Prisma.PromotionScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.PromotionCodeScalarFieldEnum = {
+  id: 'id',
+  code: 'code',
+  description: 'description',
+  couponId: 'couponId',
+  userId: 'userId',
+  isUsed: 'isUsed',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.TransactionScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -355,6 +366,14 @@ exports.Prisma.PromotionOrderByRelevanceFieldEnum = {
   description: 'description'
 };
 
+exports.Prisma.PromotionCodeOrderByRelevanceFieldEnum = {
+  id: 'id',
+  code: 'code',
+  description: 'description',
+  couponId: 'couponId',
+  userId: 'userId'
+};
+
 exports.Prisma.TransactionOrderByRelevanceFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -390,6 +409,7 @@ exports.Prisma.ModelName = {
   AnonymousUser: 'AnonymousUser',
   Budget: 'Budget',
   Promotion: 'Promotion',
+  PromotionCode: 'PromotionCode',
   Transaction: 'Transaction'
 };
 

@@ -195,6 +195,20 @@ model Promotion {
   @@schema("portal")
 }
 
+model PromotionCode {
+  id          String   @id @default(cuid())
+  code        String   @unique
+  description String?
+  couponId    String
+  userId      String   @unique
+  isUsed      Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("promotion_codes")
+  @@schema("portal")
+}
+
 model Transaction {
   id        String            @id @default(cuid())
   userId    String
