@@ -63,7 +63,7 @@ export const AgentCardFooter: React.FC<AgentCardFooterProps> = ({
           onClick={() => state[1](!state[0])}
           variant="portal-neutral"
           size="sm"
-          className="w-full hover:animate-shimmer border-ds-neutral
+          className="w-full hover:animate-shimmer border-ds-neutral font-medium
           bg-gradient-to-tr from-ds-neutral to-ds-neutral active:scale-95 transition-all
           hover:bg-[linear-gradient(110deg,#565c62,45%,#117a91,55%,#565c62)] bg-[length:200%_100%] "
         >

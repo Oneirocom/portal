@@ -4,7 +4,12 @@ import type { TemplateGetStaticProps } from '../template-page-isr'
 import { Avatar, AvatarImage, cn } from '@magickml/client-ui'
 import { TempateMetadataItemItem } from './template-metadata-item'
 import { WizardHatIcon, MagickWandIcon, CrystalBallIcon } from '../icons'
-import { Psychology, Update, PlayArrow, Favorite } from '@mui/icons-material'
+import {
+  Psychology,
+  Update,
+  PlayArrow,
+  //  Favorite
+} from '@mui/icons-material'
 import { api } from '@magickml/portal-api-client'
 
 interface TemplateMetadataProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -69,9 +74,9 @@ export const TemplateMetadata: React.FC<TemplateMetadataProps> = ({
       </TempateMetadataItemItem>
 
       {/* Likes */}
-      <TempateMetadataItemItem title="Likes" Icon={Favorite}>
+      {/* <TempateMetadataItemItem title="Likes" Icon={Favorite}>
         <p className="text-white text-base font-medium">7</p>
-      </TempateMetadataItemItem>
+      </TempateMetadataItemItem> */}
 
       {/* Current Version */}
       <TempateMetadataItemItem title="Current Version" Icon={Psychology}>
