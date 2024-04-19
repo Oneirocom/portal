@@ -13,7 +13,6 @@ export const PortalHeader = () => {
   const navigation = usePortalNavigation()
 
   const isRoute = (href: string) => {
-    console.log('isRoute', href, router.pathname)
     if (href === '/') {
       return router.pathname === '/'
     }

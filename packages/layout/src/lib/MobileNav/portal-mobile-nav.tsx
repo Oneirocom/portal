@@ -10,7 +10,6 @@ export const PortalMobileNav: React.FC<Props> = () => {
   const navigation = usePortalNavigation()
 
   const isRoute = (href: string) => {
-    console.log('isRoute', href, pathname)
     if (href === '/') {
       return pathname === '/'
     }
