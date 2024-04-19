@@ -75,6 +75,7 @@ export const CreateAgentPage = () => {
               metadata={t.templateVersions[0]?.metadata ?? null}
               ogAgentId={t.ogAgentId}
               version={t.templateVersions[0]?.version.toString() ?? null}
+              type={t.type}
             />
           ))}
       </PageSection>
@@ -101,6 +102,7 @@ export const CreateAgentPage = () => {
               metadata={t.templateVersions[0]?.metadata ?? null}
               ogAgentId={t.ogAgentId}
               version={t.templateVersions[0]?.version.toString() ?? null}
+              type={t.type}
             />
           ))}
       </PageSection>
@@ -117,13 +119,14 @@ export const CreateAgentPage = () => {
                 t?.image
                   ? `${process.env.NEXT_PUBLIC_BUCKET_PREFIX}/${t.image}`
                   : null
-              } 
+              }
               description={t?.description ?? ''}
               isPublic={t.public}
               creator={t.userId}
               metadata={t.templateVersions[0]?.metadata ?? null}
               ogAgentId={t.ogAgentId}
               version={t.templateVersions[0]?.version.toString() ?? null}
+              type={t.type}
             />
           ))}
       </PageSection>

@@ -45,6 +45,7 @@ export const templatesRouter = createTRPCRouter({
           userId: true,
           public: true,
           ogAgentId: true,
+          type: true,
           templateVersions: {
             take: 1,
             orderBy: { version: 'desc' },
