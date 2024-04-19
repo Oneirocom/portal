@@ -14,6 +14,7 @@ type Props = {
 export const FrigadeProvider = ({ children }: Props) => {
   const { user, isSignedIn, isLoaded } = useUser()
   const router = useRouter()
+  // TODO: Move this logic down its throwing an error
   const { userId, setUserId, setUserIdWithProperties } = useFrigadeUser()
 
   useEffect(() => {
@@ -59,7 +60,6 @@ export const FrigadeProvider = ({ children }: Props) => {
         },
       }}
     >
-      <p className="absolute top-0 right-4">{userId}</p>
       {children}
     </FrigadeProviderOG>
   )
