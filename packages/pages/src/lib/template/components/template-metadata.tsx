@@ -23,6 +23,7 @@ export const TemplateMetadata: React.FC<TemplateMetadataProps> = ({
 
   return (
     <div className={cn('inline-flex flex-col w-full', className)} {...props}>
+      {/* Built By */}
       <TempateMetadataItemItem title="Built By" Icon={WizardHatIcon}>
         <div className="inline-flex w-full items-center justify-start gap-x-1">
           <Avatar className="w-8 h-8 items-start justify-start">
@@ -42,34 +43,40 @@ export const TemplateMetadata: React.FC<TemplateMetadataProps> = ({
         </div>
       </TempateMetadataItemItem>
 
+      {/* Template Uses */}
       <TempateMetadataItemItem title="Template Uses" Icon={PlayArrow}>
         <p className="text-white text-base font-medium">
           {template?.usageCount ?? 'n/a'}
         </p>
       </TempateMetadataItemItem>
 
+      {/* Likes */}
       <TempateMetadataItemItem title="Likes" Icon={Favorite}>
         <p className="text-white text-base font-medium">7</p>
       </TempateMetadataItemItem>
 
+      {/* Current Version */}
       <TempateMetadataItemItem title="Current Version" Icon={Psychology}>
         <p className="font-medium">
           {`Version ${template?.templateVersions?.[0].version ?? '1'}`}
         </p>
       </TempateMetadataItemItem>
 
+      {/* Created */}
       <TempateMetadataItemItem title="Created" Icon={MagickWandIcon}>
         <p className="font-medium">
           {new Date(template?.createdAt ?? '').toLocaleDateString()}
         </p>
       </TempateMetadataItemItem>
 
+      {/* Last Updated */}
       <TempateMetadataItemItem title="Last Updated" Icon={Update}>
         <p className="font-medium">
           {new Date(template?.updatedAt ?? '').toLocaleDateString()}
         </p>
       </TempateMetadataItemItem>
 
+      {/* Models Used */}
       <TempateMetadataItemItem
         title="Models Used"
         Icon={CrystalBallIcon}
@@ -80,7 +87,9 @@ export const TemplateMetadata: React.FC<TemplateMetadataProps> = ({
       >
         {models.map(model => (
           <div className="inline-flex gap-x-1 basis-1/2">
-            <Avatar key={model} className="w-8 h-8 items-start justify-start">
+            {/* There is no current sane way to get a provider from a model name */}
+            {/* TODO: add to servicesShared  */}
+            {/* <Avatar key={model} className="w-8 h-8 items-start justify-start">
               <AvatarImage
                 className="h-full w-full rounded-full"
                 alt={model}
@@ -91,7 +100,9 @@ export const TemplateMetadata: React.FC<TemplateMetadataProps> = ({
                 })}
               />
             </Avatar>
-            <span>Model Org</span>
+            <span>Model Org</span> */}
+
+            <span className='text-xs'>{model}</span>
           </div>
         ))}
       </TempateMetadataItemItem>
