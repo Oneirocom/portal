@@ -7,6 +7,7 @@ import { anonUserRouter } from './router/anonUsers'
 import { billingRouter } from './router/billing'
 import { chatRouterV2 } from './router/chatv2'
 import { templateRouters } from '@magickml/portal-templates'
+import { profileRouter } from './router/profiles'
 
 /**
  * This is the primary router for your server.
@@ -23,6 +24,7 @@ export const portalRouter = createTRPCRouter({
   templates: templateRouters.base,
   templateVersions: templateRouters.version,
   chatv2: chatRouterV2,
+  profiles: profileRouter,
 })
 
 // export type definition of API

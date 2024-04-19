@@ -48,6 +48,7 @@ export const templatesGetStaticProps: GetStaticProps = async ({ params }) => {
       createdAt: true,
       updatedAt: true,
       usageCount: true,
+      userId: true,
       templateVersions: parsedParams.version
         ? {
             where: {
@@ -118,6 +119,7 @@ export type TemplateGetStaticProps = {
     createdAt: string
     updatedAt: string
     usageCount: number
+    userId: string | null
     templateVersions: {
       id: string
       version: number

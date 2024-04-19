@@ -24,12 +24,13 @@ export const TemplateAgentImage: React.FC<TemplateAgentImageProps> = ({
         className="h-full w-full !rounded-[10px]"
         src={getImage({
           id: template?.id ?? '1',
-          image: template?.image ?? '',
+          image: template?.image
+            ? `${process.env.NEXT_PUBLIC_BUCKET_PREFIX}/${template.image}`
+            : null,
           type: ImageType.IMAGE,
         })}
         alt={template.name?.at(0) || 'A'}
       />
-      {template?.image ? template.name?.at(0) || 'A' : null}
     </Avatar>
   )
 }
