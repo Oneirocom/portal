@@ -7,11 +7,13 @@ export const findTemplatesSchema = z.object({
 })
 
 export const createTemplateSchema = z.object({
+  id: z.string().optional(),
   agentId: z.string(),
   name: z.string(),
   description: z.string().optional(),
   public: z.boolean().optional(),
   type: z.nativeEnum(TemplateType).optional(),
+  image: z.string().optional(),
 })
 
 export const updateTemplateSchema = z.object({
@@ -19,6 +21,8 @@ export const updateTemplateSchema = z.object({
   name: z.string().optional(),
   description: z.string().optional(),
   public: z.boolean().optional(),
+  type: z.nativeEnum(TemplateType).optional(),
+  image: z.string().optional(),
 })
 
 export const deleteTemplateSchema = z.object({
