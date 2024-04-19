@@ -7,6 +7,8 @@ import {
   TextareaWithLabel,
   SwitchWithLabel,
 } from '@magickml/client-ui'
+import { handleImageUpload, PublicPresignType } from '../../utils/image'
+import { RouterInputs } from '@magickml/portal-server-router'
 
 type UpdateTemplateDialogProps = {
   isOpen: boolean
@@ -32,6 +34,7 @@ export const UpdateTemplateDialog: React.FC<UpdateTemplateDialogProps> = ({
   initialPublic,
 }) => {
   const utils = api.useContext()
+  const [imageFile, setImageFile] = useState<File | null>(null)
 
   const [templateState, setTemplateState] = useState<UpdateTemplateState>({
     name: initialName,
@@ -39,9 +42,17 @@ export const UpdateTemplateDialog: React.FC<UpdateTemplateDialogProps> = ({
     public: initialPublic,
   })
 
+  const { mutateAsync: getPresignedUrl } =
+    api.templates.presignImageUrl.useMutation({
+      onError: error => {
+        toast.error('Something went wrong')
+      },
+    })
+
   const { mutateAsync: updateTemplate, isLoading: isUpdateTemplateLoading } =
     api.templates.update.useMutation({
       onSuccess: async payload => {
+        setImageFile(null)
         toast.success('Template updated')
         setIsOpen(false)
         await utils.templates.invalidate()
@@ -53,12 +64,34 @@ export const UpdateTemplateDialog: React.FC<UpdateTemplateDialogProps> = ({
     })
 
   const handleUpdateTemplate = async () => {
+    let image: string | undefined
+    if (imageFile) {
+      const args: RouterInputs['templates']['presignImageUrl'] = {
+        id: templateId,
+        type: PublicPresignType.templateAvatar,
+      }
+
+      const key = await handleImageUpload({
+        imageFile,
+        fn: getPresignedUrl,
+        args,
+        ...args,
+      })
+
+      image = key
+    }
+
     await updateTemplate({
       templateId,
       name: templateState.name,
       description: templateState.description,
       public: templateState.public,
+      image,
     })
+  }
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setImageFile(e.target.files?.[0] ?? null)
   }
 
   return (
@@ -90,6 +123,7 @@ export const UpdateTemplateDialog: React.FC<UpdateTemplateDialogProps> = ({
           }
           placeholder="Enter a name for the template"
         />
+
         <TextareaWithLabel
           id="template-description"
           label="Template Description"
@@ -100,6 +134,16 @@ export const UpdateTemplateDialog: React.FC<UpdateTemplateDialogProps> = ({
           placeholder="Enter a description for the template"
           rows={4}
         />
+
+        <InputWithLabel
+          id="templateImage"
+          type="file"
+          label="Upload an image (optional)"
+          onChange={handleFileChange}
+          placeholder="Upload an image"
+          className="w-full"
+        />
+
         <SwitchWithLabel
           id="template-type"
           label="Make this template public?"

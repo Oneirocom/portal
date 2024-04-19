@@ -10,6 +10,7 @@ import { Card, Button } from '@magickml/client-ui'
 import { useUser } from '@clerk/nextjs'
 import { PageHeader, type PageHeaderProps } from '../ui/page-header'
 import { PageSection } from '../ui/page-section'
+import { imgPrep } from './shared'
 
 const header: PageHeaderProps = {
   title: 'Agents',
@@ -59,17 +60,9 @@ export const AgentsPage = ({ initialData }) => {
             .flatMap(page => (page.items ? page.items : []))
             .map((agent, i: number) => (
               <AgentCard
-                key={agent.id}
-                id={agent.id}
-                projectId={agent.projectId ?? ''}
-                isPublic={null}
-                name={agent.name ?? 'Untitled'}
-                image={
-                  agent.image
-                    ? `${process.env.NEXT_PUBLIC_BUCKET_PREFIX}/${agent?.image}`
-                    : null
-                }
-                description={agent.description ?? ''}
+                {...agent}
+                key={`${agent.id}--official`}
+                image={imgPrep(agent.image)}
               />
             ))}
 

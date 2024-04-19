@@ -1,14 +1,10 @@
 import { useRef, useState } from 'react'
-import { BaseAgentCard } from './base-agent-card'
+import { PortalCard } from './portal-card'
 import { AgentCardMenu } from './menu/agent-card-menu'
 import { AgentCardFooter } from './agent-card-footer'
-import { AgentCardInfo } from './types'
+import { AgentCardProps } from './types'
 
-type AgentCardProps = AgentCardInfo & {
-  projectId: string
-}
-
-export const AgentCard: React.FC<AgentCardProps> = agent => {
+export const AgentCard: React.FC<AgentCardProps> = props => {
   const footerRef = useRef<HTMLButtonElement>(null)
   const footerState = useState(false)
   const menuState = useState(false)
@@ -34,24 +30,27 @@ export const AgentCard: React.FC<AgentCardProps> = agent => {
     ) {
       e.stopPropagation()
     } else {
-      window.open(`/projects/${agent.projectId}`, '_blank')
+      window.open(`/projects/${props.projectId}`, '_blank')
     }
   }
 
   const openEditor = () => {
-    window.open(`/projects/${agent.projectId}`, '_blank')
+    window.open(`/projects/${props.projectId}`, '_blank')
   }
 
   return (
-    <BaseAgentCard
-      agent={agent}
+    <PortalCard
+      id={props.id}
+      name={props.name}
+      image={props.image}
+      description={props.description}
       onClick={handleClick}
       menu={
         <AgentCardMenu
-          agentName={agent.name}
-          agentId={agent.id}
-          agentDescription={agent.description}
-          projectId={agent.projectId}
+          agentName={props.name}
+          agentId={props.id}
+          agentDescription={props.description}
+          projectId={props.projectId}
           isPublic={true} // TODO: get from API
           openState={menuState}
           updateModalState={updateModalState}
@@ -61,11 +60,15 @@ export const AgentCard: React.FC<AgentCardProps> = agent => {
       }
       footer={
         <AgentCardFooter
-          agent={agent}
+          id={props.id}
+          name={props.name}
+          description={props.description}
+          image={props.image}
           state={footerState}
           buttonRef={footerRef}
           submitText="Build"
           onSubmit={openEditor}
+          metadata={null}
         />
       }
     />

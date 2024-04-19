@@ -8,9 +8,8 @@ import {
   AvatarImage,
   AvatarFallback,
 } from '@magickml/client-ui'
-import Image from 'next/image'
 import { getImage, ImageType } from 'shared/utils'
-import type { AgentCardInfo } from './types'
+import type { PortalCardBaseProps } from './types'
 import { getPluginCredentials } from 'shared/nodeSpec'
 
 interface SpellMetadata {
@@ -20,19 +19,22 @@ interface SpellMetadata {
   knowledge: boolean
 }
 
-export type AgentCardFooterProps = {
-  agent: AgentCardInfo
+export interface AgentCardFooterProps extends PortalCardBaseProps {
   state: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
   buttonRef: React.RefObject<HTMLButtonElement>
   submitText: string
   onSubmit: () => void | Promise<void> | null
   secondaryText?: string
   onSecondaryClick?: React.MouseEventHandler<HTMLButtonElement> | null
-  metadata?: any
+  metadata: SpellMetadata | null | undefined
 }
 
 export const AgentCardFooter: React.FC<AgentCardFooterProps> = ({
-  agent,
+  id,
+  name,
+  image,
+  description,
+  version,
   state,
   buttonRef,
   submitText,
@@ -73,10 +75,10 @@ export const AgentCardFooter: React.FC<AgentCardFooterProps> = ({
         className="lg:max-w-2xl overflow-y-auto h-full sm:h-auto w-full text-ds-black dark:text-ds-white p-8"
       >
         <h2 className="text-2xl font-bold !font-montAlt capitalize inline-flex items-center justify-start">
-          {agent.name}
-          {agent.version && (
+          {name}
+          {version && (
             <span className="ml-2 mt-1 text-[10px] font-montserrat leading-none  text-ds-primary-p dark:text-ds-primary-m">
-              {`V${agent.version}`}
+              {version}
             </span>
           )}
         </h2>
@@ -85,19 +87,19 @@ export const AgentCardFooter: React.FC<AgentCardFooterProps> = ({
             <AvatarImage
               className="h-full w-full !rounded-[10px]"
               src={getImage({
-                id: agent.id ?? '0',
+                id,
                 type: ImageType.IMAGE,
-                image: agent.image,
+                image,
               })}
-              alt={agent.name ?? 'Placeholder'}
+              alt={name ?? 'Untitled'}
             />
           </Avatar>
           <div className="flex flex-col gap-2 basis-2/3 px-6 py-2.5 ">
             <p className="text-base font-semibold text-left">Description</p>
 
             <div className="self-stretch text-base font-normal">
-              {agent?.description && agent.description.length > 0
-                ? agent.description
+              {description && description.length > 0
+                ? description
                 : 'No description'}
             </div>
 

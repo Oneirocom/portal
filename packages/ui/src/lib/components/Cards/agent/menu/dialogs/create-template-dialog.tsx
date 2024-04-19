@@ -129,6 +129,7 @@ export const TemplateDialog: React.FC<TemplateDialogProps> = ({
           }
           placeholder="Enter a name for the template"
         />
+
         <TextareaWithLabel
           id="template-description"
           label="Template Description"

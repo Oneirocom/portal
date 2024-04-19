@@ -1,11 +1,12 @@
 import { PortalLayout, MainLayout } from '@magickml/portal-layout'
 import { api } from '@magickml/portal-api-client'
-import { AgentCardTemplate } from '@magickml/portal-ui'
+import { TemplateCard } from '@magickml/portal-ui'
 import React from 'react'
 import Head from 'next/head'
 import { useUser } from '@clerk/nextjs'
 import { PageHeader, type PageHeaderProps } from '../ui/page-header'
 import { PageSection } from '../ui/page-section'
+import { imgPrep } from './shared'
 
 const header: PageHeaderProps = {
   title: 'Create an Agent',
@@ -60,22 +61,10 @@ export const CreateAgentPage = () => {
         {!officialQuery.isLoading &&
           officalTemplates &&
           officalTemplates.map((t, i: number) => (
-            <AgentCardTemplate
+            <TemplateCard
+              {...t}
               key={`${t.id}--official`}
-              id={t.id}
-              name={t.name ?? 'Untitled'}
-              image={
-                t?.image
-                  ? `${process.env.NEXT_PUBLIC_BUCKET_PREFIX}/${t.image}`
-                  : null
-              }
-              description={t?.description ?? ''}
-              isPublic={t.public}
-              creator={t.userId}
-              metadata={t.templateVersions[0]?.metadata ?? null}
-              ogAgentId={t.ogAgentId}
-              version={t.templateVersions[0]?.version.toString() ?? null}
-              type={t.type}
+              image={imgPrep(t.image)}
             />
           ))}
       </PageSection>
@@ -87,22 +76,10 @@ export const CreateAgentPage = () => {
         {!communityQuery.isLoading &&
           communityTemplates &&
           communityTemplates.map((t, i: number) => (
-            <AgentCardTemplate
+            <TemplateCard
               key={`${t.id}--community`}
-              id={t.id}
-              name={t.name ?? 'Untitled'}
-              image={
-                t?.image
-                  ? `${process.env.NEXT_PUBLIC_BUCKET_PREFIX}/${t.image}`
-                  : null
-              }
-              description={t?.description ?? ''}
-              isPublic={t.public}
-              creator={t.userId}
-              metadata={t.templateVersions[0]?.metadata ?? null}
-              ogAgentId={t.ogAgentId}
-              version={t.templateVersions[0]?.version.toString() ?? null}
-              type={t.type}
+              {...t}
+              image={imgPrep(t.image)}
             />
           ))}
       </PageSection>
@@ -111,22 +88,10 @@ export const CreateAgentPage = () => {
         {!userQuery.isLoading &&
           userTemplates &&
           userTemplates.map((t, i: number) => (
-            <AgentCardTemplate
+            <TemplateCard
               key={`${t.id}--user`}
-              id={t.id}
-              name={t.name ?? 'Untitled'}
-              image={
-                t?.image
-                  ? `${process.env.NEXT_PUBLIC_BUCKET_PREFIX}/${t.image}`
-                  : null
-              }
-              description={t?.description ?? ''}
-              isPublic={t.public}
-              creator={t.userId}
-              metadata={t.templateVersions[0]?.metadata ?? null}
-              ogAgentId={t.ogAgentId}
-              version={t.templateVersions[0]?.version.toString() ?? null}
-              type={t.type}
+              {...t}
+              image={imgPrep(t.image)}
             />
           ))}
       </PageSection>

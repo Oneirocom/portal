@@ -10,15 +10,12 @@ import {
 import { UpdateTemplateDialog } from './dialogs/template-update-dialog'
 import { DeleteTemplateDialog } from './dialogs/template-delete-dialog'
 import { TemplateVersionDialog } from './dialogs/template-version-dialog'
+import type { TemplateCardProps } from '../types'
 
 type TemplateCardMenuProps = {
-  templateId: string | null
-  templateName: string | null
-  templateVersion: string | null
+  template: TemplateCardProps
   isCreator: boolean
   isAdmin: boolean
-  isPublic: boolean | null
-  templateDescription: string | null
   openState: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
   updateDialogState: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
   updateVersionDialogState: [
@@ -29,18 +26,17 @@ type TemplateCardMenuProps = {
 }
 
 export const TemplateCardMenu: React.FC<TemplateCardMenuProps> = ({
-  templateId,
-  templateName,
-  templateVersion,
   isCreator,
   isAdmin,
-  isPublic,
-  templateDescription,
   openState,
   updateDialogState,
   updateVersionDialogState,
   deleteDialogState,
+  template,
+  ...rest
 }) => {
+  const { id, name, type, userId, public: isPublic, description } = template
+
   const [isOpen, setIsOpen] = openState
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = deleteDialogState
   const [isUpdateDialogOpen, setIsUpdateDialogOpen] = updateDialogState
@@ -71,21 +67,21 @@ export const TemplateCardMenu: React.FC<TemplateCardMenuProps> = ({
       <UpdateTemplateDialog
         isOpen={isUpdateDialogOpen}
         setIsOpen={setIsUpdateDialogOpen}
-        templateId={templateId ?? ''}
-        initialName={templateName ?? ''}
-        initialDescription={templateDescription ?? ''}
+        templateId={id ?? ''}
+        initialName={name ?? ''}
+        initialDescription={description ?? ''}
         initialPublic={isPublic ?? false}
       />
       <TemplateVersionDialog
         isOpen={updateVersionDialogState[0]}
         setIsOpen={updateVersionDialogState[1]}
-        agentId={templateId}
+        agentId={id}
       />
       <DeleteTemplateDialog
         isOpen={isDeleteDialogOpen}
         setIsOpen={setIsDeleteDialogOpen}
-        templateId={templateId}
-        templateName={templateName}
+        templateId={id}
+        templateName={name}
       />
       <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
         <DropdownMenuTrigger asChild>

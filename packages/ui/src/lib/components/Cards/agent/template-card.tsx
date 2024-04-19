@@ -1,20 +1,14 @@
 import { useRef, useState } from 'react'
-import { BaseAgentCard } from './base-agent-card'
+import { PortalCard } from './portal-card'
 import { AgentCardFooter } from './agent-card-footer'
-import { AgentCardInfo } from './types'
+import { TemplateCardProps } from './types'
 import React from 'react'
 import { CreateAgentDialog } from './menu/dialogs/create-agent-dialog'
-import { TemplateCardMenu } from './menu/agent-card-template-menu'
+import { TemplateCardMenu } from './menu/template-card-menu'
 import { useUser } from '@clerk/nextjs'
-import { useRouter } from 'next/router'
+import { AgentCardBadge } from './components/agent-card-badge'
 
-type AgentCardTemplateProps = AgentCardInfo & {
-  metadata?: any
-  ogAgentId?: string | null
-  version?: string | null
-}
-
-export const AgentCardTemplate: React.FC<AgentCardTemplateProps> = template => {
+export const TemplateCard: React.FC<TemplateCardProps> = props => {
   const { user, isSignedIn } = useUser()
   const isAdmin = (role: unknown) => role === 'ADMIN'
   const isCreator = (creator: string | null | undefined) => creator === user?.id
@@ -60,24 +54,25 @@ export const AgentCardTemplate: React.FC<AgentCardTemplateProps> = template => {
   > = e => {
     e.preventDefault()
     if (!window) return
-    window.open(`/templates/${template.id}`, '_blank')
+    window.open(`/templates/${props.id}`, '_blank')
   }
 
   return (
-    <BaseAgentCard
-      agent={template}
+    <PortalCard
+      {...props}
       onClick={handleClick}
+      badge={
+        props.type === 'OFFICIAL' && (
+          <AgentCardBadge>{props.type}</AgentCardBadge>
+        )
+      }
       menu={
         isSignedIn &&
-        (isAdmin(user?.publicMetadata.role) || isCreator(template.creator)) && (
+        (isAdmin(user?.publicMetadata.role) || isCreator(props.userId)) && (
           <TemplateCardMenu
-            templateId={template.id}
-            templateName={template.name}
-            templateVersion={'1'}
-            templateDescription={template.description}
-            isCreator={isCreator(template.creator)}
+            template={props}
+            isCreator={isCreator(props.userId)}
             isAdmin={isAdmin(user?.publicMetadata.role)}
-            isPublic={template?.isPublic || false}
             openState={menuState}
             updateDialogState={updateState}
             updateVersionDialogState={updateVersionState}
@@ -88,16 +83,16 @@ export const AgentCardTemplate: React.FC<AgentCardTemplateProps> = template => {
       footer={
         <>
           <AgentCardFooter
-            agent={template}
+            {...props}
             state={footerState}
             buttonRef={footerRef}
             submitText="Build"
             secondaryText="Preview"
             onSecondaryClick={handleSecondaryClick}
             onSubmit={handleFooterSubmit}
-            metadata={template.metadata}
+            metadata={props.templateVersions[0]?.metadata as any}
           />
-          <CreateAgentDialog templateId={template.id} state={createState} />
+          <CreateAgentDialog templateId={props.id} state={createState} />
         </>
       }
     />

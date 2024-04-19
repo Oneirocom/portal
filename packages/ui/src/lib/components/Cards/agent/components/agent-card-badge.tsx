@@ -1,16 +1,16 @@
-import { Badge } from '@magickml/client-ui'
+import { Badge, cn } from '@magickml/client-ui'
+import React from 'react'
 
-type Props = {
-  text: string
-}
+interface Props extends React.ComponentProps<typeof Badge> {}
 
-export const AgentCardBadge = (props: Props) => {
+export const AgentCardBadge: React.FC<Props> = ({ className, ...props }) => {
   return (
     <Badge
-      className="w-28 h-9 inline-flex justify-center absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 
-  text-center bg-ds-primary-m text-black text-sm font-normal font-montserrat"
-    >
-      {props.text}
-    </Badge>
+      className={cn(
+        'w-28 h-9 z-50 inline-flex justify-center absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center bg-ds-primary-m text-black text-sm font-normal font-montserrat',
+        className
+      )}
+      {...props}
+    />
   )
 }
