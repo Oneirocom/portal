@@ -64,7 +64,11 @@ export const CreateAgentPage = () => {
               key={`${t.id}--official`}
               id={t.id}
               name={t.name ?? 'Untitled'}
-              image={t.image}
+              image={
+                t?.image
+                  ? `${process.env.NEXT_PUBLIC_BUCKET_PREFIX}/${t.image}`
+                  : null
+              }
               description={t?.description ?? ''}
               isPublic={t.public}
               creator={t.userId}
@@ -86,7 +90,11 @@ export const CreateAgentPage = () => {
               key={`${t.id}--community`}
               id={t.id}
               name={t.name ?? 'Untitled'}
-              image={t.image}
+              image={
+                t?.image
+                  ? `${process.env.NEXT_PUBLIC_BUCKET_PREFIX}/${t.image}`
+                  : null
+              }
               description={t?.description ?? ''}
               isPublic={t.public}
               creator={t.userId}
@@ -105,7 +113,11 @@ export const CreateAgentPage = () => {
               key={`${t.id}--user`}
               id={t.id}
               name={t.name ?? 'Untitled'}
-              image={t.image}
+              image={
+                t?.image
+                  ? `${process.env.NEXT_PUBLIC_BUCKET_PREFIX}/${t.image}`
+                  : null
+              } 
               description={t?.description ?? ''}
               isPublic={t.public}
               creator={t.userId}
