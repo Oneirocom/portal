@@ -9,7 +9,7 @@ import { useUser } from '@clerk/nextjs'
 import { AgentCardBadge } from './components/agent-card-badge'
 
 export const TemplateCard: React.FC<TemplateCardProps> = props => {
-  const { createdAt: versionDate } = props.templateVersions[0] || {}
+  const { createdAt: versionDate, version } = props.templateVersions[0] || {}
   const { user, isSignedIn } = useUser()
   const isAdmin = (role: unknown) => role === 'ADMIN'
   const isCreator = (creator: string | null | undefined) => creator === user?.id
@@ -58,12 +58,12 @@ export const TemplateCard: React.FC<TemplateCardProps> = props => {
     window.open(`/templates/${props.id}`, '_blank')
   }
 
-  // If the template has was created in the past 7 days, show bade with text "NEW"
-  // If the last version was created in the past 7 days, show badge with text "UPDATED"
+  // If the template has was created in the past 3 days, show bade with text "NEW"
+  // If the last version was created in the past 3 days, show badge with text "UPDATED"
   // Prioritize version date over template date
 
   const isNew = (date: Date) =>
-    date.getTime() > Date.now() - 1000 * 60 * 60 * 24 * 7
+    date.getTime() > Date.now() - 1000 * 60 * 60 * 24 * 3
 
   const badgeOrNoBadge = (): React.ReactNode | null => {
     if (props.type !== 'OFFICIAL') {
@@ -73,13 +73,12 @@ export const TemplateCard: React.FC<TemplateCardProps> = props => {
     const versionIsNew = versionDate && isNew(versionDate)
     const templateIsNew = props.createdAt && isNew(props.createdAt)
 
-    if (versionIsNew) {
+    if (versionIsNew && version > 1)
       return <AgentCardBadge>UPDATED</AgentCardBadge>
-    } else if (templateIsNew) {
+
+    if (templateIsNew && version === 1)
       return <AgentCardBadge>NEW</AgentCardBadge>
-    } else {
-      return null
-    }
+    return null
   }
 
   return (
