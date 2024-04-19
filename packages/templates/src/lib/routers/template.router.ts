@@ -9,8 +9,11 @@ import {
   createTemplateSchema,
   updateTemplateSchema,
   deleteTemplateSchema,
+  presignTemplateImageSchema,
 } from '../schemas'
 import { removeTemplate, createFromAgent } from '../services'
+import { z } from 'zod'
+import { publicPresigner } from 'server-storage'
 
 export const templatesRouter = createTRPCRouter({
   find: protectedProcedure
@@ -57,6 +60,7 @@ export const templatesRouter = createTRPCRouter({
     .input(createTemplateSchema)
     .mutation(async ({ ctx, input }) => {
       const user = await clerkClient.users.getUser(ctx.auth.userId)
+      console.log(input)
 
       return await createFromAgent({
         ...input,
@@ -107,5 +111,38 @@ export const templatesRouter = createTRPCRouter({
       }
 
       await removeTemplate(input.templateId)
+    }),
+  presignImageUrl: protectedProcedure
+    .input(presignTemplateImageSchema)
+    .mutation(async ({ input, ctx }) => {
+      const user = await clerkClient.users.getUser(ctx.auth.userId)
+      const role = user.publicMetadata?.['role']
+
+      const { id, type } = input
+
+      const template = await prismaPortal.template.findUnique({
+        where: { id },
+        select: { userId: true },
+      })
+
+      const exists = z
+        .object({ userId: z.string() })
+        .safeParse(template).success
+
+      const isOwner = exists && template?.userId === ctx.auth.userId
+
+      if (exists && !isOwner && role !== 'ADMIN') {
+        throw new Error('You are not authorized to update this template')
+      }
+
+      const presignedUrl = await publicPresigner.getPresignedUrl({
+        type,
+        id,
+      })
+      if (!presignedUrl) {
+        throw new Error('Error generating presigned URL')
+      } else {
+        return presignedUrl
+      }
     }),
 })
