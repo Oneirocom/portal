@@ -5,8 +5,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@magickml/client-ui'
-import Image from 'next/legacy/image'
-import { ImageType, getImage } from '@magickml/portal-utils-shared'
+import { getImage, ImageType } from 'shared/utils'
 import { ReactNode } from 'react'
 import { AgentCardInfo } from './types'
 
@@ -40,8 +39,7 @@ export const BaseAgentCard: React.FC<BaseAgentCardProps> = ({
             type: ImageType.IMAGE,
           })}
           alt={name ?? 'Placeholder'}
-          // layout="fill"
-          className="object-cover bg-ds-card-alt object-center absolute w-full h-full aspect-square"
+          className="object- bg-ds-card-alt object-center absolute w-full h-full aspect-square"
         />
       </div>
       <CardHeader className="p-0 pt-2.5 h-[35%] text-center text-pretty grow">

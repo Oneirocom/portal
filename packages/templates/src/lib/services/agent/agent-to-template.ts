@@ -7,8 +7,10 @@ import { generateSpellMetadata } from '../../utils/metadata'
  */
 export interface CreateFromAgentInput {
   name: string
-  description?: string
   agentId: string
+  id?: string
+  image?: string
+  description?: string
   userId?: string
   type?: TemplateType
   public?: boolean
@@ -57,8 +59,10 @@ export const createFromAgent = async (input: CreateFromAgentInput) => {
   const spells = release.spells
 
   const template: Prisma.TemplateCreateInput = {
+    id: input.id,
     name: input.name,
     description: input.description,
+    image: input.image,
     userId: input.userId,
     type: input.type || TemplateType.COMMUNITY,
     public: input.public || false,
