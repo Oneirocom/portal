@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, cn } from '@magickml/client-ui'
+import { cn } from '@magickml/client-ui'
 import { useRouter } from 'next/router'
 import { usePortalNavigation } from '../hooks/use-portal-navigation'
 

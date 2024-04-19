@@ -16,7 +16,7 @@ export const profileRouter = createTRPCRouter({
   find: publicProcedure
     .input(findProfileInputSchema)
     .output(findProfileOutputSchema)
-    .query(async ({ input, ctx }) => {
+    .query(async ({ input }) => {
       const { id, username, imageUrl } = await clerkClient.users.getUser(
         input.id
       )

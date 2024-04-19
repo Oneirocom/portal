@@ -1,4 +1,3 @@
-import type { InferGetStaticPropsType } from 'next'
 import { prismaPortal } from '@magickml/portal-db'
 import type { GetStaticProps } from 'next'
 import { z } from 'zod'

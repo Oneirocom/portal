@@ -35,7 +35,7 @@ export const TemplateCardMenu: React.FC<TemplateCardMenuProps> = ({
   template,
   ...rest
 }) => {
-  const { id, name, type, userId, public: isPublic, description } = template
+  const { id, name, public: isPublic, description } = template
 
   const [isOpen, setIsOpen] = openState
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = deleteDialogState

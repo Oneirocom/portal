@@ -1,4 +1,4 @@
-import type { api, RouterInputs } from '@magickml/portal-api-client'
+import type { RouterInputs } from '@magickml/portal-api-client'
 import axios from 'axios'
 
 export enum PublicPresignType {
