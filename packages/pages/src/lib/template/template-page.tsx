@@ -1,8 +1,8 @@
 import { MainLayout, PortalLayout } from '@magickml/portal-layout'
 
 import type { TemplateGetStaticProps } from './template-page-isr'
-import { TemplatePageContainer } from './template-container'
-import { TemplatePageSide } from './aside/template-page-aside'
+import { TemplatePageContainer } from './layout/template-container'
+import { TemplatePageSide } from './layout/template-page-aside'
 import { TemplatePageMain } from './main/template-page-main'
 import { ReactFlowProvider } from 'reactflow'
 

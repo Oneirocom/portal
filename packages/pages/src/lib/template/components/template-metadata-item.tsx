@@ -2,7 +2,7 @@ import { cn } from '@magickml/client-ui'
 import type { SvgIconTypeMap } from '@mui/material'
 import type { OverridableComponent } from '@mui/material/OverridableComponent'
 
-interface TemplatePageAsideItemProps
+interface TempateMetadataItemItemProps
   extends React.HTMLAttributes<HTMLDivElement> {
   titleProps?: React.HTMLAttributes<HTMLParagraphElement>
   constainerProps?: React.HTMLAttributes<HTMLDivElement>
@@ -14,7 +14,9 @@ interface TemplatePageAsideItemProps
     | React.FC<React.SVGProps<SVGSVGElement>>
 }
 
-export const TemplatePageAsideItem = (props: TemplatePageAsideItemProps) => {
+export const TempateMetadataItemItem = (
+  props: TempateMetadataItemItemProps
+) => {
   const { title, children, Icon, constainerProps, className, titleProps } =
     props
   return (

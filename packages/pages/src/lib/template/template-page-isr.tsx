@@ -88,27 +88,46 @@ export const templatesGetStaticProps: GetStaticProps = async ({ params }) => {
     }
   }
 
+  const returnTemplate: TemplateGetStaticProps['template'] = {
+    ...template,
+    createdAt: template?.createdAt?.toISOString() ?? '',
+    updatedAt: template?.updatedAt?.toISOString() ?? '',
+    // @ts-ignore
+    templateVersions: template.templateVersions.map(version => ({
+      ...version,
+      createdAt: version.createdAt.toISOString(),
+      updatedAt: version.updatedAt.toISOString(),
+    })),
+  }
+
   return {
     props: {
-      template: {
-        ...template,
-        createdAt: template?.createdAt?.toISOString(),
-        updatedAt: template?.updatedAt?.toISOString(),
-        templateVersions: template?.templateVersions.map(version => ({
-          ...version,
-          createdAt: version.createdAt.toISOString(),
-          updatedAt: version.updatedAt.toISOString(),
-        })),
-      },
+      template: returnTemplate,
     },
     revalidate: 600, // Revalidate every 10 minutes (600 seconds)
     // TODO: change to revalidate based on the version
   }
 }
 
-export type TemplateGetStaticProps = InferGetStaticPropsType<
-  typeof templatesGetStaticProps
->
+export type TemplateGetStaticProps = {
+  template: {
+    id: string
+    name: string
+    image: string
+    description: string
+    createdAt: string
+    updatedAt: string
+    usageCount: number
+    templateVersions: {
+      id: string
+      version: number
+      spells: string[]
+      createdAt: string
+      updatedAt: string
+      metadata: Record<string, any>
+    }[]
+  }
+}
 
 export async function templatesGetStaticPaths() {
   // Fetch the templates of type "OFFICIAL"

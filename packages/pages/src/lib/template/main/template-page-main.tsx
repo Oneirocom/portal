@@ -5,6 +5,7 @@ import { TemplatePageSubHeader } from './template-page-subheader'
 import dynamic from 'next/dynamic'
 import { useRef, useState } from 'react'
 import { cn } from '@magickml/client-ui'
+import { TemplateMetadata } from '../components/template-metadata'
 
 type TemplatePageMainProps = {
   template: TemplateGetStaticProps['template']
@@ -14,9 +15,9 @@ export const TemplatePageMain = (props: TemplatePageMainProps) => {
   const { template } = props
   const [activeSpell, setActiveSpell] = useState<
     SpellInterfaceWithGraph | null | undefined
-  >(template?.templateVersions?.[0].spells?.[0])
+  >(template?.templateVersions?.[0].spells?.[0] as any) // TODO: add correct type for json values to prisma schema
 
-  const spells = template?.templateVersions?.[0].spells as
+  const spells = template?.templateVersions?.[0].spells as any as
     | SpellInterfaceWithGraph[]
     | undefined
     | null
@@ -39,7 +40,7 @@ export const TemplatePageMain = (props: TemplatePageMainProps) => {
   )
 
   return (
-    <main className="w-full px-10 items-start gap-8 flex flex-col h-full overflow-y-auto">
+    <main className="w-full lg:px-10 items-start gap-8 flex flex-col h-full overflow-y-auto">
       <TemplatePageHeader template={template} />
 
       <TemplatePageSubHeader template={template} />
@@ -89,6 +90,8 @@ export const TemplatePageMain = (props: TemplatePageMainProps) => {
           )}
         </div>
       </div>
+
+      <TemplateMetadata className="lg:hidden" template={template} />
     </main>
   )
 }
