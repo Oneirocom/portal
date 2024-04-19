@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import Image from "next/legacy/image"
+import Image from 'next/legacy/image'
 import { PortalHeader } from '../Header/PortalHeader'
-// import MagickMobileNav from '../MobileNav/MagickMobileNav'
-import clsx from 'clsx'
 import PortalFooter from '../Footer/PortalFooter'
+import { cn } from '@magickml/client-ui'
+import { PortalMobileNav } from '../MobileNav/portal-mobile-nav'
 
 export enum BackgroundType {
   Image = 'image',
@@ -128,15 +128,14 @@ export const MainLayout: React.FC<Props> = ({
         )}
         <PortalHeader />
         <div
-          className={clsx(
-            'flex flex-col z-10 h-full overflow-y-auto overflow-x-hidden',
+          className={cn(
+            'flex flex-col z-10 h-full overflow-y-auto overflow-x-hidden pb-20',
             classNames
           )}
         >
           {children}
         </div>
-
-        {/* <MagickMobileNav /> */}
+        <PortalMobileNav />
       </div>
       <PortalFooter />
     </>
