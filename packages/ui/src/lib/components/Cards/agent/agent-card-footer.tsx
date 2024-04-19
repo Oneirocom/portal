@@ -70,7 +70,7 @@ export const AgentCardFooter: React.FC<AgentCardFooterProps> = ({
       </DialogTrigger>
       <DialogContent
         onPointerDownOutside={e => e.preventDefault()}
-        className="max-w-xs lg:max-w-2xl w-full text-ds-black dark:text-ds-white p-8"
+        className="lg:max-w-2xl overflow-y-auto h-full sm:h-auto w-full text-ds-black dark:text-ds-white p-8"
       >
         <h2 className="text-2xl font-bold !font-montAlt capitalize inline-flex items-center justify-start">
           {agent.name}
@@ -80,19 +80,18 @@ export const AgentCardFooter: React.FC<AgentCardFooterProps> = ({
             </span>
           )}
         </h2>
-        <div className="flex flex-col lg:flex-row gap-2 items-start justify-start">
-          <div className="aspect-square font-montserrat relative w-full h-full rounded-t-xl overflow-hidden m-0 p-0 basis-1/3">
-            <Image
+        <div className="flex  flex-col lg:flex-row gap-2 items-start justify-start">
+          <Avatar className="w-full aspect-square max-w-72 h-auto !rounded-[10px] mx-auto">
+            <AvatarImage
+              className="h-full w-full !rounded-[10px]"
               src={getImage({
                 id: agent.id ?? '0',
                 type: ImageType.IMAGE,
                 image: agent.image,
               })}
               alt={agent.name ?? 'Placeholder'}
-              layout="fill"
-              className="object-cover"
             />
-          </div>
+          </Avatar>
           <div className="flex flex-col gap-2 basis-2/3 px-6 py-2.5 ">
             <p className="text-base font-semibold text-left">Description</p>
 
@@ -137,7 +136,7 @@ export const AgentCardFooter: React.FC<AgentCardFooterProps> = ({
           </div>
         </div>
 
-        <DialogFooter className="pt-8 gap-x-2">
+        <DialogFooter className="lg:pt-8 gap-2">
           {secondaryText && onSecondaryClick && (
             <Button onClick={onSecondaryClick} variant="portal-neutral">
               {secondaryText}
