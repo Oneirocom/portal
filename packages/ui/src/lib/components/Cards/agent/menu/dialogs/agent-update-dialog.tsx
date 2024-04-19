@@ -6,7 +6,7 @@ import {
   InputWithLabel,
   TextareaWithLabel,
 } from '@magickml/client-ui'
-import axios from 'axios'
+import { handleImageUpload } from '../../utils/image'
 
 type AgentUpdateDialogProps = {
   isOpen: boolean
@@ -54,31 +54,20 @@ export const AgentUpdateDialog: React.FC<AgentUpdateDialogProps> = ({
 
     let image: string | undefined
     if (imageFile) {
-      const presignedUrl = await getPresignedUrl({
+      const key = await handleImageUpload({
         agentId,
-        type: 'agentAvatar' as RouterInputs['agents']['getPresignedUrl']['type'],
+        imageFile,
+        getPresignedUrl,
+        type: 'agentAvatar' as RouterInputs['agents']['getPresignedUrl']['type'], // TODO: use the zod schema for enum
       })
 
-      if (!presignedUrl) {
-        toast.error('Please try again.')
+      if (!key) {
+        toast.error(
+          'Error uploading image. Please try again with a different image.'
+        )
         return
       }
-
-      const res = await axios.put(presignedUrl.url, imageFile, {
-        headers: {
-          'Content-Type': imageFile.type,
-        },
-      })
-
-      console.log(res)
-
-      // check if the image was uploaded successfully
-      if (res.status !== 200) {
-        toast.error('Failed to upload image. Please try a different image.')
-        image = undefined
-      } else {
-        image = presignedUrl.key
-      }
+      image = key
     }
 
     await updateAgent({
