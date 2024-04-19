@@ -23,6 +23,7 @@ export default authMiddleware({
     '/api/magick/user',
     '/api/magick/user(.*)',
     '/templates/(.*)',
+    `/templates`,
   ],
 })
 
