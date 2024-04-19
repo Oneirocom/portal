@@ -25,17 +25,17 @@ export const rolesConfig: Record<Role, string[]> = {
 
 export const allRoutes: Record<string, any> = {
   home: {
-    name: 'Home',
+    name: 'My Agents',
     href: '/',
     icon: '/images/icons/home.svg',
     enabled: true,
     Iicon: HomeIcon,
   },
-  explore: {
-    name: 'Explore',
-    href: '/explore',
-    icon: '/images/icons/community.svg',
-    enabled: false,
+  templates: {
+    name: 'Templates',
+    href: '/templates',
+    icon: '/images/icons/templates.svg',
+    enabled: true,
     Iicon: ExploreIcon,
   },
   projects: {
