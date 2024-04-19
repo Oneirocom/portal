@@ -6,7 +6,7 @@ import {
   InputWithLabel,
   TextareaWithLabel,
 } from '@magickml/client-ui'
-import { handleImageUpload } from '../../utils/image'
+import { handleImageUpload, PublicPresignType } from '../../utils/image'
 
 type AgentUpdateDialogProps = {
   isOpen: boolean
@@ -54,19 +54,18 @@ export const AgentUpdateDialog: React.FC<AgentUpdateDialogProps> = ({
 
     let image: string | undefined
     if (imageFile) {
-      const key = await handleImageUpload({
+      const args: RouterInputs['agents']['getPresignedUrl'] = {
         agentId,
+        type: PublicPresignType.agentAvatar,
+      }
+      const key = await handleImageUpload({
+        id: agentId,
         imageFile,
-        getPresignedUrl,
-        type: 'agentAvatar' as RouterInputs['agents']['getPresignedUrl']['type'], // TODO: use the zod schema for enum
+        fn: getPresignedUrl,
+        args,
+        type: args.type,
       })
 
-      if (!key) {
-        toast.error(
-          'Error uploading image. Please try again with a different image.'
-        )
-        return
-      }
       image = key
     }
 
