@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { api } from '@magickml/portal-api-client'
+import { api, RouterInputs } from '@magickml/portal-api-client'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/router'
 import {
@@ -9,6 +9,8 @@ import {
 } from '@magickml/client-ui'
 import { TextareaWithLabel } from '@magickml/client-ui'
 import { useUser } from '@clerk/nextjs'
+import { handleImageUpload, PublicPresignType } from '../../utils/image'
+import { v4 } from 'uuid'
 
 type TemplateDialogProps = {
   isOpen: boolean
@@ -30,6 +32,7 @@ export const TemplateDialog: React.FC<TemplateDialogProps> = ({
 }) => {
   const { user } = useUser()
   const role = user?.publicMetadata?.role as string | undefined
+  const [imageFile, setImageFile] = useState<File | null>(null)
 
   const utils = api.useContext()
   const router = useRouter()
@@ -40,9 +43,17 @@ export const TemplateDialog: React.FC<TemplateDialogProps> = ({
     type: 'COMMUNITY',
   })
 
+  const { mutateAsync: getPresignedUrl } =
+    api.templates.presignImageUrl.useMutation({
+      onError: error => {
+        toast.error('Something went wrong')
+      },
+    })
+
   const { mutateAsync: createTemplate, isLoading: isCreateTemplateLoading } =
     api.templates.create.useMutation({
       onSuccess: async () => {
+        setImageFile(null)
         await utils.agents.invalidate()
         toast.success('Template created')
         setIsOpen(false)
@@ -56,10 +67,37 @@ export const TemplateDialog: React.FC<TemplateDialogProps> = ({
 
   const handleCreateTemplate = async () => {
     if (!agentId) return
+    let image: string | undefined
+    let id: string | undefined
+    if (imageFile) {
+      id = v4()
+      const args: RouterInputs['templates']['presignImageUrl'] = {
+        id,
+        type: PublicPresignType.templateAvatar,
+      }
+
+      const key = await handleImageUpload({
+        id,
+        imageFile,
+        fn: getPresignedUrl,
+        args,
+        type: args.type,
+      })
+
+      image = key
+      console.log('image', image)
+    }
+
     await createTemplate({
       ...templateState,
       agentId,
+      image,
+      id,
     })
+  }
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setImageFile(e.target.files?.[0] ?? null)
   }
 
   return (
@@ -100,6 +138,15 @@ export const TemplateDialog: React.FC<TemplateDialogProps> = ({
           }
           placeholder="Enter a description for the template"
           rows={4}
+        />
+
+        <InputWithLabel
+          id="templateImage"
+          type="file"
+          label="Upload an image (optional)"
+          onChange={handleFileChange}
+          placeholder="Upload an image"
+          className="w-full"
         />
 
         <SwitchWithLabel

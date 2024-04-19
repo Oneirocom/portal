@@ -16,7 +16,6 @@ type AgentCardTemplateProps = AgentCardInfo & {
 
 export const AgentCardTemplate: React.FC<AgentCardTemplateProps> = template => {
   const { user, isSignedIn } = useUser()
-  const { push } = useRouter()
   const isAdmin = (role: unknown) => role === 'ADMIN'
   const isCreator = (creator: string | null | undefined) => creator === user?.id
 
