@@ -1,37 +1,24 @@
-import { useState, useEffect } from 'react'
 import { useUser } from '@clerk/nextjs'
 import Link from 'next/link'
 import clsx from 'clsx'
-import { Route, getNavigationForRole } from '../navigation'
-import { ANONYMOUS, Roles } from '@magickml/portal-config'
 import { InfoMenu, UserMenu } from './menus'
 import { Button } from '@magickml/client-ui'
 import { PageProgress } from './PageProgress'
 import { useRouter } from 'next/router'
+import { usePortalNavigation } from '../hooks/use-portal-navigation'
 
 export const PortalHeader = () => {
   const router = useRouter()
-  const { user, isSignedIn } = useUser()
-  const [navigation, setNavigation] = useState<Route[]>(
-    getNavigationForRole(ANONYMOUS)
-  )
+  const { isSignedIn } = useUser()
+  const navigation = usePortalNavigation()
 
-  useEffect(() => {
-    if (isSignedIn) {
-      const metadata = user.publicMetadata
-      switch (metadata?.role) {
-        case Roles.ADMIN:
-          setNavigation(getNavigationForRole(Roles.ADMIN))
-          break
-        case Roles.TESTER:
-          setNavigation(getNavigationForRole(Roles.TESTER))
-          break
-        default:
-          setNavigation(getNavigationForRole(Roles.USER))
-          break
-      }
+  const isRoute = (href: string) => {
+    console.log('isRoute', href, router.pathname)
+    if (href === '/') {
+      return router.pathname === '/'
     }
-  }, [isSignedIn, user])
+    return router.pathname.includes(href)
+  }
 
   return (
     <div className="bg-ds-header shrink-0 h-16 relative w-full inline-flex justify-start items-center text-left text-ds-black dark:text-ds-white lg:px-10">
@@ -109,43 +96,40 @@ export const PortalHeader = () => {
       {/* LINKS */}
       <div className="items-center justify-start hidden pl-20 lg:inline-flex gap-x-10">
         {/* TEMPORARY REMOVE NAV */}
-        {false &&
-          navigation &&
-          navigation.length > 0 &&
-          navigation.map(
-            (item: Route) =>
-              item.enabled && (
-                <Link
-                  href={item.href}
-                  key={item.href}
-                  className={clsx(
-                    'inline-flex items-center group justify-start pb-0.5 border-b-[3px] color-transition font-montserrat uppercase',
-                    item.href === router.asPath
-                      ? 'dark:text-[#72dbf3] text-secondary-highlight dark:border-b-[#72dbf3] border-b-secondary-highlight'
-                      : 'text-black dark:text-white border-b-transparent'
-                  )}
-                  id={`header-link-${item.name}`}
-                >
-                  <item.Iicon
-                    className={clsx(
-                      'relative w-[32px] h-[32px] overflow-hidden flex-shrink-0 object-cover mx-2 color-transition',
-                      item.href === router.asPath
-                        ? 'dark:text-[#72dbf3] text-secondary-highlight'
-                        : 'text-black dark:text-white hover:dark:text-[#72dbf3] hover:text-secondary-highlight '
-                    )}
-                    width={32}
-                    height={32}
-                  />
-                  <span
-                    className={clsx(
-                      'text-base font-medium transition-all duration-75 ease-in-out mx-2 opacity-100 w-auto'
-                    )}
-                  >
-                    {item.name}
-                  </span>
-                </Link>
-              )
-          )}
+
+        {navigation.map(item => {
+          return (
+            <Link
+              href={item.href}
+              key={item.href}
+              className={clsx(
+                'inline-flex items-center group justify-start pb-0.5 border-b-[3px] color-transition font-montserrat uppercase',
+                isRoute(item.href)
+                  ? 'dark:text-[#72dbf3] text-secondary-highlight dark:border-b-[#72dbf3] border-b-secondary-highlight'
+                  : 'text-black dark:text-white border-b-transparent'
+              )}
+              id={`header-link-${item.name}`}
+            >
+              <item.Icon
+                className={clsx(
+                  'relative w-[32px] h-[32px] overflow-hidden flex-shrink-0 object-cover mx-2 color-transition',
+                  isRoute(item.href)
+                    ? 'dark:text-[#72dbf3] text-secondary-highlight'
+                    : 'text-black dark:text-white hover:dark:text-[#72dbf3] hover:text-secondary-highlight '
+                )}
+                width={32}
+                height={32}
+              />
+              <span
+                className={clsx(
+                  'text-base font-medium transition-all duration-75 ease-in-out mx-2 opacity-100 w-auto'
+                )}
+              >
+                {item.name}
+              </span>
+            </Link>
+          )
+        })}
       </div>
 
       <div className="grow" />
