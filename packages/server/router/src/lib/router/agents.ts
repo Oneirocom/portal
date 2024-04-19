@@ -152,7 +152,7 @@ export const agentsRouter = createTRPCRouter({
         name: z.string().optional(),
         description: z.string().optional(),
         publicVariables: z.string().optional(), // unused now leaving for old code
-        variables: z.string().optional(), // unused now, will probably be done in a different way
+        variables: z.string().optional(), // unused now, is done in a different way
         image: z.string().optional().nullable(),
         data: z.any().optional().nullable(), // unused now leaving for old code
         agentId: z.string(),

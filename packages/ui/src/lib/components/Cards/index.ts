@@ -1,6 +1,6 @@
 export * from './agent/agent-card'
 export * from './agent/agent-card-template'
-export * from  './agent/create-agent-dialog'
+export * from  './agent/menu/dialogs/create-agent-dialog'
 export * from './project'
 export * from './project/project-grid'
 export * from './project/project-grid-pagination'

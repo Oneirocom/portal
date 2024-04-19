@@ -29,11 +29,14 @@ export const CreateAgentDialog: React.FC<CreateAgentDialogProps> = ({
       },
     })
 
-  const handleCreate = async () => {
+  const handleCreate = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+
     if (!name) {
       toast.error('Please enter a name for your agent.')
       return
     }
+
     await create({ templateId, name })
   }
 
