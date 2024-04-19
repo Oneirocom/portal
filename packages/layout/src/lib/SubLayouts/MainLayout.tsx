@@ -129,7 +129,7 @@ export const MainLayout: React.FC<Props> = ({
         <PortalHeader />
         <div
           className={clsx(
-            'flex flex-col z-10 h-full overflow-y-auto overflow-x-hidden pb-20',
+            'flex flex-col z-10 h-full overflow-y-auto overflow-x-hidden',
             classNames
           )}
         >
