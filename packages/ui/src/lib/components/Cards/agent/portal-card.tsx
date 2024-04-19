@@ -6,30 +6,25 @@ import {
   CardTitle,
 } from '@magickml/client-ui'
 import { getImage, ImageType } from 'shared/utils'
-import { ReactNode } from 'react'
-import { AgentCardInfo } from './types'
+import { PortalCardProps } from './types'
 
-type BaseAgentCardProps = {
-  agent: AgentCardInfo
-  onClick: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void
-  menu?: ReactNode
-  footer?: ReactNode
-}
-
-export const BaseAgentCard: React.FC<BaseAgentCardProps> = ({
-  agent,
+export const PortalCard: React.FC<PortalCardProps> = ({
+  id,
+  name,
+  image,
+  description,
   onClick,
   menu,
   footer,
+  badge,
 }) => {
-  const { id, name, image, description, version } = agent
-
   return (
     <Card
       onClick={onClick}
       key={id}
-      className="w-44 h-60 lg:w-56 lg:h-80 flex flex-col border-ds-neutral hover:border-ds-primary hover:scale-[102.5%] transition-all duration-150 ease-in-out hover:overflow-visible cursor-pointer"
+      className="w-44 h-60 lg:w-56 lg:h-80 flex flex-col border-ds-neutral hover:border-ds-primary hover:scale-[102.5%] transition-all duration-150 ease-in-out hover:overflow-visible cursor-pointer relative"
     >
+      {badge && badge}
       <div className="relative w-full h-[53%] rounded-t-xl overflow-hidden m-0 p-0">
         {menu}
         <img
@@ -45,11 +40,6 @@ export const BaseAgentCard: React.FC<BaseAgentCardProps> = ({
       <CardHeader className="p-0 pt-2.5 h-[35%] text-center text-pretty grow">
         <CardTitle className="font-montserrat text-sm lg:text-base font-medium inline-flex items-center justify-center">
           {name}
-          {version && (
-            <span className="ml-2 text-[10px] font-montserrat leading-none  text-ds-primary-p dark:text-ds-primary-m">
-              {`V${version}`}
-            </span>
-          )}
         </CardTitle>
         {description && (
           <CardDescription className="mx-2 line-clamp-2 text-xs lg:text-base text-center dark:!text-ds-white !text-ds-black">
