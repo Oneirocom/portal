@@ -33,15 +33,15 @@ export const BaseAgentCard: React.FC<BaseAgentCardProps> = ({
     >
       <div className="relative w-full h-[53%] rounded-t-xl overflow-hidden m-0 p-0">
         {menu}
-        <Image
+        <img
           src={getImage({
             id,
             image,
             type: ImageType.IMAGE,
           })}
           alt={name ?? 'Placeholder'}
-          layout="fill"
-          className="object-cover bg-ds-card-alt"
+          // layout="fill"
+          className="object-cover bg-ds-card-alt object-center absolute w-full h-full aspect-square"
         />
       </div>
       <CardHeader className="p-0 pt-2.5 h-[35%] text-center text-pretty grow">
