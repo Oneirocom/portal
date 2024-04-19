@@ -17,15 +17,13 @@ export const PortalMobileNav: React.FC<Props> = () => {
   }
 
   return (
-    <div className="sticky lg:hidden bottom-0 left-0 z-50 w-full h-20 bg-ds-card border-t border-ds-neutral">
-      <div className="flex justify-evenly items-center h-full w-full  mx-auto font-medium">
+    <div className="sticky lg:hidden bottom-0 left-0 z-50 w-full h-20 bg-ds-card border-t border-t-zinc-700">
+      <div className="flex justify-evenly items-center h-full w-full divide-x divide-x-zinc-700  mx-auto font-medium">
         {navigation.map(nav => (
-          <Button
+          <button
             key={nav.href}
-            variant="ghost"
-            size="icon"
             className={cn(
-              'flex flex-col items-center justify-center w-fit',
+              'flex flex-col items-center justify-center group h-full w-full',
               isRoute(nav.href) ? '' : 'opacity-50'
             )}
             onClick={() => push(nav.href)}
@@ -37,7 +35,7 @@ export const PortalMobileNav: React.FC<Props> = () => {
               className="w-6 h-6"
             />
             <span className="text-xs font-normal">{nav.name}</span>
-          </Button>
+          </button>
         ))}
       </div>
     </div>
