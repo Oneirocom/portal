@@ -140,7 +140,7 @@ export const PortalHeader = () => {
           variant="portal-primary"
           size="sm"
           onClick={() => {
-            router.push(isSignedIn ? '/create' : '/sign-in')
+            router.push(isSignedIn ? '/templates' : '/sign-in')
           }}
           className="hidden lg:flex"
         >

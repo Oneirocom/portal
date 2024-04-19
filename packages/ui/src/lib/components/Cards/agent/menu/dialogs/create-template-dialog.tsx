@@ -46,7 +46,7 @@ export const TemplateDialog: React.FC<TemplateDialogProps> = ({
         await utils.agents.invalidate()
         toast.success('Template created')
         setIsOpen(false)
-        router.push('/create')
+        router.push('/templates')
       },
       onError: e => {
         toast.error(e.message)

@@ -82,7 +82,7 @@ export const templatesGetStaticProps: GetStaticProps = async ({ params }) => {
   if (!template) {
     return {
       redirect: {
-        destination: '/create',
+        destination: '/templates',
         permanent: false,
       },
     }

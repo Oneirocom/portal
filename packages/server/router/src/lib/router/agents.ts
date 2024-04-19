@@ -19,10 +19,7 @@ import {
 } from '@magickml/portal-utils-shared'
 import { makeClient } from 'ideClient'
 import { createFromTemplate } from '@magickml/portal-templates'
-import {
-  publicPresigner,
-  PublicPresignType,
-} from 'server-storage'
+import { publicPresigner, PublicPresignType } from 'server-storage'
 
 const ideServerUrl = process.env?.['IDE_SERVER_URL'] || 'http://localhost:3030'
 
@@ -138,12 +135,14 @@ export const agentsRouter = createTRPCRouter({
         throw new Error('No access to the specified workspace')
       }
 
-      try {
-        const presignedUrl = await publicPresigner.getPresignedUrl(id, 'avatar.jpg', type)
-
+      const presignedUrl = await publicPresigner.getPresignedUrl({
+        type,
+        id,
+      })
+      if (!presignedUrl) {
+        throw new Error('Error generating presigned URL')
+      } else {
         return presignedUrl
-      } catch (error) {
-        return null
       }
     }),
 
