@@ -79,6 +79,9 @@ export const templatesRouter = createTRPCRouter({
   update: protectedProcedure
     .input(updateTemplateSchema)
     .mutation(async ({ ctx, input }) => {
+      const user = await clerkClient.users.getUser(ctx.auth.userId)
+      const role = user.publicMetadata?.['role']
+
       const { templateId: id, ...data } = input
       const template = await prismaPortal.template.findUnique({
         where: { id },
@@ -89,7 +92,9 @@ export const templatesRouter = createTRPCRouter({
       }
 
       if (template.userId !== ctx.auth.userId) {
-        throw new Error('You are not authorized to update this template')
+        if (role !== 'ADMIN') {
+          throw new Error('You are not authorized to update this template')
+        }
       }
 
       return prismaPortal.template.update({
