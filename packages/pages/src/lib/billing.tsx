@@ -41,7 +41,7 @@ export const BillingPage = () => {
 
   const router = useRouter()
   const [inputValue, setInputValue] = useState<string>('5.00')
-  const [error] = useState<string | undefined>()
+  const [error, setError] = useState<string | undefined>()
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/[^0-9.]/g, '').replace(/^0+/, '')
