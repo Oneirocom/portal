@@ -19,10 +19,10 @@ export const Maintenance = ({ mode = 'cloud' }: { mode: 'cloud' | 'editor' }) =>
             Thanks for your patience.
           </div>
           <Image
-            src="/images/maintenance.png"
+            src="/images/fixing-reality.png"
             width={640}
             height={640}
-            alt="404-wizard"
+            alt="fixing reality"
             className="self-center lg:self-end h-64 w-64 lg:h-[640px] lg:w-[640px]"
           />
           <div className="lg:hidden block leading-7 text-sm font-montserrat pt-2 lg:pt-8 text-[#c4d0d9] font-semibold">
