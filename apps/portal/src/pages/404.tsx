@@ -1,44 +1,49 @@
+import { cn } from '@magickml/client-ui'
 import Image from 'next/image'
 import Link from 'next/link'
 
-const FourOhFour = () => {
+export default function FourOhFour() {
   return (
-    <div className="flex font-montAlt flex-col items-start justify-start h-screen overflow-hidden font-medium text-[#f1f4f6] bg-[#2D194F]">
-      <div className="relative w-full h-full py-20 mx-auto lg:py-40 max-w-7xl">
-        <div className="flex flex-col w-full px-8 mx-auto sm:px-16 lg:px-32">
-          <div className="text-4xl font-bold lg:text-6xl text">404</div>
-          <div className="my-4 text-2xl font-bold lg:text-4xl">
-            You Encountered a Sad Wizard
-            <br />
-            <span className="text-base font-medium lg:text-4xl">
-              {`(this page cannot be found or no longer exists)`}
-            </span>
-          </div>
-          <div className="hidden  lg:block leading-10 text-2xl font-montserrat pt-2 lg:pt-8 text-[#c4d0d9] font-semibold">
-            {`You'll have to return from whence you came.`}
-          </div>
-          <Image
-            src="/images/404-wizard.png"
-            width={640}
-            height={640}
-            alt="404-wizard"
-            className="self-center lg:self-end -scale-x-100 h-64 w-64 lg:h-[640px] lg:w-[640px]"
-          />
-          <div className="lg:hidden block leading-7 text-sm font-montserrat pt-2 lg:pt-8 text-[#c4d0d9] font-semibold">
-            {`You'll have to return from whence you came.`}
-          </div>
-          <div className="grow" />
-          <Link
-            href="/"
-            className="flex-col items-start self-stretch justify-center py-5"
+    <div className="flex w-full h-screen bg-indigo-950">
+      <div className="flex flex-col max-w-screen-xl p-4 w-full mt-10 mx-auto  text-zinc-300">
+        <span className="font-bold text-4xl md:text-6xl ">404</span>
+        <span className="text-xl pt-4 md:pt-2 md:text-4xl font-bold font-montAlt">
+          You Encountered a Sad Wizard
+        </span>
+        <div className="text-zinc-300 text-wrap text-base md:text-4xl font-medium font-montAlt">
+          {`(this page cannot be found or no longer exists)`}
+        </div>
+
+        <div className="inline-flex flex-col-reverse md:flex-col justify-between h-full w-full py-4">
+          <span
+            className={cn(
+              'text-zinc-500 text-sm md:text-2xl font-semibold leading-10 font-montserrat'
+            )}
           >
+            {`You'll have to return from whence you came.`}
+          </span>
+          <div className="max-w-screen-sm w-full  h-full relative place-self-center">
+            <Image
+              src="/images/sad-wizard1.png"
+              className="object-contain"
+              fill
+              alt="Sad Wizard"
+            />
+          </div>
+        </div>
+
+        <Link
+          href="/"
+          className="inline-flex items-center justify-start mt-auto gap-x-1 lg:gap-x-2"
+        >
+          <div className="flex-col items-start self-stretch justify-center py-2 pl-2 lg:py-5 lg:pl-5">
             <svg
-              width="187"
-              height="33"
+              width="126"
+              height="23"
               viewBox="0 0 188 33"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
-              className="text-[#f1f4f6] relative w-[187px] h-[33px] overflow-hidden flex-shrink-0 object-cover"
+              className="relative w-[126px] h-[23px] lg:w-[187px] lg:h-[33px] overflow-hidden flex-shrink-0 object-cover"
             >
               <g id="Wordmark - group">
                 <path
@@ -87,11 +92,9 @@ const FourOhFour = () => {
                 />
               </g>
             </svg>
-          </Link>
-        </div>
+          </div>
+        </Link>
       </div>
     </div>
   )
 }
-
-export default FourOhFour
