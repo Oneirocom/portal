@@ -1,5 +1,4 @@
 import type { RouterInputs } from '@magickml/portal-api-client'
-import axios from 'axios'
 
 export enum PublicPresignType {
   projectAvatar = 'projectAvatar',
@@ -19,10 +18,20 @@ export const uploadImage = async ({
   presignedUrl,
   imageFile,
 }: UploadImageProps) => {
-  const res = await axios.put(presignedUrl.url, imageFile, {
-    headers: {
-      'Content-Type': imageFile.type,
-    },
+  const url = new URL(presignedUrl.url)
+  const headers = new Headers()
+  for (const [key, value] of url.searchParams.entries()) {
+    if (key.startsWith('x-goog-')) {
+      headers.set(key, value)
+    }
+  }
+
+  headers.set('Content-Type', 'application/octet-stream')
+
+  const res = await fetch(url.toString(), {
+    method: 'PUT',
+    body: imageFile,
+    headers,
   })
 
   if (res.status !== 200) {
