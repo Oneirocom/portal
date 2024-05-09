@@ -10,6 +10,12 @@ import {
 import { handleImageUpload, PublicPresignType } from '../../utils/image'
 import { RouterInputs } from '@magickml/portal-server-router'
 
+enum Status {
+  IDLE = 'Update Template',
+  IMG_UPLOADING = 'Uploading Image...',
+  TEMPLATE_UPDATING = 'Updating Template...',
+}
+
 type UpdateTemplateDialogProps = {
   isOpen: boolean
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
@@ -42,6 +48,8 @@ export const UpdateTemplateDialog: React.FC<UpdateTemplateDialogProps> = ({
     public: initialPublic,
   })
 
+  const [status, setStatus] = useState<Status>(Status.IDLE)
+
   const { mutateAsync: getPresignedUrl } =
     api.templates.presignImageUrl.useMutation({
       onError: error => {
@@ -49,23 +57,25 @@ export const UpdateTemplateDialog: React.FC<UpdateTemplateDialogProps> = ({
       },
     })
 
-  const { mutateAsync: updateTemplate, isLoading: isUpdateTemplateLoading } =
-    api.templates.update.useMutation({
-      onSuccess: async payload => {
-        setImageFile(null)
-        toast.success('Template updated')
-        setIsOpen(false)
-        await utils.templates.invalidate()
-      },
-      onError: e => {
-        toast.error(e.message)
-        setIsOpen(false)
-      },
-    })
+  const { mutateAsync: updateTemplate } = api.templates.update.useMutation({
+    onSuccess: async payload => {
+      setImageFile(null)
+      toast.success('Template updated')
+      await utils.templates.invalidate()
+      setStatus(Status.IDLE)
+      setIsOpen(false)
+    },
+    onError: e => {
+      toast.error(e.message)
+      setStatus(Status.IDLE)
+      setIsOpen(false)
+    },
+  })
 
   const handleUpdateTemplate = async () => {
     let image: string | undefined
     if (imageFile) {
+      setStatus(Status.IMG_UPLOADING)
       const args: RouterInputs['templates']['presignImageUrl'] = {
         id: templateId,
         type: PublicPresignType.templateAvatar,
@@ -81,6 +91,7 @@ export const UpdateTemplateDialog: React.FC<UpdateTemplateDialogProps> = ({
       image = key
     }
 
+    setStatus(Status.TEMPLATE_UPDATING)
     await updateTemplate({
       templateId,
       name: templateState.name,
@@ -104,11 +115,11 @@ export const UpdateTemplateDialog: React.FC<UpdateTemplateDialogProps> = ({
       }}
       title="Update Template"
       description="Update the name and description of the template."
-      footerText={`${isUpdateTemplateLoading ? 'Updating' : 'Update'} Template`}
+      footerText={status}
       footerButton={{
         onClick: handleUpdateTemplate,
-        disabled: isUpdateTemplateLoading,
-        isLoading: isUpdateTemplateLoading,
+        disabled: status !== Status.IDLE,
+        isLoading: status !== Status.IDLE,
         className: 'w-full',
         variant: 'portal-primary',
       }}
