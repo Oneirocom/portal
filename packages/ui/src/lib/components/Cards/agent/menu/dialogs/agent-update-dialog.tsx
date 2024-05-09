@@ -8,6 +8,12 @@ import {
 } from '@magickml/client-ui'
 import { handleImageUpload, PublicPresignType } from '../../utils/image'
 
+enum Status {
+  IDLE = 'Update Agent',
+  IMG_UPLOADING = 'Uploading Image...',
+  AGENT_UPDATING = 'Updating Agent...',
+}
+
 type AgentUpdateDialogProps = {
   isOpen: boolean
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
@@ -27,26 +33,28 @@ export const AgentUpdateDialog: React.FC<AgentUpdateDialogProps> = ({
   const [name, setName] = useState(initialName ?? '')
   const [description, setDescription] = useState(initialDescription ?? '')
   const [imageFile, setImageFile] = useState<File | null>(null)
+  const [status, setStatus] = useState<Status>(Status.IDLE)
 
   const { mutateAsync: getPresignedUrl } =
     api.agents.getPresignedUrl.useMutation({
       onError: error => {
-        toast.error('Something went wrong')
+        toast.error('Error getting image upload URL')
       },
     })
 
-  const { mutateAsync: updateAgent, isLoading: isUpdateLoading } =
-    api.agents.updateAgent.useMutation({
-      onSuccess: async () => {
-        setImageFile(null)
-        toast.success('Agent updated.')
-        await utils.agents.invalidate()
-        setIsOpen(false)
-      },
-      onError: error => {
-        toast.error('Something went wrong')
-      },
-    })
+  const { mutateAsync: updateAgent } = api.agents.updateAgent.useMutation({
+    onSuccess: async () => {
+      setImageFile(null)
+      toast.success('Agent updated.')
+      await utils.agents.invalidate()
+      setStatus(Status.IDLE)
+      setIsOpen(false)
+    },
+    onError: error => {
+      setStatus(Status.IDLE)
+      toast.error('Error updating agent')
+    },
+  })
 
   const handleUpdate = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
@@ -54,6 +62,7 @@ export const AgentUpdateDialog: React.FC<AgentUpdateDialogProps> = ({
 
     let image: string | undefined
     if (imageFile) {
+      setStatus(Status.IMG_UPLOADING)
       const args: RouterInputs['agents']['getPresignedUrl'] = {
         agentId,
         type: PublicPresignType.agentAvatar,
@@ -68,6 +77,7 @@ export const AgentUpdateDialog: React.FC<AgentUpdateDialogProps> = ({
 
       image = key
     }
+    setStatus(Status.AGENT_UPDATING)
 
     await updateAgent({
       name,
@@ -92,11 +102,11 @@ export const AgentUpdateDialog: React.FC<AgentUpdateDialogProps> = ({
       }}
       title="Update Agent"
       description="Update your agent's name, description, and image."
-      footerText="Update Agent"
+      footerText={status}
       footerButton={{
         onClick: handleUpdate,
-        disabled: isUpdateLoading,
-        isLoading: isUpdateLoading,
+        disabled: !name || status !== Status.IDLE,
+        isLoading: status !== Status.IDLE,
         className: 'w-full',
         variant: 'portal-primary',
       }}
@@ -126,6 +136,7 @@ export const AgentUpdateDialog: React.FC<AgentUpdateDialogProps> = ({
           onChange={handleFileChange}
           placeholder="Upload an image"
           className="w-full"
+          accept="image/*"
         />
       </div>
     </PortalDialog>
