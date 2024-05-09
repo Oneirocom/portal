@@ -12,6 +12,12 @@ import { useUser } from '@clerk/nextjs'
 import { handleImageUpload, PublicPresignType } from '../../utils/image'
 import { v4 } from 'uuid'
 
+enum Status {
+  IDLE = 'Create Template',
+  IMG_UPLOADING = 'Uploading Image...',
+  TEMPLATE_CREATING = 'Creating Template...',
+}
+
 type TemplateDialogProps = {
   isOpen: boolean
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
@@ -33,6 +39,7 @@ export const TemplateDialog: React.FC<TemplateDialogProps> = ({
   const { user } = useUser()
   const role = user?.publicMetadata?.role as string | undefined
   const [imageFile, setImageFile] = useState<File | null>(null)
+  const [status, setStatus] = useState<Status>(Status.IDLE)
 
   const utils = api.useContext()
   const router = useRouter()
@@ -50,26 +57,28 @@ export const TemplateDialog: React.FC<TemplateDialogProps> = ({
       },
     })
 
-  const { mutateAsync: createTemplate, isLoading: isCreateTemplateLoading } =
-    api.templates.create.useMutation({
-      onSuccess: async () => {
-        setImageFile(null)
-        await utils.agents.invalidate()
-        toast.success('Template created')
-        setIsOpen(false)
-        router.push('/templates')
-      },
-      onError: e => {
-        toast.error(e.message)
-        setIsOpen(false)
-      },
-    })
+  const { mutateAsync: createTemplate } = api.templates.create.useMutation({
+    onSuccess: async () => {
+      setImageFile(null)
+      await utils.agents.invalidate()
+      toast.success('Template created')
+      setStatus(Status.IDLE)
+      setIsOpen(false)
+      router.push('/templates')
+    },
+    onError: e => {
+      toast.error(e.message)
+      setStatus(Status.IDLE)
+      setIsOpen(false)
+    },
+  })
 
   const handleCreateTemplate = async () => {
     if (!agentId) return
     let image: string | undefined
     let id: string | undefined
     if (imageFile) {
+      setStatus(Status.IMG_UPLOADING)
       id = v4()
       const args: RouterInputs['templates']['presignImageUrl'] = {
         id,
@@ -88,6 +97,7 @@ export const TemplateDialog: React.FC<TemplateDialogProps> = ({
       console.log('image', image)
     }
 
+    setStatus(Status.TEMPLATE_CREATING)
     await createTemplate({
       ...templateState,
       agentId,
@@ -110,11 +120,11 @@ export const TemplateDialog: React.FC<TemplateDialogProps> = ({
       }}
       title="Create Template"
       description="Create a template from this agent."
-      footerText={`${isCreateTemplateLoading ? 'Creating' : 'Create'} Template`}
+      footerText={status}
       footerButton={{
         onClick: handleCreateTemplate,
-        disabled: templateState.name === '' || isCreateTemplateLoading,
-        isLoading: isCreateTemplateLoading,
+        disabled: templateState.name === '' || status !== Status.IDLE,
+        isLoading: status !== Status.IDLE,
         className: 'w-full',
         variant: 'portal-primary',
       }}
