@@ -59,7 +59,7 @@ export const InfoMenu = () => {
     },
     {
       id: 'Docs',
-      href: 'https://magick-docs.vercel.app/',
+      href: 'https://docs.magickml.com/',
       enabled: true,
       newTab: true,
       type: 'link',
