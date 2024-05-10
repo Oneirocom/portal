@@ -5,7 +5,11 @@ import {
 import { stripeService } from '@magickml/portal-billing'
 import { z } from 'zod'
 import { prismaPortal, type Transaction } from '@magickml/portal-db'
-import { getFullUser, paginateItems } from '@magickml/portal-utils-server'
+import {
+  ProxyUser,
+  getFullUser,
+  paginateItems,
+} from '@magickml/portal-utils-server'
 import type Stripe from 'stripe'
 
 export const billingRouter = createTRPCRouter({
@@ -56,34 +60,31 @@ export const billingRouter = createTRPCRouter({
     }),
 
   getBudget: protectedProcedure.query(async ({ ctx }) => {
-    const budget = await prismaPortal.budget.findFirst({
-      where: {
-        userId: ctx.auth.userId,
-      },
-    })
-
-    if (!budget) {
-      throw new Error('Budget not found')
-    }
-
-    const promotions = await prismaPortal.promotion.findMany({
-      where: {
-        userId: ctx.auth.userId,
-        validUntil: {
-          gte: new Date(),
+    const walletUser = (await fetch(
+      `${process.env['KEYWORDS_API_URL']}/api/user/detail/WALLET_${ctx.auth.userId}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${process.env['KEYWORDS_API_KEY']}`,
         },
-        isUsed: false,
-      },
-    })
+      }
+    ).then(res => res.json())) as ProxyUser
 
-    const promoCredit = promotions.reduce(
-      (acc, promo) => acc + promo.amount.toNumber(),
-      0
-    )
+    const mpUser = (await fetch(
+      `${process.env['KEYWORDS_API_URL']}/api/user/detail/MP_${ctx.auth.userId}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${process.env['KEYWORDS_API_KEY']}`,
+        },
+      }
+    ).then(res => res.json())) as ProxyUser
 
     const data = {
-      balance: budget.balance.toNumber(),
-      promotional_balance: promoCredit,
+      balance: walletUser.period_budget || 0,
+      promotional_balance: mpUser.period_budget || 0,
     }
 
     return data
