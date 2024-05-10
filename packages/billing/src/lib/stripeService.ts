@@ -5,6 +5,7 @@ import { PriceKeys } from '@magickml/portal-utils-shared'
 import { clerkClient } from '@clerk/nextjs'
 import { StripeEventHandler } from './stripeEventService'
 import { NextApiRequest } from 'next'
+import { ProxyUser } from '@magickml/portal-utils-server'
 
 export interface CreateCheckoutInput {
   price: keyof typeof PriceKeys
@@ -267,16 +268,58 @@ export class StripeService {
     return portalSession.url
   }
 
-  async createDefaultBudget(userId: string): Promise<void> {
+  async createDefaultProxyUsers(userId: string) {
     try {
-      await prismaPortal.budget.create({
-        data: {
-          userId,
-          balance: 0,
+      const promo = await makeTrialPromotion(userId)
+      const mpUser: ProxyUser = await fetch(
+        `${process.env.KEYWORDS_API_URL}/api/users/create/`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${process.env.KEYWORDS_API_KEY}`,
+          },
+          body: JSON.stringify({
+            period_budget: promo.amount.toNumber(),
+            customer_identifier: `MP_${userId}`,
+          }),
+        }
+      )
+        .then(res => res.json())
+        .catch(error => {
+          console.error('Error creating default wallet:', error)
+          throw error
+        })
+
+      const walletUser: ProxyUser = await fetch(
+        `${process.env.KEYWORDS_API_URL}/api/users/create/`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${process.env.KEYWORDS_API_KEY}`,
+          },
+          body: JSON.stringify({
+            period_budget: 0,
+            customer_identifier: `WALLET_${userId}`,
+          }),
+        }
+      )
+        .then(res => res.json())
+        .catch(error => {
+          console.error('Error creating default wallet:', error)
+          throw error
+        })
+
+      if (!mpUser?.id || !walletUser?.id) {
+        throw new Error('Error creating proxy users')
+      }
+      await clerkClient.users.updateUserMetadata(userId, {
+        privateMetadata: {
+          mpUser: mpUser,
+          walletUser: walletUser,
         },
       })
-
-      await makeTrialPromotion(userId)
     } catch (error) {
       console.error('Error creating default wallet:', error)
       throw error
@@ -285,8 +328,18 @@ export class StripeService {
 
   async checkBudgetExists(userId: string): Promise<boolean> {
     try {
-      const budget = await prismaPortal.budget.findFirst({ where: { userId } })
-      return Boolean(budget)
+      const walletUser = await fetch(
+        `${process.env.KEYWORDS_API_URL}/api/user/detail/WALLET_${userId}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${process.env['KEYWORDS_API_KEY']}`,
+          },
+        }
+      ).then(res => res.json())
+
+      return Boolean(walletUser?.id)
     } catch (error) {
       console.error('Error checking if wallet exists:', error)
       throw error
@@ -296,7 +349,7 @@ export class StripeService {
   async handleNewCustomer(userId: string): Promise<string> {
     if (!userId) throw new Error('userId is required')
     if (!(await this.checkBudgetExists(userId))) {
-      this.createDefaultBudget(userId)
+      this.createDefaultProxyUsers(userId)
     }
 
     const stripe = await this.stripe.customers.create({
