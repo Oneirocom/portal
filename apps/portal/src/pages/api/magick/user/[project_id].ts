@@ -2,9 +2,11 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { z } from 'zod'
 import { prismaPortal } from '@magickml/portal-db'
 import {
+  ProxyUser,
   getFullUser,
   validateBudgetRequest,
 } from '@magickml/portal-utils-server'
+import { clerkClient } from '@clerk/nextjs'
 
 // Zod schema for request query
 const QuerySchema = z.object({
@@ -48,42 +50,48 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
     const { user } = userResult
 
-    const wallet = await prismaPortal.budget.findUnique({
-      where: {
-        userId: project.owner,
-      },
-    })
+    let walletUser = await fetch(
+      `${process.env.KEYWORDS_API_URL}/api/user/detail/WALLET_${user.id}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${process.env.KEYWORDS_API_KEY}`,
+        },
+      }
+    ).then(res => res.json())
 
-    if (!wallet) {
-      await prismaPortal.budget.create({
-        data: {
-          userId: project.owner,
+    if (!walletUser) {
+      walletUser = await fetch(
+        `${process.env.KEYWORDS_API_URL}/api/user/detail/WALLET_${user.id}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${process.env.KEYWORDS_API_KEY}`,
+          },
+        }
+      ).then(res => res.json())
+
+      if (!walletUser) {
+        throw new Error('Failed to create wallet user')
+      }
+
+      await clerkClient.users.updateUserMetadata(project.owner, {
+        privateMetadata: {
+          walletUser,
         },
       })
     }
 
-    // Retrieve promotions and calculate total promotional credit
-    const promotions = await prismaPortal.promotion.findMany({
-      where: {
-        userId: project.owner,
-        validUntil: {
-          gte: new Date(),
-        },
-        isUsed: false,
-      },
-    })
-
-    const promoCredit = promotions.reduce(
-      (acc, promo) => acc + promo.amount.toNumber(),
-      0
-    )
+    const mpUser = user.privateMetadata?.mpUser as ProxyUser
 
     const responseUser = {
       id: user.id,
       email: user.emailAddresses[0]?.emailAddress ?? null,
       name: user.username ?? null,
-      balance: wallet?.balance.toNumber() ?? 0,
-      promoCredit,
+      balance: walletUser.period_budget ?? 0,
+      promoCredit: mpUser?.period_budget ?? 0,
       introCredit: 0, // Calculate based on specific criteria
       hasSubscription: !!user.publicMetadata?.subscription,
       subscriptionName: user.publicMetadata?.subscription ?? 'Neophyte',
