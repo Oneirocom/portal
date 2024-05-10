@@ -4,7 +4,6 @@ import { makeWizardPromotion, makeApprenticePromotion } from './promotions'
 import { PortalSubscriptions } from '@magickml/portal-utils-shared'
 import { buffer } from 'micro'
 import { NextApiRequest } from 'next'
-import { prismaPortal } from '@magickml/portal-db'
 import { PortalBot } from 'server/event-tracker'
 
 class StripeEventHandler {
@@ -85,7 +84,7 @@ class StripeEventHandler {
 
   async handleCheckoutSessionCompleted(event: Stripe.Event) {
     const session = event.data.object as Stripe.Checkout.Session
-    const userId = session?.metadata?.userId as string | undefined
+    const userId = session?.metadata?.userId || ''
     const isBalance = session?.metadata?.balance === 'true' ? true : false
     const subscriptionName = session?.metadata?.subscriptionName as string
     const amount = session?.metadata?.amount as string
@@ -94,16 +93,73 @@ class StripeEventHandler {
       const parsedAmount = parseFloat(amount)
 
       try {
-        await prismaPortal.budget.update({
-          where: {
-            userId: userId,
-          },
-          data: {
-            balance: {
-              increment: parsedAmount,
+        // Get the user's private metadata from Clerk
+        const user = await clerkClient.users.getUser(userId)
+        const privateMetadata = user.privateMetadata
+
+        if (privateMetadata?.walletUser) {
+          const userWallet = await fetch(
+            `${process.env.KEYWORDS_API_URL}/api/user/detail/WALLET_${userId}`,
+            {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${process.env.KEYWORDS_API_KEY}`,
+              },
+            }
+          ).then(res => res.json())
+
+          if (!userWallet) {
+            throw new Error('User proxy data not found')
+          }
+
+          const walletUser = await fetch(
+            `${process.env.KEYWORDS_API_URL}/api/user/update/WALLET_${userId}`,
+            {
+              method: 'PATCH',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${process.env.KEYWORDS_API_KEY}`,
+              },
+              body: JSON.stringify({
+                budget_duration: 'monthly',
+                period_budget: parsedAmount + userWallet.period_budget,
+                period_start: new Date().toISOString(),
+              }),
+            }
+          ).then(res => res.json())
+
+          if (!walletUser) {
+            throw new Error('Failed to update wallet user')
+          }
+        } else {
+          const walletUser = await fetch(
+            `${process.env.KEYWORDS_API_URL}/api/user/create/`,
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${process.env.KEYWORDS_API_KEY}`,
+              },
+              body: JSON.stringify({
+                budget_duration: 'monthly',
+                period_budget: parsedAmount,
+                customer_identifier: `WALLET_${userId}`,
+                period_start: new Date().toISOString(),
+              }),
+            }
+          ).then(res => res.json())
+
+          if (!walletUser) {
+            throw new Error('Failed to create wallet user')
+          }
+
+          await clerkClient.users.updateUserMetadata(userId, {
+            privateMetadata: {
+              walletUser: walletUser,
             },
-          },
-        })
+          })
+        }
 
         await this.bot.log({
           event: 'Checkout session completed',
