@@ -5,16 +5,16 @@ import { useEffect, useMemo } from 'react'
 // import { useRouter } from 'next/router'
 import { useUser } from '@clerk/nextjs'
 import Head from 'next/head'
-// import { useInView } from 'react-intersection-observer'
+import { useInView } from 'react-intersection-observer'
 
 export default function Page() {
   const { isSignedIn } = useUser()
   // const router = useRouter()
-  // const { ref, inView } = useInView()
+  const { inView } = useInView()
   const {
     data,
     // isFetchingNextPage,
-    //  fetchNextPage,
+    fetchNextPage,
     //  hasNextPage,
     //  isLoading
   } = api.agents.getInfinite.useInfiniteQuery(
