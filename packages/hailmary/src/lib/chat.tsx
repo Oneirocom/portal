@@ -20,7 +20,7 @@ export const Chat = ({ agents }: ChatProps) => {
     '0644d18a-401c-4777-85fa-c600801ac685'
   )
   const [agentInfo, setAgentInfo] = useState<any>(null)
-  const audioRef = useRef<HTMLAudioElement | null>(null)
+  // const audioRef = useRef<HTMLAudioElement | null>(null)
 
   const handleConnect = () => {
     if (agentId) {

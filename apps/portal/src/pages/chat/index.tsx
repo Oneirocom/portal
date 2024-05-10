@@ -2,10 +2,10 @@ import { Chat } from 'hailmary'
 import { MainLayout, PortalLayout } from '@magickml/portal-layout'
 import { api } from '@magickml/portal-api-client'
 import { useEffect, useMemo } from 'react'
-import { useRouter } from 'next/router'
+// import { useRouter } from 'next/router'
 import { useUser } from '@clerk/nextjs'
 import Head from 'next/head'
-import { useInView } from 'react-intersection-observer'
+// import { useInView } from 'react-intersection-observer'
 
 export default function Page() {
   const { isSignedIn } = useUser()

@@ -1,6 +1,5 @@
 import { ComponentProps } from 'react'
 import { Button, Input, Select, Textarea, Tooltip } from '@magickml/client-ui'
-import { RouterOutputs } from '@magickml/portal-api-client'
 
 export type ButtonProps = ComponentProps<typeof Button>
 export type SelectProps = ComponentProps<typeof Select>

@@ -1,7 +1,7 @@
-'use client';
+'use client'
 
-import React from 'react';
-import { ChatInputProps } from '../types';
+import React from 'react'
+import { ChatInputProps } from '../types'
 import {
   Label,
   Textarea,
@@ -9,13 +9,17 @@ import {
   Tooltip,
   TooltipTrigger,
   TooltipContent,
-} from '@magickml/client-ui';
-import { Paperclip, CornerDownLeft, Mic } from 'lucide-react';
-import dynamic from 'next/dynamic';
+} from '@magickml/client-ui'
+import {
+  Paperclip,
+  CornerDownLeft,
+  // Mic
+} from 'lucide-react'
+import dynamic from 'next/dynamic'
 
 const ChatTranscription = dynamic(() => import('./chat-transcription'), {
   ssr: false,
-});
+})
 
 export const ChatInput: React.FC<ChatInputProps> = ({
   textareaProps,
@@ -28,9 +32,9 @@ export const ChatInput: React.FC<ChatInputProps> = ({
     <>
       <form
         className="relative overflow-hidden rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring"
-        onSubmit={(e) => {
-          e.preventDefault();
-          onMessageSend(textareaProps.value as string);
+        onSubmit={e => {
+          e.preventDefault()
+          onMessageSend(textareaProps.value as string)
         }}
       >
         <Label htmlFor="message" className="sr-only">
@@ -65,12 +69,17 @@ export const ChatInput: React.FC<ChatInputProps> = ({
             </TooltipTrigger>
             <TooltipContent side="top">Use Microphone</TooltipContent>
           </Tooltip>
-          <Button type="submit" variant="portal-primary" size="sm" className="ml-auto gap-1.5">
+          <Button
+            type="submit"
+            variant="portal-primary"
+            size="sm"
+            className="ml-auto gap-1.5"
+          >
             Send Message
             <CornerDownLeft className="size-3.5" />
           </Button>
         </div>
       </form>
     </>
-  );
-};
+  )
+}

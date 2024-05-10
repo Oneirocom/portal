@@ -1,19 +1,8 @@
 'use client'
 
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ChatSettingsProps } from '../types'
-import {
-  Button,
-  Input,
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-  SelectWithLabel,
-} from '@magickml/client-ui'
+import { Button, SelectWithLabel } from '@magickml/client-ui'
 import { codeToHtml } from 'shiki'
 import { useTheme } from 'next-themes'
 
