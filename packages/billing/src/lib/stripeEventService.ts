@@ -124,7 +124,6 @@ class StripeEventHandler {
               body: JSON.stringify({
                 budget_duration: 'monthly',
                 period_budget: parsedAmount + userWallet.period_budget,
-                period_start: new Date().toISOString(),
               }),
             }
           ).then(res => res.json())
@@ -209,11 +208,16 @@ class StripeEventHandler {
       }
 
       try {
-        await clerkClient.users.updateUserMetadata(userId, {
-          publicMetadata: {
-            subscription: subscriptionName.toUpperCase(),
-          },
-        })
+        await clerkClient.users
+          .updateUserMetadata(userId, {
+            publicMetadata: {
+              subscription: subscriptionName,
+            },
+          })
+          .catch(err => {
+            console.error('Error updating metadata:', err)
+            throw err
+          })
 
         await this.bot.log({
           event: 'Checkout session completed',
