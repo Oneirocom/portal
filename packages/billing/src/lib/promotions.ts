@@ -1,3 +1,4 @@
+import { clerkClient } from '@clerk/nextjs'
 import { prismaPortal, PromotionType } from '@magickml/portal-db'
 import { Decimal } from '@prisma/client/runtime/library'
 
@@ -56,6 +57,22 @@ export const makeWizardPromotion = async (userId: string) => {
       },
     })
 
+    const mpUser = await fetch(
+      `${process.env.KEYWORDS_API_URL}/api/user/detail/MP_${userId}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${process.env.KEYWORDS_API_KEY}`,
+        },
+      }
+    )
+      .then(res => res.json())
+      .catch(err => {
+        console.error('Error fetching user:', err)
+        throw err
+      })
+
     const success = await fetch(
       `${process.env.KEYWORDS_API_URL}/api/user/update/MP_${userId}`,
       {
@@ -65,19 +82,32 @@ export const makeWizardPromotion = async (userId: string) => {
           Authorization: `Bearer ${process.env.KEYWORDS_API_KEY}`,
         },
         body: JSON.stringify({
-          budget_duration: 'monthly',
-          period_budget: new Decimal(10),
-          period_start: new Date().toISOString(),
+          period_budget: 10 + mpUser?.period_budget || 0,
         }),
       }
-    ).then(res => res.json())
-
-    if (success?.id) {
-      await prismaPortal.promotion.update({
-        where: { id: promo.id },
-        data: { isUsed: true },
+    )
+      .then(res => res.json())
+      .catch(err => {
+        console.error('Error updating user:', err)
+        throw err
       })
+    if (!success?.customer_identifier) {
+      throw new Error('Failed to update user credits')
     }
+
+    await prismaPortal.promotion.update({
+      where: { id: promo.id },
+      data: { isUsed: true },
+    })
+
+    clerkClient.users.updateUserMetadata(userId, {
+      publicMetadata: {
+        subscription: 'WIZARD',
+      },
+      privateMetadata: {
+        mpUser: success,
+      },
+    })
   } catch (error) {
     console.error('Error updating user:', error)
     throw error
