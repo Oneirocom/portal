@@ -291,6 +291,13 @@ export class StripeService {
           throw error
         })
 
+      if (mpUser.customer_identifier) {
+        await prismaPortal.promotion.update({
+          where: { id: promo.id },
+          data: { isUsed: true },
+        })
+      }
+
       const walletUser: ProxyUser = await fetch(
         `${process.env.KEYWORDS_API_URL}/api/users/create/`,
         {
