@@ -2,7 +2,6 @@ import type { SvgIconTypeMap } from '@mui/material'
 import type { OverridableComponent } from '@mui/material/OverridableComponent'
 import { TarotCardsIcon } from './Header/tarot-card-icon'
 import { SmartToyOutlined, Chat } from '@mui/icons-material'
-import { Eclipse } from 'lucide-react'
 
 export interface NavigationV2Item {
   name: string

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState } from 'react'
 import { TooltipProvider } from '@magickml/client-ui'
 import { ChatInterface } from './components/chat-interface'
 import { ChatSettings } from './components/chat-settings'
