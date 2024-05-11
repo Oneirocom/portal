@@ -98,8 +98,8 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       id: user.id,
       email: user.emailAddresses[0]?.emailAddress ?? null,
       name: user.username ?? null,
-      balance: walletUser.period_budget ?? 0,
-      promoCredit: mpUser?.period_budget ?? 0,
+      balance: walletUser.period_budget - walletUser.total_period_usage || 0,
+      promoCredit: mpUser?.period_budget - mpUser?.total_period_usage || 0,
       introCredit: 0, // Calculate based on specific criteria
       hasSubscription: !!user.publicMetadata?.subscription,
       subscriptionName: user.publicMetadata?.subscription ?? 'Neophyte',
