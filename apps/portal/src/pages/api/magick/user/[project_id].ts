@@ -50,7 +50,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
     const { user } = userResult
 
-    let walletUser = await fetch(
+    const walletUserResponse = await fetch(
       `${process.env.KEYWORDS_API_URL}/api/user/detail/WALLET_${user.id}`,
       {
         method: 'GET',
@@ -59,13 +59,21 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
           Authorization: `Bearer ${process.env.KEYWORDS_API_KEY}`,
         },
       }
-    ).then(res => res.json())
+    )
 
-    if (!walletUser) {
+    let walletUser = await walletUserResponse.json()
+
+    // We need to check explicitly for 404 because the API returns 404 for not found
+    // But parsing the json will not trigger the conditional
+    if (walletUserResponse.status === 404) {
       walletUser = await fetch(
-        `${process.env.KEYWORDS_API_URL}/api/user/detail/WALLET_${user.id}`,
+        `${process.env.KEYWORDS_API_URL}/api/users/create`,
         {
-          method: 'GET',
+          method: 'POST',
+          body: JSON.stringify({
+            customer_identifier: `WALLET_${user.id}`,
+            period_budget: 0,
+          }),
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${process.env.KEYWORDS_API_KEY}`,
