@@ -4,7 +4,7 @@ import type { TemplateGetStaticProps } from './template-page-isr'
 import { TemplatePageContainer } from './layout/template-container'
 import { TemplatePageSide } from './layout/template-page-aside'
 import { TemplatePageMain } from './main/template-page-main'
-import { ReactFlowProvider } from 'reactflow'
+import { ReactFlowProvider } from '@xyflow/react'
 import Head from 'next/head'
 import { getImage, ImageType } from 'shared/utils'
 
