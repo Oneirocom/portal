@@ -1,7 +1,6 @@
 import { clerkClient } from '@clerk/nextjs'
 
 export type ProxyUser = {
-  id: number
   name: string
   customer_identifier: string
   created_at: string
@@ -62,8 +61,64 @@ export const getFullUser = async (userId: string) => {
         fetchUserData(userId, 'WALLET'),
       ])
 
-      if (mpUser?.id && walletUser?.id) {
+      if (mpUser?.customer_identifier && walletUser?.customer_identifier) {
         await updateUserMetadata(userId, { mpUser, walletUser })
+      } else {
+        try {
+          const mpUser: ProxyUser = await fetch(
+            `${process.env.KEYWORDS_API_URL}/api/users/create/`,
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${process.env.KEYWORDS_API_KEY}`,
+              },
+              body: JSON.stringify({
+                customer_identifier: `MP_${userId}`,
+              }),
+            }
+          )
+            .then(res => res.json())
+            .catch(error => {
+              console.error('Error creating default wallet:', error)
+              throw error
+            })
+
+          const walletUser: ProxyUser = await fetch(
+            `${process.env.KEYWORDS_API_URL}/api/users/create/`,
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${process.env.KEYWORDS_API_KEY}`,
+              },
+              body: JSON.stringify({
+                customer_identifier: `WALLET_${userId}`,
+              }),
+            }
+          )
+            .then(res => res.json())
+            .catch(error => {
+              console.error('Error creating default wallet:', error)
+              throw error
+            })
+
+          if (
+            !mpUser?.customer_identifier ||
+            !walletUser?.customer_identifier
+          ) {
+            throw new Error('Error creating proxy users')
+          }
+          await clerkClient.users.updateUserMetadata(userId, {
+            privateMetadata: {
+              mpUser: mpUser,
+              walletUser: walletUser,
+            },
+          })
+        } catch (error) {
+          console.error('Error creating default wallet:', error)
+          throw error
+        }
       }
 
       const customer = user?.privateMetadata?.stripeId as string
