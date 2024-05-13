@@ -318,7 +318,7 @@ export class StripeService {
           throw error
         })
 
-      if (!mpUser?.id || !walletUser?.id) {
+      if (!mpUser?.customer_identifier || !walletUser?.customer_identifier) {
         throw new Error('Error creating proxy users')
       }
       await clerkClient.users.updateUserMetadata(userId, {
@@ -346,7 +346,7 @@ export class StripeService {
         }
       ).then(res => res.json())
 
-      return Boolean(walletUser?.id)
+      return Boolean(walletUser?.customer_id)
     } catch (error) {
       console.error('Error checking if wallet exists:', error)
       throw error
