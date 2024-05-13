@@ -2,11 +2,9 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { z } from 'zod'
 import { prismaPortal } from '@magickml/portal-db'
 import {
-  ProxyUser,
   getFullUser,
   validateBudgetRequest,
 } from '@magickml/portal-utils-server'
-import { clerkClient } from '@clerk/nextjs'
 
 // Zod schema for request query
 const QuerySchema = z.object({
@@ -48,61 +46,20 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         .json({ status: 'error', message: 'User not found' })
     }
 
-    const { user } = userResult
-
-    const walletUserResponse = await fetch(
-      `${process.env.KEYWORDS_API_URL}/api/user/detail/WALLET_${user.id}`,
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${process.env.KEYWORDS_API_KEY}`,
-        },
-      }
-    )
-
-    let walletUser = await walletUserResponse.json()
-
-    // We need to check explicitly for 404 because the API returns 404 for not found
-    // But parsing the json will not trigger the conditional
-    if (walletUserResponse.status === 404) {
-      walletUser = await fetch(
-        `${process.env.KEYWORDS_API_URL}/api/users/create`,
-        {
-          method: 'POST',
-          body: JSON.stringify({
-            customer_identifier: `WALLET_${user.id}`,
-            period_budget: 0,
-          }),
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${process.env.KEYWORDS_API_KEY}`,
-          },
-        }
-      ).then(res => res.json())
-
-      if (!walletUser) {
-        throw new Error('Failed to create wallet user')
-      }
-
-      await clerkClient.users.updateUserMetadata(project.owner, {
-        privateMetadata: {
-          walletUser,
-        },
-      })
-    }
-
-    const mpUser = user.privateMetadata?.mpUser as ProxyUser
+    const { user, mpUser, walletUser, useWallet } = userResult
 
     const responseUser = {
       id: user.id,
       email: user.emailAddresses[0]?.emailAddress ?? null,
       name: user.username ?? null,
-      balance: walletUser.period_budget - walletUser.total_period_usage || 0,
+      balance: walletUser?.period_budget - walletUser?.total_period_usage || 0,
       promoCredit: mpUser?.period_budget - mpUser?.total_period_usage || 0,
       introCredit: 0, // Calculate based on specific criteria
       hasSubscription: !!user.publicMetadata?.subscription,
       subscriptionName: user.publicMetadata?.subscription ?? 'Neophyte',
+      mpUser,
+      walletUser,
+      useWallet: useWallet ?? false,
     }
 
     return res.status(200).json({ status: 'success', user: responseUser })
