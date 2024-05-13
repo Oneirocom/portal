@@ -49,6 +49,7 @@ export type ChatMessagesProps = {
 export interface ChatTranscriptionProps
   extends React.ComponentProps<typeof Button> {
   onTranscript: React.ChangeEventHandler<HTMLTextAreaElement>
+  sendMessage: () => void
 }
 
 export type ChatInputProps = {

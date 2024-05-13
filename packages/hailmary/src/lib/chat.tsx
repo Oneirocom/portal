@@ -1,26 +1,27 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { TooltipProvider } from '@magickml/client-ui'
 import { ChatInterface } from './components/chat-interface'
-import { ChatSettings } from './components/chat-settings'
+
 import { AgentProps, ChatInputProps, ChatMessagesProps } from './types'
 import { useUser } from '@clerk/nextjs'
 import { v4 } from 'uuid'
+import { TooltipProvider } from '@magickml/client-ui'
+import { ChatSettings } from './components/chat-settings'
 
 interface ChatProps {
   agents: AgentProps[]
 }
+
 export const Chat = ({ agents }: ChatProps) => {
   const { user } = useUser()
-  const prompt = useState<string>('')
+  const [prompt, setPrompt] = useState<string>('')
   const [messages, setMessages] = useState<ChatMessagesProps['messages']>([])
   const [socket, setSocket] = useState<WebSocket | null>(null)
   const [agentId, setAgentId] = useState<string>(
-    '0644d18a-401c-4777-85fa-c600801ac685'
+    'f79066c5-3beb-4aa5-9de9-fad89e245afa'
   )
   const [agentInfo, setAgentInfo] = useState<any>(null)
-  // const audioRef = useRef<HTMLAudioElement | null>(null)
 
   const handleConnect = () => {
     if (agentId) {
@@ -32,81 +33,91 @@ export const Chat = ({ agents }: ChatProps) => {
       }
 
       newSocket.onmessage = (event: MessageEvent) => {
-        console.log('WebSocket message received:', event.data)
-        const data = JSON.parse(event.data)
-
-        switch (data.type) {
-          case 'message':
-            const isStream = typeof data?.responseId === 'number'
-            if (!isStream) {
-              setMessages(prevMessages => [...prevMessages, data])
-            } else {
-              setMessages(prevMessages => {
-                const messageIndex = prevMessages.findIndex(
-                  message => message.responseId === data.responseId
-                )
-                if (messageIndex !== -1) {
-                  const updatedMessage = {
-                    ...prevMessages[messageIndex],
-                    text: prevMessages[messageIndex].text + data.text,
-                  }
-                  const updatedMessages = [...prevMessages]
-                  updatedMessages[messageIndex] = updatedMessage
-                  return updatedMessages
-                } else {
-                  return [...prevMessages, data]
-                }
-              })
-            }
-            break
-
-          case 'audio':
-            console.log('Received audio chunk')
-            setMessages(prevMessages => {
-              const messageIndex = prevMessages.findIndex(
-                message => message.responseId === data.responseId
-              )
-              if (messageIndex !== -1) {
-                const updatedMessage = {
-                  ...prevMessages[messageIndex],
-                  audioChunks: [
-                    ...(prevMessages[messageIndex].audioChunks || []),
-                    data.data,
-                  ],
-                }
-                if (data.isComplete) {
-                  try {
-                    const audioData = updatedMessage.audioChunks.join('')
-                    const audioArray = new Uint8Array(
-                      atob(audioData)
-                        .split('')
-                        .map(char => char.charCodeAt(0))
-                    )
-                    const audioBlob = new Blob([audioArray], {
-                      type: 'audio/mpeg',
-                    })
-                    const audioUrl = URL.createObjectURL(audioBlob)
-                    updatedMessage.audioUrl = audioUrl
-                  } catch (error) {
-                    console.error('Error processing audio chunks:', error)
-                  }
-                }
-                const updatedMessages = [...prevMessages]
-                updatedMessages[messageIndex] = updatedMessage
-                return updatedMessages
+        if (typeof event.data === 'string') {
+          const data = JSON.parse(event.data)
+          switch (data.type) {
+            case 'message':
+              // eslint-disable-next-line no-case-declarations
+              const isStream = typeof data?.responseId === 'number'
+              if (!isStream) {
+                setMessages(prevMessages => [...prevMessages, data])
               } else {
-                return prevMessages
+                setMessages(prevMessages => {
+                  const messageIndex = prevMessages.findIndex(
+                    message => message.responseId === data.responseId
+                  )
+                  if (messageIndex !== -1) {
+                    const prevMessageText = prevMessages[messageIndex].text
+                    let updatedMessageText = prevMessageText
+
+                    if (data.text === '<START>') {
+                      // If the current token is <START>, create a new message in the history
+                      return [
+                        ...prevMessages,
+                        {
+                          ...data,
+                          text: '',
+                        },
+                      ]
+                    } else if (data.text === '<END>') {
+                      // If the current token is <END>, remove the <END> token from the message text
+                      updatedMessageText = prevMessageText.replace(/<END>/g, '')
+                    } else {
+                      // Append the new text to the existing message, filtering out <START> and <END> tokens
+                      updatedMessageText =
+                        prevMessageText +
+                        data.text.replace(/<START>|<END>/g, '')
+                    }
+
+                    const updatedMessage = {
+                      ...prevMessages[messageIndex],
+                      text: updatedMessageText,
+                    }
+                    const updatedMessages = [...prevMessages]
+                    updatedMessages[messageIndex] = updatedMessage
+                    return updatedMessages
+                  } else {
+                    // If the current token is <START>, create a new message in the history
+                    if (data.text === '<START>') {
+                      return [
+                        ...prevMessages,
+                        {
+                          ...data,
+                          text: '',
+                        },
+                      ]
+                    } else {
+                      // Filter out <START> and <END> tokens from the new message text
+                      const filteredText = data.text.replace(
+                        /<START>|<END>/g,
+                        ''
+                      )
+                      return [
+                        ...prevMessages,
+                        {
+                          ...data,
+                          text: filteredText,
+                        },
+                      ]
+                    }
+                  }
+                })
               }
-            })
-            break
-          case 'agentInfo':
-            setAgentInfo(data.data)
-            break
-          case 'status':
-            console.log('Status:', data)
-            break
-          default:
-            console.error('Unknown message type:', data.type)
+              break
+            case 'agentInfo':
+              setAgentInfo(data.data)
+              break
+            case 'status':
+              console.log('Status:', data)
+              break
+            default:
+              console.error('Unknown message type:', data.type)
+          }
+        } else {
+          console.log('Received binary data:', event)
+          // Handle binary data
+          const arrayBuffer = event.data
+          handleBinaryData(arrayBuffer)
         }
       }
 
@@ -124,6 +135,36 @@ export const Chat = ({ agents }: ChatProps) => {
       return () => {
         newSocket.close()
       }
+    }
+  }
+
+  let mediaSource: MediaSource | null = null
+  let sourceBuffer: SourceBuffer | null = null
+
+  async function handleBinaryData(data: Blob) {
+    if (!mediaSource) {
+      mediaSource = new MediaSource()
+      const audioElement = document.createElement('audio')
+      audioElement.src = URL.createObjectURL(mediaSource)
+      audioElement.play()
+    }
+
+    if (mediaSource.readyState === 'open' && !sourceBuffer) {
+      sourceBuffer = mediaSource.addSourceBuffer('audio/mpeg')
+      sourceBuffer.mode = 'sequence'
+    }
+
+    if (sourceBuffer && sourceBuffer.updating) {
+      await new Promise(resolve => {
+        ;(sourceBuffer as SourceBuffer).addEventListener('updateend', resolve, {
+          once: true,
+        })
+      })
+    }
+
+    if (sourceBuffer) {
+      const arrayBuffer = await data.arrayBuffer()
+      sourceBuffer.appendBuffer(arrayBuffer)
     }
   }
 
@@ -145,23 +186,23 @@ export const Chat = ({ agents }: ChatProps) => {
   const sendMessage = () => {
     if (socket && socket.readyState === WebSocket.OPEN) {
       const newMessage = {
-        text: prompt[0],
+        text: prompt,
         id: v4(),
         sender: user?.username || user?.id || 'Anonymous',
         type: 'message',
       }
-      console.log('Sending message:', newMessage)
       socket.send(JSON.stringify(newMessage))
       setMessages(prevMessages => [...prevMessages, newMessage])
+      setPrompt('')
     }
   }
 
   const chatInputProps: ChatInputProps = {
     textareaProps: {
       placeholder: 'Type your message here...',
-      value: prompt[0],
+      value: prompt,
       onChange: event => {
-        prompt[1](event.target.value)
+        setPrompt(event.target.value)
       },
     },
     onMessageSend: sendMessage,
@@ -175,8 +216,9 @@ export const Chat = ({ agents }: ChatProps) => {
     },
     transcriptionProps: {
       onTranscript: event => {
-        prompt[1](prompt[0] + event.target.value)
+        setPrompt(prompt + event.target.value)
       },
+      sendMessage,
     },
   }
 
