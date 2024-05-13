@@ -38,12 +38,13 @@ const fetchUserData = async (userId: string, walletUser: string) => {
 
 const updateUserMetadata = async (
   userId: string,
-  metadata: { mpUser: ProxyUser; walletUser: ProxyUser }
+  metadata: { mpUser: ProxyUser; walletUser: ProxyUser; useWallet: boolean }
 ) => {
   return clerkClient.users.updateUserMetadata(userId, {
     privateMetadata: {
       mpUser: metadata.mpUser,
       walletUser: metadata.walletUser,
+      useWallet: metadata.useWallet,
     },
   })
 }
@@ -55,17 +56,19 @@ export const getFullUser = async (userId: string) => {
       throw new Error('User not found')
     }
 
-    try {
-      const [mpUser, walletUser] = await Promise.all([
-        fetchUserData(userId, 'MP'),
-        fetchUserData(userId, 'WALLET'),
-      ])
+    let [mpUser, walletUser] = await Promise.all([
+      fetchUserData(userId, 'MP'),
+      fetchUserData(userId, 'WALLET'),
+    ])
 
+    try {
       if (mpUser?.customer_identifier && walletUser?.customer_identifier) {
-        await updateUserMetadata(userId, { mpUser, walletUser })
+        const useWallet = mpUser.period_budget - mpUser.total_period_usage <= 0
+
+        await updateUserMetadata(userId, { mpUser, walletUser, useWallet })
       } else {
         try {
-          const mpUser: ProxyUser = await fetch(
+          mpUser = await fetch(
             `${process.env.KEYWORDS_API_URL}/api/users/create/`,
             {
               method: 'POST',
@@ -84,7 +87,7 @@ export const getFullUser = async (userId: string) => {
               throw error
             })
 
-          const walletUser: ProxyUser = await fetch(
+          walletUser = await fetch(
             `${process.env.KEYWORDS_API_URL}/api/users/create/`,
             {
               method: 'POST',
@@ -113,6 +116,7 @@ export const getFullUser = async (userId: string) => {
             privateMetadata: {
               mpUser: mpUser,
               walletUser: walletUser,
+              useWallet: false,
             },
           })
         } catch (error) {
@@ -125,12 +129,14 @@ export const getFullUser = async (userId: string) => {
       if (!customer) {
         throw new Error('Stripe customer not found')
       }
+      const useWallet = mpUser.period_budget - mpUser.total_period_usage <= 0
 
-      return { user, customer }
+      return { user, customer, mpUser, walletUser, useWallet }
     } catch (error) {
       console.error('Error getting user data:', error)
-      throw error
     }
+
+    return { user, customer: null, mpUser, walletUser, useWallet: false }
   } catch (error) {
     console.error('Error getting user:', error)
     throw error
