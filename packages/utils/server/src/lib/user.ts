@@ -1,6 +1,7 @@
 import { clerkClient } from '@clerk/nextjs'
 
 export type ProxyUser = {
+  id: string
   name: string
   customer_identifier: string
   created_at: string
