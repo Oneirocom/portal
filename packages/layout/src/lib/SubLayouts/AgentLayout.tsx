@@ -2,7 +2,6 @@ import React from 'react'
 import { useAtomValue } from 'jotai'
 import { toggleAgentSettingsAtom } from '@magickml/portal-state'
 import clsx from 'clsx'
-import { AgentChatHeader } from '@magickml/portal-chat'
 import { AgentData } from '@magickml/portal-types'
 
 type Props = {
@@ -26,12 +25,6 @@ export const AgentLayout: React.FC<Props> = ({
           toggleAgentSettings ? 'flex-row' : 'flex-col'
         )}
       >
-        <AgentChatHeader
-          agent={agent}
-          isPrivate={!isPublic}
-          className="lg:hidden"
-        />
-
         <div className="flex flex-row w-full h-full pt-12 mx-auto overflow-hidden md:pt-0 grow">
           {children}
         </div>
