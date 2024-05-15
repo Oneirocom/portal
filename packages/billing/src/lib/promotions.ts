@@ -1,6 +1,9 @@
 import { clerkClient } from '@clerk/nextjs/server'
 import { prismaPortal, PromotionType } from '@magickml/portal-db'
 import { Decimal } from '@prisma/client/runtime/library'
+import KeywordsService from 'portal/cloud/packages/utils/server/src/lib/keywords'
+
+const keywordsService = new KeywordsService()
 
 export const makeTrialPromotion = async (userId: string) => {
   const promo = await prismaPortal.promotion.create({
@@ -18,7 +21,39 @@ export const makeTrialPromotion = async (userId: string) => {
     },
   })
 
-  return promo
+  let mpUser = await keywordsService.fetchProxyWallet(`MP_${userId}`)
+
+  if (!mpUser) {
+    mpUser = await keywordsService.createWalletUser(`MP_${userId}`, {
+      period_budget: 2,
+      customer_identifier: `MP_${userId}`,
+      budget_duration: 'monthly',
+    })
+  }
+
+  mpUser = await keywordsService.updateProxyWallet(`MP_${userId}`, {
+    period_budget: 2 + mpUser?.period_budget || 0,
+    budget_duration: 'monthly',
+    period_start: new Date().toISOString(),
+    period_end: new Date(
+      new Date().setDate(new Date().getDate() + 30)
+    ).toISOString(),
+  })
+
+  if (!mpUser?.customer_identifier) {
+    throw new Error('Failed to update user credits with trial promotion')
+  }
+
+  await prismaPortal.promotion.update({
+    where: { id: promo.id },
+    data: { isUsed: true },
+  })
+
+  clerkClient.users.updateUserMetadata(userId, {
+    privateMetadata: {
+      mpUser,
+    },
+  })
 }
 
 export const makeApprenticePromotion = async (userId: string) => {
@@ -57,41 +92,19 @@ export const makeWizardPromotion = async (userId: string) => {
       },
     })
 
-    const mpUser = await fetch(
-      `${process.env.KEYWORDS_API_URL}/api/user/detail/MP_${userId}`,
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${process.env.KEYWORDS_API_KEY}`,
-        },
-      }
-    )
-      .then(res => res.json())
-      .catch(err => {
-        console.error('Error fetching user:', err)
-        throw err
-      })
+    const mpUser = await keywordsService.fetchProxyWallet(`MP_${userId}`)
 
-    const success = await fetch(
-      `${process.env.KEYWORDS_API_URL}/api/user/update/MP_${userId}`,
+    const updatedMpUser = await keywordsService.updateProxyWallet(
+      `MP_${userId}`,
+
       {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${process.env.KEYWORDS_API_KEY}`,
-        },
-        body: JSON.stringify({
-          period_budget: 10 + mpUser?.period_budget || 0,
-        }),
+        period_budget: 10 + mpUser?.period_budget || 0,
+        budget_duration: 'monthly',
+        period_start: new Date().toISOString(),
       }
     )
-      .then(res => res.json())
-      .catch(err => {
-        console.error('Error updating user:', err)
-        throw err
-      })
-    if (!success?.customer_identifier) {
+
+    if (!updatedMpUser?.customer_identifier) {
       throw new Error('Failed to update user credits')
     }
 
@@ -105,7 +118,8 @@ export const makeWizardPromotion = async (userId: string) => {
         subscription: 'WIZARD',
       },
       privateMetadata: {
-        mpUser: success,
+        mpUser: updatedMpUser,
+        useWallet: false,
       },
     })
   } catch (error) {
