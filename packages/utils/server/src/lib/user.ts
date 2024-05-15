@@ -1,4 +1,5 @@
 import { clerkClient } from '@clerk/nextjs'
+import { Decimal } from 'packages/server/db/src/lib/prisma/client-core/runtime/library'
 
 export type ProxyUser = {
   id: string
@@ -79,6 +80,8 @@ export const getFullUser = async (userId: string) => {
               },
               body: JSON.stringify({
                 customer_identifier: `MP_${userId}`,
+                budget_duration: 'monthly',
+                period_budget: new Decimal(2),
               }),
             }
           )
@@ -98,6 +101,8 @@ export const getFullUser = async (userId: string) => {
               },
               body: JSON.stringify({
                 customer_identifier: `WALLET_${userId}`,
+                budget_duration: 'monthly',
+                period_budget: 0,
               }),
             }
           )
