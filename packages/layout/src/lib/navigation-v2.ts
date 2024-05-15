@@ -39,7 +39,7 @@ export const adminNavigation: NavigationV2Item[] = [
   },
   {
     name: 'Chat',
-    href: '/hm',
+    href: '/chat',
     enabled: true,
     Icon: Chat,
   },
