@@ -91,20 +91,20 @@ export const getFullUser = async (userId: string) => {
       fetchUserData(userId, 'WALLET'),
     ])
 
-    if (!mpUser.period_budget || !walletUser.period_budget) {
-      await Promise.all([
-        updateUserData(userId, 'MP', {
-          period_budget: 0,
-        }),
-        updateUserData(userId, 'WALLET', {
-          period_budget: 0,
-        }),
-      ])
-    }
-
     try {
       if (mpUser?.customer_identifier && walletUser?.customer_identifier) {
         const useWallet = mpUser.period_budget - mpUser.total_period_usage <= 0
+
+        if (!mpUser.period_budget || !walletUser.period_budget) {
+          await Promise.all([
+            updateUserData(userId, 'MP', {
+              period_budget: 0,
+            }),
+            updateUserData(userId, 'WALLET', {
+              period_budget: 0,
+            }),
+          ])
+        }
 
         await updateUserMetadata(userId, {
           mpUser,
