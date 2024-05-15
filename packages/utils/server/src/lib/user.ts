@@ -40,12 +40,22 @@ const fetchUserData = async (userId: string, walletUser: string) => {
 
 const updateUserMetadata = async (
   userId: string,
-  metadata: { mpUser: ProxyUser; walletUser: ProxyUser; useWallet: boolean }
+  metadata: {
+    mpUser: ProxyUser
+    walletUser: ProxyUser
+    useWallet: boolean
+  }
 ) => {
   return clerkClient.users.updateUserMetadata(userId, {
     privateMetadata: {
-      mpUser: metadata.mpUser,
-      walletUser: metadata.walletUser,
+      mpUser: {
+        ...metadata.mpUser,
+        period_budget: new Decimal(metadata.mpUser.period_budget || 0),
+      },
+      walletUser: {
+        ...metadata.walletUser,
+        period_budget: new Decimal(metadata.walletUser.period_budget || 0),
+      },
       useWallet: metadata.useWallet,
     },
   })
@@ -67,7 +77,11 @@ export const getFullUser = async (userId: string) => {
       if (mpUser?.customer_identifier && walletUser?.customer_identifier) {
         const useWallet = mpUser.period_budget - mpUser.total_period_usage <= 0
 
-        await updateUserMetadata(userId, { mpUser, walletUser, useWallet })
+        await updateUserMetadata(userId, {
+          mpUser,
+          walletUser,
+          useWallet,
+        })
       } else {
         try {
           mpUser = await fetch(
