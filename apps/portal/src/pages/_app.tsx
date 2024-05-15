@@ -100,13 +100,6 @@ const App = ({
               `${monteserratAlternates.variable} font-sans h-screen`
             )}
           >
-            <Head>
-              <meta
-                title="Maintenance | MagickML"
-                name="viewport"
-                content="initial-scale=1, width=device-width"
-              />
-            </Head>
             <NextThemeProvider attribute="class">
               {process.env.NEXT_PUBLIC_MAINTENANCE_MODE === 'true' ? (
                 <Maintenance mode="cloud" />
