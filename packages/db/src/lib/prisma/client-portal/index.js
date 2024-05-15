@@ -404,7 +404,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/home/coffee/migrate/magick/portal/cloud/packages/db/src/lib/prisma/client-portal",
+      "value": "/home/coffee/Desktop/MAGICK/portal/cloud/packages/db/src/lib/prisma/client-portal",
       "fromEnvVar": null
     },
     "config": {

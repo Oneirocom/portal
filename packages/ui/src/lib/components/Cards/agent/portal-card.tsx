@@ -34,7 +34,7 @@ export const PortalCard: React.FC<PortalCardProps> = ({
             type: ImageType.IMAGE,
           })}
           alt={name ?? 'Placeholder'}
-          className="object- bg-ds-card-alt object-center absolute w-full h-full aspect-square"
+          className="object-cover bg-ds-card-alt object-center absolute w-full h-full aspect-square"
         />
       </div>
       <CardHeader className="p-0 pt-2.5 h-[35%] text-center text-pretty grow">
