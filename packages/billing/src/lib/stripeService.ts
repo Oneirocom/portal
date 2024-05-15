@@ -282,6 +282,7 @@ export class StripeService {
           body: JSON.stringify({
             period_budget: promo.amount.toNumber(),
             customer_identifier: `MP_${userId}`,
+            budget_duration: 'monthly',
           }),
         }
       )
