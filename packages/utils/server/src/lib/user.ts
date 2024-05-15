@@ -38,6 +38,30 @@ const fetchUserData = async (userId: string, walletUser: string) => {
   }
 }
 
+const updateUserData = async (
+  userId: string,
+  walletUser: string,
+  data: any
+) => {
+  try {
+    const response = (await fetch(
+      `${process.env.KEYWORDS_API_URL}/api/user/update/${walletUser}_${userId}`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${process.env.KEYWORDS_API_KEY}`,
+        },
+        body: JSON.stringify(data),
+      }
+    ).then(res => res.json())) as ProxyUser
+    return response
+  } catch (error) {
+    console.error('Error updating user data:', error)
+    throw error
+  }
+}
+
 const updateUserMetadata = async (
   userId: string,
   metadata: {
@@ -48,14 +72,8 @@ const updateUserMetadata = async (
 ) => {
   return clerkClient.users.updateUserMetadata(userId, {
     privateMetadata: {
-      mpUser: {
-        ...metadata.mpUser,
-        period_budget: new Decimal(metadata.mpUser.period_budget || 0),
-      },
-      walletUser: {
-        ...metadata.walletUser,
-        period_budget: new Decimal(metadata.walletUser.period_budget || 0),
-      },
+      mpUser: metadata.mpUser,
+      walletUser: metadata.walletUser,
       useWallet: metadata.useWallet,
     },
   })
@@ -72,6 +90,17 @@ export const getFullUser = async (userId: string) => {
       fetchUserData(userId, 'MP'),
       fetchUserData(userId, 'WALLET'),
     ])
+
+    if (!mpUser.period_budget || !walletUser.period_budget) {
+      await Promise.all([
+        updateUserData(userId, 'MP', {
+          period_budget: 0,
+        }),
+        updateUserData(userId, 'WALLET', {
+          period_budget: 0,
+        }),
+      ])
+    }
 
     try {
       if (mpUser?.customer_identifier && walletUser?.customer_identifier) {
