@@ -5,7 +5,7 @@ import { FunctionComponent, useState } from 'react'
 // import toast from 'react-hot-toast'
 import { SlRefresh } from 'react-icons/sl'
 import { useSession } from '@clerk/nextjs'
-// import { api } from '@magickml/portal-api-client'
+// import { api } from '@magickml/portal-server-provider'
 
 type AgentChatRemixButtonProps = {
   publicAgentId: string

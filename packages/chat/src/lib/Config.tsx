@@ -1,4 +1,4 @@
-import { api } from '@magickml/portal-api-client'
+import { api } from '@magickml/portal-server-provider'
 import Image from 'next/legacy/image'
 import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'

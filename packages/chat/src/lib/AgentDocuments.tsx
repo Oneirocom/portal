@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
-import { api } from '@magickml/portal-api-client'
+import { api } from '@magickml/portal-server-provider'
 import {
   createColumnHelper,
   flexRender,

@@ -2,7 +2,7 @@ import { AgentData } from '@magickml/portal-types'
 import { useState } from 'react'
 import toast from 'react-hot-toast'
 import { Switch, Label } from '@magickml/client-ui'
-import { api } from '@magickml/portal-api-client'
+import { api } from '@magickml/portal-server-provider'
 import { extractAgentData } from '@magickml/portal-utils-shared'
 
 type DiscordSwitchProps = {

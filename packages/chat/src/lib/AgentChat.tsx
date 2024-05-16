@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid'
-import { api } from '@magickml/portal-api-client'
+import { api } from '@magickml/portal-server-provider'
 import { useEffect, useRef, useState } from 'react'
 import { useAtom, useAtomValue } from 'jotai'
 import {

@@ -1,6 +1,6 @@
 // import toast from 'react-hot-toast'
 import { AiOutlineWarning } from 'react-icons/ai'
-// import { api } from '@magickml/portal-api-client'
+// import { api } from '@magickml/portal-server-provider'
 import { useState } from 'react'
 import { Checkbox, Textarea, Button ,MagickDialog} from '@magickml/client-ui'
 

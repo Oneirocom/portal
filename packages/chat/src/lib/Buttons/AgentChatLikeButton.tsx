@@ -3,7 +3,7 @@ import { MagickUnauthorizedDialog,Button } from '@magickml/client-ui'
 import { useRouter } from 'next/router'
 import { FunctionComponent, useState } from 'react'
 import { AiFillHeart } from 'react-icons/ai'
-// import { api } from '@magickml/portal-api-client'
+// import { api } from '@magickml/portal-server-provider'
 import { useSession } from '@clerk/nextjs'
 
 type AgentChatLikeButtonProps = {

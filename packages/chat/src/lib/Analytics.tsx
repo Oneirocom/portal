@@ -1,7 +1,7 @@
 import { agentDataAtom } from '@magickml/portal-state'
 import { useAtomValue } from 'jotai'
 import { ClipboardIcon } from '@heroicons/react/20/solid'
-import { api } from '@magickml/portal-api-client'
+import { api } from '@magickml/portal-server-provider'
 import { useState } from 'react'
 import toast from 'react-hot-toast'
 import { copyToClipboard } from '@magickml/portal-utils-shared'

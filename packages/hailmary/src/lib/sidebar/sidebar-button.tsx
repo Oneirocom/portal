@@ -1,16 +1,16 @@
-'use client';
+'use client'
 
-import React from 'react';
+import React from 'react'
 import {
   Button,
   Tooltip,
   TooltipTrigger,
   TooltipContent,
-} from '@magickml/client-ui';
-import { SidebarProps } from '../types';
-import { useRouter, usePathname } from 'next/navigation';
+} from '@magickml/client-ui'
+import { SidebarProps } from '../types'
+import { useRouter, usePathname } from 'next/navigation'
 import { cn } from '@magickml/client-ui'
-import { isCurrentPage } from '../utils/page-utils';
+import { isCurrentPage } from '../utils/page-utils'
 
 export const SidebarButton: React.FC<SidebarProps['buttons'][number]> = ({
   icon,
@@ -20,8 +20,8 @@ export const SidebarButton: React.FC<SidebarProps['buttons'][number]> = ({
   className,
   ...buttonProps
 }) => {
-  const { push } = useRouter();
-  const pathname = usePathname();
+  const { push } = useRouter()
+  const pathname = usePathname()
 
   return (
     <Tooltip {...tooltipProps}>
@@ -33,14 +33,17 @@ export const SidebarButton: React.FC<SidebarProps['buttons'][number]> = ({
             'rounded-lg hover:bg-primary/50',
             className,
             // rmove any trailing slashes from pathname and href, then compare
-            href && isCurrentPage({ pathname, href }) && 'bg-primary'
+            href &&
+              pathname &&
+              isCurrentPage({ pathname, href }) &&
+              'bg-primary'
           )}
-          onClick={(e) => {
+          onClick={e => {
             if (href) {
-              push(href);
+              push(href)
             }
             if (onClick) {
-              onClick(e);
+              onClick(e)
             }
           }}
           {...buttonProps}
@@ -52,5 +55,5 @@ export const SidebarButton: React.FC<SidebarProps['buttons'][number]> = ({
         {tooltipProps.content}
       </TooltipContent>
     </Tooltip>
-  );
-};
+  )
+}
