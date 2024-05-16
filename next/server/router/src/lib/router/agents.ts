@@ -109,7 +109,7 @@ export const agentsRouter = createTRPCRouter({
       })
       trackServerEvent(
         PrivateEventTypes.AGENT_PRIVATE_DELETE,
-        ctx.auth.user?.emailAddresses[0].emailAddress ?? '',
+        ctx.auth.userId,
         input.agentId
       )
       return deletedAgent
@@ -200,7 +200,7 @@ export const agentsRouter = createTRPCRouter({
 
         trackServerEvent(
           PrivateEventTypes.AGENT_PRIVATE_UPDATE,
-          ctx.auth.user?.emailAddresses[0].emailAddress ?? '',
+          ctx.auth.userId, // todo: make email, this was previously typed weirdly, there is no email here,
           agentIdToUpdate
         )
       }
@@ -289,7 +289,7 @@ export const agentsRouter = createTRPCRouter({
 
       trackServerEvent(
         PrivateEventTypes.AGENT_PRIVATE_MAKE_PUBLIC,
-        ctx.auth.user?.emailAddresses[0].emailAddress ?? '',
+        ctx.auth.userId, // todo: make email, this was previously typed weirdly, there is no email here,
         input.agentId
       )
 
@@ -344,7 +344,7 @@ export const agentsRouter = createTRPCRouter({
 
       trackServerEvent(
         PublicEventTypes.AGENT_PUBLIC_UPDATE,
-        ctx.auth.user?.emailAddresses[0].emailAddress ?? '',
+        ctx.auth.userId, // todo: make email, this was previously typed weirdly, there is no email here,
         input.agentId
       )
 
@@ -395,7 +395,7 @@ export const agentsRouter = createTRPCRouter({
 
       trackServerEvent(
         PublicEventTypes.AGENT_PUBLIC_UPDATE,
-        ctx.auth.user?.emailAddresses[0].emailAddress ?? '',
+        ctx.auth.userId, // todo: make email, this was previously typed weirdly, there is no email here,
         input.agentId
       )
 
