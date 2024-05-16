@@ -1,2 +1,1 @@
-export * from './lib/CustomPostHogProvider'
-export * from './lib/FrigadeProvider'
+export * from './lib/posthog-provider'

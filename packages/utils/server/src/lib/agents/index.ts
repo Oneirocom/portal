@@ -2,10 +2,8 @@ import { prismaPortal } from '@magickml/portal-db'
 import { prismaCore } from '@magickml/server-db'
 import { Session } from 'next-auth'
 import { PublicVariable, AgentDataOld } from '@magickml/portal-types'
-import {
-  type SignedInAuthObject,
-  type SignedOutAuthObject,
-} from '@clerk/clerk-sdk-node'
+import {} from '@clerk/clerk-sdk-node'
+import { getAuth } from '@clerk/nextjs/dist/types/server'
 
 export const getAgentDataSSR = async (
   session: Session | null,
@@ -116,7 +114,7 @@ export const getAgentDataSSR = async (
 }
 
 interface GetAgentDataParams {
-  auth: SignedInAuthObject | SignedOutAuthObject
+  auth: ReturnType<typeof getAuth>
   agentId: string
 }
 

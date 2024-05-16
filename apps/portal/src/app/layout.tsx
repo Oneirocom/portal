@@ -1,18 +1,17 @@
 import { Metadata, Viewport } from 'next'
-
 import { siteConfig } from '@magickml/portal-config'
-import { cn } from '@magickml/client-ui'
 import {
   PortalLayout,
   ThemeProvider,
   fontSans,
 } from '@magickml/portal-layout-next'
 
+/* PROVIDERS */
 import { ClerkProvider } from '@clerk/nextjs'
 import { TRPCReactProvider } from '@magickml/portal-server-provider'
-// import { clerkAppearance } from '../styles/clerk'
+import * as Frigade from '@frigade/react'
 
-/* Styles */
+/* STYLES */
 import '../styles/globals.css'
 import '../../../../../../packages/client/stylesheets/src/App.css'
 import '../../../../../../packages/client/stylesheets/src/design-globals/design-globals.css'
@@ -25,6 +24,11 @@ import '../../../../../../packages/client/stylesheets/src/behaveFlow.css'
 import '../../../../../../packages/client/stylesheets/src/dockview.css'
 import '../../../../../../packages/client/stylesheets/src/flowOverrides.css'
 import 'react-tooltip/dist/react-tooltip.css'
+
+import { auth } from '@clerk/nextjs/server'
+import { cn } from '@magickml/client-ui'
+import { PortalPosthogProvider } from '@magickml/portal-providers'
+
 // import {
 //   CustomPosthogProvider,
 //   FrigadeProvider,
@@ -102,38 +106,47 @@ interface RootLayoutProps {
 }
 
 export default function RootLayout({ children }: RootLayoutProps) {
+  const { userId } = auth()
+
   return (
     <ClerkProvider>
       <TRPCReactProvider>
-        <html lang="en" suppressHydrationWarning>
-          <head />
-          <body
-            className={cn(
-              'min-h-screen bg-background font-sans antialiased w-full',
-              fontSans.variable
-            )}
+        <PortalPosthogProvider>
+          <Frigade.Provider
+            apiKey={process.env.FRIGADE_PRIVATE_KEY || ''}
+            userId={userId || undefined}
           >
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-            >
-              <PortalLayout>{children}</PortalLayout>
-              {/* <div vaul-drawer-wrapper="">
+            <html lang="en" suppressHydrationWarning>
+              <head />
+              <body
+                className={cn(
+                  'min-h-screen bg-background font-sans antialiased w-full',
+                  fontSans.variable
+                )}
+              >
+                <ThemeProvider
+                  attribute="class"
+                  defaultTheme="system"
+                  enableSystem
+                  disableTransitionOnChange
+                >
+                  <PortalLayout>{children}</PortalLayout>
+                  {/* <div vaul-drawer-wrapper="">
                 <div className="relative flex min-h-screen flex-col bg-background">
                   {children}
                 </div>
               </div> */}
-              {/* <TailwindIndicator /> */}
-              {/* <ThemeSwitcher /> */}
-              {/* <Analytics /> */}
-              {/* <NewYorkToaster /> */}
-              {/* <DefaultToaster /> */}
-              {/* <NewYorkSonner /> */}
-            </ThemeProvider>
-          </body>
-        </html>
+                  {/* <TailwindIndicator /> */}
+                  {/* <ThemeSwitcher /> */}
+                  {/* <Analytics /> */}
+                  {/* <NewYorkToaster /> */}
+                  {/* <DefaultToaster /> */}
+                  {/* <NewYorkSonner /> */}
+                </ThemeProvider>
+              </body>
+            </html>
+          </Frigade.Provider>
+        </PortalPosthogProvider>
       </TRPCReactProvider>
     </ClerkProvider>
   )

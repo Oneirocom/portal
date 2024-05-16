@@ -3,6 +3,7 @@ import { PortalHeader } from '../header'
 import PortalFooter from '../footer'
 import { cn } from '@magickml/client-ui'
 import { PortalMobileNav } from '../navigation/mobile-nav'
+// import PageViewer from './page-viewer'
 
 type Props = {
   children: React.ReactNode
@@ -15,6 +16,7 @@ export const MainLayout: React.FC<Props> = ({
 }) => {
   return (
     <>
+      {/* <PageViewer /> */}
       <div className="relative flex flex-col w-full h-screen">
         <PortalHeader />
         <div

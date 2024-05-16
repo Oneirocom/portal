@@ -13,12 +13,7 @@ import superjson from 'superjson'
 import { ZodError } from 'zod'
 import { prismaPortal } from '@magickml/portal-db'
 import { NextApiRequest } from 'next'
-import {
-  getAuth,
-  SignedInAuthObject,
-  SignedOutAuthObject,
-} from '@clerk/nextjs/server'
-import { AuthObjectWithDeprecatedResources } from '@clerk/nextjs/dist/types/server/types'
+import { getAuth } from '@clerk/nextjs/server'
 
 /**
  * 1. CONTEXT
@@ -30,9 +25,7 @@ import { AuthObjectWithDeprecatedResources } from '@clerk/nextjs/dist/types/serv
 
 type CreateContextOptions = {
   req?: NextApiRequest
-  auth:
-    | AuthObjectWithDeprecatedResources<SignedInAuthObject>
-    | AuthObjectWithDeprecatedResources<SignedOutAuthObject>
+  auth: ReturnType<typeof getAuth>
 }
 
 /**
