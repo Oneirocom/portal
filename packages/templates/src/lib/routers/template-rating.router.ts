@@ -1,4 +1,7 @@
-import { createTRPCRouter, protectedProcedure } from '@magickml/portal-server-core'
+import {
+  createTRPCRouter,
+  protectedProcedure,
+} from '@magickml/portal-server-core'
 import { rateTemplateSchema, getTemplateRatingSchema } from '../schemas'
 import { getTemplateRating, rateTemplate } from '../services'
 
