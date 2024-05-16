@@ -169,9 +169,10 @@ module.exports = {
       },
       fontFamily: {
         'libre-baskerville': ['Libre Baskerville'],
-        montAlt: ['var(--font-montserrat-alternates)'],
+        montAlt: ['var(--font-sans)'],
         'berkley-mono': ['Berkley Mono'],
-        montserrat: ['Montserrat'],
+        montserrat: ['--font-alt'],
+        sans: ['var(--font-sans)'],
       },
       listStyleType: {
         alpha: 'lower-alpha',
