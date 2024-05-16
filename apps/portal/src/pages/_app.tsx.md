@@ -21,7 +21,7 @@ import { Montserrat, Montserrat_Alternates } from 'next/font/google'
 
 // state
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import { api } from '@magickml/portal-api-client'
+import { api } from '@magickml/portal-server-provider'
 
 import { StyledToaster } from '@magickml/portal-ui'
 
