@@ -1,5 +1,9 @@
+'use client'
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/router'
+import {
+  //  useRouter,
+  useSearchParams,
+} from 'next/navigation'
 import posthog from 'posthog-js'
 import { PostHogProvider } from 'posthog-js/react'
 import { CookieBanner } from '@magickml/portal-ui'
@@ -11,8 +15,10 @@ type Props = {
 
 export const CustomPosthogProvider = ({ children }: Props) => {
   // get sessionId from query params
-  const router = useRouter()
-  const { sessionId: webflowSessionId } = router.query
+  const query = useSearchParams()
+  // const router = useRouter()
+  const webflowSessionId = query.get('sessionId')
+
   const { isSignedIn, session } = useSession()
   const [showBanner, setShowBanner] = useState(false)
 
@@ -37,15 +43,15 @@ export const CustomPosthogProvider = ({ children }: Props) => {
     }
   }, [webflowSessionId])
 
-  // Track page views with PostHog
-  useEffect(() => {
-    const handleRouteChange = () => posthog.capture('$pageview')
-    router.events.on('routeChangeComplete', handleRouteChange)
+  // // Track page views with PostHog
+  // useEffect(() => {
+  //   const handleRouteChange = () => posthog.capture('$pageview')
+  //   router.events.on('routeChangeComplete', handleRouteChange)
 
-    return () => {
-      router.events.off('routeChangeComplete', handleRouteChange)
-    }
-  }, [router.events])
+  //   return () => {
+  //     router.events.off('routeChangeComplete', handleRouteChange)
+  //   }
+  // }, [router.events])
 
   // Set identity
   useEffect(() => {

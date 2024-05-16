@@ -1,8 +1,10 @@
+"use client"
+
 import { atom, useSetAtom } from 'jotai'
 import { useEffect, ReactNode } from 'react'
 import Cookies from 'js-cookie'
 import { ClientJS } from 'clientjs'
-import { api } from '@magickml/portal-api-client'
+import { api } from '@magickml/portal-server-provider'
 import { useSession } from '@clerk/nextjs'
 
 export const anonymousUserIdAtom = atom<string | null>(null)

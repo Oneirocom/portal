@@ -1,8 +1,10 @@
+'use client'
+
 import {
   FrigadeProvider as FrigadeProviderOG,
   useUser as useFrigadeUser,
 } from '@frigade/react'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import { useUser } from '@clerk/nextjs'
 import { v4 as uuidv4 } from 'uuid'
