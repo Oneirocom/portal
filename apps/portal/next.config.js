@@ -4,10 +4,6 @@ const { PrismaPlugin } = require('@prisma/nextjs-monorepo-workaround-plugin')
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { composePlugins, withNx } = require('@nx/next')
-const withTM = require('next-transpile-modules')([
-  '@magickml/behave-graph',
-  'pdfjs-dist',
-])
 
 /**
  * @type {import('@nx/next/plugins/with-nx').WithNxOptions}
@@ -47,6 +43,7 @@ const nextConfig = {
       },
     ],
   },
+  transpilePackages: ['@magickml/behave-graph'],
   reactStrictMode: false,
   webpack: (config, { isServer }) => {
     if (isServer) {
@@ -60,9 +57,17 @@ const nextConfig = {
     })
 
     config.module.rules.push({
-      test: [/pdfjs-dist\/build\/pdf\.worker\.js$/],
-      type: 'asset/resource',
+      test: /\.js$/,
+      include: /node_modules\/@magickml\/behave-graph/,
+      type: 'javascript/auto',
+      use: {
+        loader: 'babel-loader',
+        options: {
+          presets: ['next/babel'],
+        },
+      },
     })
+
     config.experiments = {
       layers: true,
     }
@@ -71,4 +76,4 @@ const nextConfig = {
   },
 }
 
-module.exports = composePlugins(withNx, withTM)(nextConfig)
+module.exports = composePlugins(withNx)(nextConfig)
