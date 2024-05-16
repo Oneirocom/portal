@@ -3,7 +3,7 @@ import { MainLayout } from '@magickml/portal-layout-next/server'
 
 const AccountPage = () => (
   <MainLayout>
-    <UserProfile path="/account" routing="virtual" />
+    <UserProfile routing="virtual" />
   </MainLayout>
 )
 
