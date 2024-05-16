@@ -28,6 +28,7 @@ import 'react-tooltip/dist/react-tooltip.css'
 import { auth } from '@clerk/nextjs/server'
 import { cn } from '@magickml/client-ui'
 import { PortalPosthogProvider } from '@magickml/portal-providers'
+import React from 'react'
 
 // import {
 //   CustomPosthogProvider,

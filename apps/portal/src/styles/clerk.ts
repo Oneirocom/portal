@@ -1,4 +1,9 @@
-import { type ClerkOptions, type Theme } from '@clerk/types'
+// import { type ClerkOptions, type Theme } from '@clerk/types'
+
+type ClerkOptions = any
+
+type Theme = any
+
 import { buttonVariants, formInputStyles } from '@magickml/client-ui'
 
 const commonText = 'text-ds-black dark:text-ds-white font-montserrat '
@@ -68,7 +73,7 @@ export const clerkAppearance: ClerkOptions['appearance'] = {
       rootBox: 'w-full h-full',
       card: 'w-full shadow-none !p-0 !m-0',
     },
-  }
+  },
   // userProfile: {
   //   elements: {
   //     // ...authTheme.elements,
