@@ -46,7 +46,11 @@ export const projectsRouter = createTRPCRouter({
       })
 
       const newToken = await prepareToken({
-        user: ctx.auth,
+        user: {
+          userId: ctx.auth.userId,
+          user: {},
+          orgId: ctx.auth.orgId || null,
+        },
         projectId: project.id,
       })
 
@@ -90,7 +94,10 @@ export const projectsRouter = createTRPCRouter({
     .mutation(async ({ input, ctx }) => {
       const access = await hasAccess({
         projectId: input.projectId,
-        user: ctx.auth,
+        user: {
+          userId: ctx.auth.userId,
+          orgId: ctx.auth.orgId || null,
+        },
       })
 
       if (!access) {
@@ -112,7 +119,10 @@ export const projectsRouter = createTRPCRouter({
     .mutation(async ({ input, ctx }) => {
       const access = await hasAccess({
         projectId: input.projectId,
-        user: ctx.auth,
+        user: {
+          userId: ctx.auth.userId,
+          orgId: ctx.auth.orgId || null,
+        },
       })
 
       if (!access) {

@@ -1,5 +1,8 @@
 import { z } from 'zod'
-import { createTRPCRouter, protectedProcedure } from '@magickml/portal-server-core'
+import {
+  createTRPCRouter,
+  protectedProcedure,
+} from '@magickml/portal-server-core'
 import { hasAccess } from '../utils/shared'
 import { prismaCore } from '@magickml/server-db'
 
@@ -13,7 +16,10 @@ export const spellRouter = createTRPCRouter({
     )
     .query(async ({ ctx, input }) => {
       const access = await hasAccess({
-        user: ctx.auth,
+        user: {
+          userId: ctx.auth.userId,
+          orgId: ctx.auth.orgId || '',
+        },
         projectId: input.projectId,
       })
 

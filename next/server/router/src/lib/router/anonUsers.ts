@@ -1,5 +1,8 @@
 import { z } from 'zod'
-import { createTRPCRouter, publicProcedure } from '@magickml/portal-server-core'
+import {
+  createTRPCRouter,
+  publicProcedure,
+} from '@magickml/portal-server-core'
 import { prismaPortal } from '@magickml/portal-db'
 import { v4 as uuidv4 } from 'uuid'
 

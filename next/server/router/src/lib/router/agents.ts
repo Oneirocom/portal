@@ -55,7 +55,11 @@ export const agentsRouter = createTRPCRouter({
     .input(z.object({ agentId: z.string(), projectId: z.string() }))
     .query(async ({ input, ctx }) => {
       const newToken = await prepareToken({
-        user: ctx.auth,
+        user: {
+          userId: ctx.auth.userId,
+          orgId: ctx.auth.orgId || null,
+          user: {},
+        },
         projectId: input.projectId,
       })
       const agents = await fetchAgentAnalytics({
@@ -91,7 +95,11 @@ export const agentsRouter = createTRPCRouter({
     .input(z.object({ agentId: z.string(), projectId: z.string() }))
     .mutation(async ({ input, ctx }) => {
       const token = await prepareToken({
-        user: ctx.auth,
+        user: {
+          userId: ctx.auth.userId,
+          orgId: ctx.auth.orgId || null,
+          user: {},
+        },
         projectId: input.projectId,
       })
       const deletedAgent = await deleteAgent({
@@ -128,7 +136,10 @@ export const agentsRouter = createTRPCRouter({
 
       const access = await hasAccess({
         projectId: agent.projectId,
-        user: ctx.auth,
+        user: {
+          userId: ctx.auth.userId,
+          orgId: ctx.auth.orgId || null,
+        },
       })
 
       if (!access) {
@@ -170,7 +181,10 @@ export const agentsRouter = createTRPCRouter({
 
       const access = await hasAccess({
         projectId: agent.projectId,
-        user: ctx.auth,
+        user: {
+          userId: ctx.auth.userId,
+          orgId: ctx.auth.orgId || null,
+        },
       })
 
       if (!access) {
@@ -226,7 +240,10 @@ export const agentsRouter = createTRPCRouter({
 
       const access = await hasAccess({
         projectId: a.projectId,
-        user: ctx.auth,
+        user: {
+          userId: ctx.auth.userId,
+          orgId: ctx.auth.orgId || null,
+        },
       })
 
       if (!access) {
@@ -303,7 +320,10 @@ export const agentsRouter = createTRPCRouter({
 
       const access = await hasAccess({
         projectId: a.projectId,
-        user: ctx.auth,
+        user: {
+          userId: ctx.auth.userId,
+          orgId: ctx.auth.orgId || null,
+        },
       })
 
       if (!access) {
@@ -354,7 +374,10 @@ export const agentsRouter = createTRPCRouter({
 
       const access = await hasAccess({
         projectId: a.projectId,
-        user: ctx.auth,
+        user: {
+          userId: ctx.auth.userId,
+          orgId: ctx.auth.orgId || null,
+        },
       })
 
       if (!access) {
@@ -400,7 +423,10 @@ export const agentsRouter = createTRPCRouter({
 
       const access = await hasAccess({
         projectId: a.projectId,
-        user: ctx.auth,
+        user: {
+          userId: ctx.auth.userId,
+          orgId: ctx.auth.orgId || null,
+        },
       })
 
       if (!access) {

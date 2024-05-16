@@ -1,4 +1,7 @@
-import { createTRPCRouter, publicProcedure } from '@magickml/portal-server-core'
+import {
+  createTRPCRouter,
+  publicProcedure,
+} from '@magickml/portal-server-core'
 import { clerkClient } from '@clerk/nextjs'
 import { z } from 'zod'
 

@@ -1,6 +1,9 @@
 import { z } from 'zod'
 
-import { createTRPCRouter, protectedProcedure } from '@magickml/portal-server-core'
+import {
+  createTRPCRouter,
+  protectedProcedure,
+} from '@magickml/portal-server-core'
 
 import jwt from 'jsonwebtoken'
 

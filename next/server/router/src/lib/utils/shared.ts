@@ -1,9 +1,13 @@
 import { encode } from 'next-auth/jwt'
 import { prismaPortal } from '@magickml/portal-db'
-import { type SignedInAuthObject } from '@clerk/clerk-sdk-node'
 
 interface PrepareTokenParams {
-  user: SignedInAuthObject
+  // user: SignedInAuthObject | DuctTape
+  user: {
+    userId: string
+    user: any
+    orgId: string | null
+  }
   projectId: string
 }
 
@@ -36,7 +40,10 @@ export async function prepareToken(
 }
 
 interface HasAccessParams {
-  user: SignedInAuthObject
+  user: {
+    userId: string
+    orgId: string | null
+  }
   projectId: string
 }
 

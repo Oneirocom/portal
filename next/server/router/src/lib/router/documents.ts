@@ -1,5 +1,8 @@
 import { z } from 'zod'
-import { createTRPCRouter, protectedProcedure } from '@magickml/portal-server-core'
+import {
+  createTRPCRouter,
+  protectedProcedure,
+} from '@magickml/portal-server-core'
 import { hasAccess, prepareToken } from '../utils/shared'
 import { prismaCore } from '@magickml/server-db'
 
@@ -18,7 +21,10 @@ export const documentsRouter = createTRPCRouter({
     .input(z.object({ projectId: z.string() }))
     .query(async ({ input, ctx }) => {
       const access = await hasAccess({
-        user: ctx.auth,
+        user: {
+          userId: ctx.auth.userId,
+          orgId: ctx.auth.orgId || '',
+        },
         projectId: input.projectId,
       })
 
@@ -58,7 +64,11 @@ export const documentsRouter = createTRPCRouter({
       const { documentId, updateData, projectId } = input
 
       const newToken = await prepareToken({
-        user: ctx.auth,
+        user: {
+          userId: ctx.auth.userId,
+          orgId: ctx.auth.orgId || null,
+          user: {},
+        },
         projectId,
       })
 
@@ -78,7 +88,11 @@ export const documentsRouter = createTRPCRouter({
     .input(z.object({ documentId: z.string(), projectId: z.string() }))
     .mutation(async ({ input, ctx }) => {
       const newToken = await prepareToken({
-        user: ctx.auth,
+        user: {
+          userId: ctx.auth.userId,
+          orgId: ctx.auth.orgId || null,
+          user: {},
+        },
         projectId: input.projectId,
       })
       await deleteDocument({

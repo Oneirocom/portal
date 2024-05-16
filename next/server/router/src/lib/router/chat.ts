@@ -1,5 +1,9 @@
 import { z } from 'zod'
-import { createTRPCRouter, protectedProcedure, publicProcedure } from '@magickml/portal-server-core'
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from '@magickml/portal-server-core'
 import { hasAccess } from '../utils/shared'
 import { trackServerEvent } from '@magickml/portal-utils-server'
 import {
@@ -35,7 +39,10 @@ export const chatRouter = createTRPCRouter({
 
       try {
         const access = await hasAccess({
-          user: ctx.auth,
+          user: {
+            userId: ctx.auth.userId,
+            orgId: ctx.auth.orgId || null,
+          },
           projectId: project.projectId,
         })
 
@@ -73,7 +80,6 @@ export const chatRouter = createTRPCRouter({
 
       return ''
     }),
-
 
   publicChat: publicProcedure
     .input(
@@ -135,7 +141,10 @@ export const chatRouter = createTRPCRouter({
         }
 
         const access = hasAccess({
-          user: ctx.auth,
+          user: {
+            userId: ctx.auth.userId,
+            orgId: ctx.auth.orgId || '',
+          },
           projectId: agent.projectId,
         })
 

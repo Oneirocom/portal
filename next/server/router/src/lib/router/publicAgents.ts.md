@@ -6,49 +6,50 @@ import { createAgent, createSpell } from '@magickml/portal-utils-server'
 import { trackServerEvent } from '@magickml/portal-utils-server'
 import { PublicEventTypes } from '@magickml/portal-utils-shared'
 import {
-  getInfinitePublicAgents,
-  paginateItems,
+getInfinitePublicAgents,
+paginateItems,
 } from '@magickml/portal-utils-server'
 
 function sanitizeAgentData(agentData: string): object {
-  try {
-    const cleanData: any = {}
-    for (const [key, value] of Object.entries(JSON.parse(agentData))) {
-      if (!key.includes('api_key')) {
-        cleanData[key] = value
-      }
-    }
+try {
+const cleanData: any = {}
+for (const [key, value] of Object.entries(JSON.parse(agentData))) {
+if (!key.includes('api_key')) {
+cleanData[key] = value
+}
+}
 
     return cleanData as object
-  } catch (e) {
-    console.error('AgentData Parse Error', agentData)
-    return {}
-  }
+
+} catch (e) {
+console.error('AgentData Parse Error', agentData)
+return {}
+}
 }
 
 export const publicAgentsRouter = createTRPCRouter({
-  reportAgent: publicProcedure
-    .input(z.object({ publicAgentId: z.string(), message: z.string() }))
-    .mutation(async ({ input }) => {
-      await prisma.reports.create({
-        data: {
-          publicAgentId: input.publicAgentId,
-          message: input.message,
-        },
-      })
+reportAgent: publicProcedure
+.input(z.object({ publicAgentId: z.string(), message: z.string() }))
+.mutation(async ({ input }) => {
+await prisma.reports.create({
+data: {
+publicAgentId: input.publicAgentId,
+message: input.message,
+},
+})
 
       return { success: true }
     }),
 
-  likeAgent: protectedProcedure
-    .input(z.object({ publicAgentId: z.string() }))
-    .mutation(async ({ ctx, input }) => {
-      await prisma.likes.create({
-        data: {
-          userId: ctx.session.user.id,
-          publicAgentId: input.publicAgentId,
-        },
-      })
+likeAgent: protectedProcedure
+.input(z.object({ publicAgentId: z.string() }))
+.mutation(async ({ ctx, input }) => {
+await prisma.likes.create({
+data: {
+userId: ctx.session.user.id,
+publicAgentId: input.publicAgentId,
+},
+})
 
       trackServerEvent(
         PublicEventTypes.AGENT_PUBLIC_LIKE,
@@ -58,17 +59,17 @@ export const publicAgentsRouter = createTRPCRouter({
       return { success: true }
     }),
 
-  unlikeAgent: protectedProcedure
-    .input(z.object({ publicAgentId: z.string() }))
-    .mutation(async ({ ctx, input }) => {
-      await prisma.likes.delete({
-        where: {
-          userId_publicAgentId: {
-            userId: ctx.session.user.id,
-            publicAgentId: input.publicAgentId,
-          },
-        },
-      })
+unlikeAgent: protectedProcedure
+.input(z.object({ publicAgentId: z.string() }))
+.mutation(async ({ ctx, input }) => {
+await prisma.likes.delete({
+where: {
+userId_publicAgentId: {
+userId: ctx.session.user.id,
+publicAgentId: input.publicAgentId,
+},
+},
+})
 
       trackServerEvent(
         PublicEventTypes.AGENT_PUBLIC_UNLIKE,
@@ -78,114 +79,116 @@ export const publicAgentsRouter = createTRPCRouter({
       return { success: true }
     }),
 
-  addComment: protectedProcedure
-    .input(
-      z.object({
-        publicAgentId: z.string(),
-        content: z.string().nonempty(),
-      })
-    )
-    .mutation(async ({ ctx, input }) => {
-      const newComment = await prisma.comments.create({
-        data: {
-          userId: ctx.session.user.id,
-          publicAgentId: input.publicAgentId,
-          content: input.content,
-        },
-      })
+addComment: protectedProcedure
+.input(
+z.object({
+publicAgentId: z.string(),
+content: z.string().nonempty(),
+})
+)
+.mutation(async ({ ctx, input }) => {
+const newComment = await prisma.comments.create({
+data: {
+userId: ctx.session.user.id,
+publicAgentId: input.publicAgentId,
+content: input.content,
+},
+})
 
       return { comment: newComment }
     }),
 
-  getPublicAgents: publicProcedure.query(async () => {
-    const publicAgents = await prisma.agents.findMany({
-      where: {
-        isPublic: true,
-        enabled: true,
-      },
-      select: {
-        commentsCount: true,
-        creatorName: true,
-        creatorImage: true,
-        enabled: true,
-        likesCount: true,
-        name: true,
-        image: true,
-        id: true,
-        publicAgentId: true,
-        description: true,
-      },
-      orderBy: {
-        likesCount: 'desc',
-      },
-    })
+getPublicAgents: publicProcedure.query(async () => {
+const publicAgents = await prisma.agents.findMany({
+where: {
+isPublic: true,
+enabled: true,
+},
+select: {
+commentsCount: true,
+creatorName: true,
+creatorImage: true,
+enabled: true,
+likesCount: true,
+name: true,
+image: true,
+id: true,
+publicAgentId: true,
+description: true,
+},
+orderBy: {
+likesCount: 'desc',
+},
+})
 
     if (!publicAgents) {
       return []
     }
 
     return publicAgents
-  }),
 
-  getFeaturedAgents: publicProcedure.query(async () => {
-    const publicAgents = await prisma.agents.findMany({
-      where: {
-        isPublic: true,
-        enabled: true,
-        featured: true,
-      },
-      select: {
-        commentsCount: true,
-        creatorName: true,
-        creatorImage: true,
-        creatorId: true,
-        enabled: true,
-        likesCount: true,
-        name: true,
-        image: true,
-        id: true,
-        publicAgentId: true,
-        description: true,
-      },
-      orderBy: {
-        likesCount: 'desc',
-      },
-    })
+}),
+
+getFeaturedAgents: publicProcedure.query(async () => {
+const publicAgents = await prisma.agents.findMany({
+where: {
+isPublic: true,
+enabled: true,
+featured: true,
+},
+select: {
+commentsCount: true,
+creatorName: true,
+creatorImage: true,
+creatorId: true,
+enabled: true,
+likesCount: true,
+name: true,
+image: true,
+id: true,
+publicAgentId: true,
+description: true,
+},
+orderBy: {
+likesCount: 'desc',
+},
+})
 
     if (!publicAgents) {
       return []
     }
 
     return publicAgents
-  }),
 
-  getPublicAgentsByIds: publicProcedure
-    .input(z.object({ ids: z.array(z.string()) }))
-    .query(async ({ input }) => {
-      const publicAgents = await prisma.agents.findMany({
-        where: {
-          isPublic: true,
-          enabled: true,
-          publicAgentId: {
-            in: input.ids,
-          },
-        },
-        select: {
-          commentsCount: true,
-          creatorName: true,
-          creatorImage: true,
-          enabled: true,
-          likesCount: true,
-          name: true,
-          image: true,
-          id: true,
-          publicAgentId: true,
-          description: true,
-        },
-        orderBy: {
-          likesCount: 'desc',
-        },
-      })
+}),
+
+getPublicAgentsByIds: publicProcedure
+.input(z.object({ ids: z.array(z.string()) }))
+.query(async ({ input }) => {
+const publicAgents = await prisma.agents.findMany({
+where: {
+isPublic: true,
+enabled: true,
+publicAgentId: {
+in: input.ids,
+},
+},
+select: {
+commentsCount: true,
+creatorName: true,
+creatorImage: true,
+enabled: true,
+likesCount: true,
+name: true,
+image: true,
+id: true,
+publicAgentId: true,
+description: true,
+},
+orderBy: {
+likesCount: 'desc',
+},
+})
 
       if (!publicAgents) {
         return []
@@ -201,29 +204,30 @@ export const publicAgentsRouter = createTRPCRouter({
 
       return sanitizedAgents
     }),
-  getTemplateAgents: publicProcedure.query(async () => {
-    const publicAgents = await prisma.agents.findMany({
-      where: {
-        isPublic: true,
-        enabled: true,
-        isTemplate: true,
-      },
-      select: {
-        commentsCount: true,
-        creatorName: true,
-        creatorImage: true,
-        enabled: true,
-        likesCount: true,
-        name: true,
-        image: true,
-        id: true,
-        publicAgentId: true,
-        description: true,
-      },
-      orderBy: {
-        likesCount: 'desc',
-      },
-    })
+
+getTemplateAgents: publicProcedure.query(async () => {
+const publicAgents = await prisma.agents.findMany({
+where: {
+isPublic: true,
+enabled: true,
+isTemplate: true,
+},
+select: {
+commentsCount: true,
+creatorName: true,
+creatorImage: true,
+enabled: true,
+likesCount: true,
+name: true,
+image: true,
+id: true,
+publicAgentId: true,
+description: true,
+},
+orderBy: {
+likesCount: 'desc',
+},
+})
 
     if (!publicAgents) {
       return []
@@ -234,31 +238,32 @@ export const publicAgentsRouter = createTRPCRouter({
       likesCount: Number(agent.likesCount),
       commentsCount: Number(agent.commentsCount),
     }))
-  }),
 
-  getRemixableAgents: protectedProcedure.query(async () => {
-    const remixableAgents = await prisma.agents.findMany({
-      where: {
-        isPublic: true,
-        remixable: true,
-        isTemplate: false,
-      },
-      select: {
-        commentsCount: true,
-        creatorName: true,
-        creatorImage: true,
-        enabled: true,
-        likesCount: true,
-        name: true,
-        image: true,
-        id: true,
-        publicAgentId: true,
-        description: true,
-      },
-      orderBy: {
-        likesCount: 'desc',
-      },
-    })
+}),
+
+getRemixableAgents: protectedProcedure.query(async () => {
+const remixableAgents = await prisma.agents.findMany({
+where: {
+isPublic: true,
+remixable: true,
+isTemplate: false,
+},
+select: {
+commentsCount: true,
+creatorName: true,
+creatorImage: true,
+enabled: true,
+likesCount: true,
+name: true,
+image: true,
+id: true,
+publicAgentId: true,
+description: true,
+},
+orderBy: {
+likesCount: 'desc',
+},
+})
 
     if (!remixableAgents) {
       return []
@@ -269,31 +274,32 @@ export const publicAgentsRouter = createTRPCRouter({
       likesCount: Number(agent.likesCount),
       commentsCount: Number(agent.commentsCount),
     }))
-  }),
 
-  getPublicAgent: publicProcedure
-    .input(z.object({ agentId: z.string() }))
-    .query(async ({ input }) => {
-      const publicAgent = await prisma.agents.findFirst({
-        where: {
-          id: input.agentId,
-          isPublic: true,
-          enabled: true,
-        },
-        select: {
-          commentsCount: true,
-          creatorName: true,
-          creatorImage: true,
-          enabled: true,
-          likesCount: true,
-          name: true,
-          image: true,
-          id: true,
-          publicAgentId: true,
-          description: true,
-          remixable: true,
-        },
-      })
+}),
+
+getPublicAgent: publicProcedure
+.input(z.object({ agentId: z.string() }))
+.query(async ({ input }) => {
+const publicAgent = await prisma.agents.findFirst({
+where: {
+id: input.agentId,
+isPublic: true,
+enabled: true,
+},
+select: {
+commentsCount: true,
+creatorName: true,
+creatorImage: true,
+enabled: true,
+likesCount: true,
+name: true,
+image: true,
+id: true,
+publicAgentId: true,
+description: true,
+remixable: true,
+},
+})
 
       if (!publicAgent) {
         throw new Error('Agent not found')
@@ -302,44 +308,45 @@ export const publicAgentsRouter = createTRPCRouter({
       return publicAgent
     }),
 
-  getLikedPublicAgents: protectedProcedure.query(async ({ ctx }) => {
-    const likedPublicAgents = await prisma.likes.findMany({
-      where: {
-        userId: ctx.session.user.id,
-      },
-      select: {
-        publicAgentId: true,
-      },
-    })
+getLikedPublicAgents: protectedProcedure.query(async ({ ctx }) => {
+const likedPublicAgents = await prisma.likes.findMany({
+where: {
+userId: ctx.session.user.id,
+},
+select: {
+publicAgentId: true,
+},
+})
 
     if (!likedPublicAgents) {
       return []
     }
 
     return likedPublicAgents
-  }),
 
-  remix: protectedProcedure
-    .input(
-      z.object({
-        publicAgentId: z.string(),
-        workspaceId: z.string(),
-        name: z.string(),
-      })
-    )
-    .mutation(async ({ ctx, input }) => {
-      const agent = await prisma.agents.findFirst({
-        where: {
-          publicAgentId: input.publicAgentId,
-        },
-        select: {
-          data: true,
-          name: true,
-          version: true,
-          rootSpellId: true,
-          projectId: true,
-        },
-      })
+}),
+
+remix: protectedProcedure
+.input(
+z.object({
+publicAgentId: z.string(),
+workspaceId: z.string(),
+name: z.string(),
+})
+)
+.mutation(async ({ ctx, input }) => {
+const agent = await prisma.agents.findFirst({
+where: {
+publicAgentId: input.publicAgentId,
+},
+select: {
+data: true,
+name: true,
+version: true,
+rootSpellId: true,
+projectId: true,
+},
+})
 
       const isV2 = agent?.version === '2.0'
 
@@ -482,18 +489,19 @@ export const publicAgentsRouter = createTRPCRouter({
       }
     }),
 
-  getInfinite: publicProcedure
-    .input(
-      z.object({ limit: z.number().optional(), cursor: z.string().optional() })
-    )
-    .query(async opts => {
-      const { input } = opts
-      const limit = input.limit ?? 10
-      const { cursor } = input
+getInfinite: publicProcedure
+.input(
+z.object({ limit: z.number().optional(), cursor: z.string().optional() })
+)
+.query(async opts => {
+const { input } = opts
+const limit = input.limit ?? 10
+const { cursor } = input
 
       const fetchedItems = await getInfinitePublicAgents({ limit, cursor })
       const result = paginateItems(fetchedItems, limit)
 
       return result
     }),
+
 })
