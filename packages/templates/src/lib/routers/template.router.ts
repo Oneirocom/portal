@@ -4,7 +4,7 @@ import {
   publicProcedure,
 } from '@magickml/portal-server-core'
 import { prismaPortal, TemplateType } from '@magickml/portal-db'
-import { clerkClient } from '@clerk/nextjs'
+import { clerkClient } from '@clerk/nextjs/server'
 import {
   findTemplatesSchema,
   createTemplateSchema,

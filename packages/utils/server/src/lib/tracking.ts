@@ -56,5 +56,5 @@ export const trackServerEvent = async (
 }
 
 export const shutdownPostHog = async () => {
-  await client.shutdownAsync()
+  await client.shutdown()
 }

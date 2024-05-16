@@ -1,4 +1,4 @@
-import { clerkClient } from '@clerk/nextjs'
+import { clerkClient } from '@clerk/nextjs/server'
 import { Decimal } from 'packages/server/db/src/lib/prisma/client-core/runtime/library'
 
 export type ProxyUser = {

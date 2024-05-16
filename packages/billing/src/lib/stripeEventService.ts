@@ -1,5 +1,5 @@
 import Stripe from 'stripe'
-import { clerkClient } from '@clerk/nextjs'
+import { clerkClient } from '@clerk/nextjs/server'
 import { makeWizardPromotion, makeApprenticePromotion } from './promotions'
 import { PortalSubscriptions } from '@magickml/portal-utils-shared'
 import { buffer } from 'micro'

@@ -1,4 +1,4 @@
-import { clerkClient } from '@clerk/nextjs'
+import { clerkClient } from '@clerk/nextjs/server'
 import { prismaPortal, PromotionType } from '@magickml/portal-db'
 import { Decimal } from '@prisma/client/runtime/library'
 

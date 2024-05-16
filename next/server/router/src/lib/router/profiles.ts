@@ -1,8 +1,5 @@
-import {
-  createTRPCRouter,
-  publicProcedure,
-} from '@magickml/portal-server-core'
-import { clerkClient } from '@clerk/nextjs'
+import { createTRPCRouter, publicProcedure } from '@magickml/portal-server-core'
+import { clerkClient } from '@clerk/nextjs/server'
 import { z } from 'zod'
 
 const findProfileInputSchema = z.object({
