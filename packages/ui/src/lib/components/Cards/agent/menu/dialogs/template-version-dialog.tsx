@@ -1,4 +1,6 @@
-import { api } from '@magickml/portal-api-client'
+'use client'
+
+import { api } from '@magickml/portal-server-provider'
 import toast from 'react-hot-toast'
 import { PortalDialog } from '@magickml/client-ui'
 

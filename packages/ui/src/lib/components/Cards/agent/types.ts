@@ -1,4 +1,4 @@
-import type { RouterOutputs } from '@magickml/portal-api-client'
+import type { RouterOutputs } from '@magickml/portal-server-provider'
 import type { ReactNode } from 'react'
 
 /* Base Portal Card Props */

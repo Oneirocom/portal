@@ -1,3 +1,5 @@
+'use client'
+
 import { useRef, useState } from 'react'
 import { PortalCard } from './portal-card'
 import { AgentCardFooter } from './agent-card-footer'
@@ -7,8 +9,11 @@ import { CreateAgentDialog } from './menu/dialogs/create-agent-dialog'
 import { TemplateCardMenu } from './menu/template-card-menu'
 import { useUser } from '@clerk/nextjs'
 import { AgentCardBadge } from './components/agent-card-badge'
+import { useRouter } from 'next/navigation'
 
 export const TemplateCard: React.FC<TemplateCardProps> = props => {
+  const router = useRouter()
+
   const { createdAt: versionDate, version } = props.templateVersions[0] || {}
   const { user, isSignedIn } = useUser()
   const isAdmin = (role: unknown) => role === 'ADMIN'
@@ -55,7 +60,8 @@ export const TemplateCard: React.FC<TemplateCardProps> = props => {
   > = e => {
     e.preventDefault()
     if (!window) return
-    window.open(`/templates/${props.id}`, '_blank')
+    // window.open(`/templates/${props.id}`, '_blank')
+    router.push(`/templates/${props.id}`)
   }
 
   // If the template has was created in the past 3 days, show bade with text "NEW"

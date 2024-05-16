@@ -2,7 +2,7 @@ import React, { ChangeEvent, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Button, Input, DatePicker } from '@magickml/client-ui'
 import clsx from 'clsx'
-import { api } from '@magickml/portal-api-client'
+import { api } from '@magickml/portal-server-provider'
 import toast from 'react-hot-toast'
 import {
   OnboardingFormData,

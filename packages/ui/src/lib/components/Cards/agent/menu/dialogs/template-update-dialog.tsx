@@ -1,5 +1,7 @@
+'use client'
+
 import { useState } from 'react'
-import { api } from '@magickml/portal-api-client'
+import { api } from '@magickml/portal-server-provider'
 import toast from 'react-hot-toast'
 import {
   PortalDialog,

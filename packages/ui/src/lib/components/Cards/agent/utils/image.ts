@@ -1,4 +1,4 @@
-import type { RouterInputs } from '@magickml/portal-api-client'
+import type { RouterInputs } from '@magickml/portal-server-provider'
 
 export enum PublicPresignType {
   projectAvatar = 'projectAvatar',

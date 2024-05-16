@@ -1,6 +1,8 @@
+'use client'
+
 import React, { useState } from 'react'
 import { InputWithLabel, PortalDialog } from '@magickml/client-ui'
-import { api } from '@magickml/portal-api-client'
+import { api } from '@magickml/portal-server-provider'
 import toast from 'react-hot-toast'
 
 type CreateAgentDialogProps = {

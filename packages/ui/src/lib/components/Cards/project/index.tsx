@@ -1,3 +1,5 @@
+'use client'
+
 import { Fragment, FunctionComponent, ReactNode, useState } from 'react'
 import Image from 'next/legacy/image'
 import Link from 'next/link'
@@ -5,7 +7,7 @@ import { useTheme } from 'next-themes'
 import { EllipsisVerticalIcon } from '@heroicons/react/24/solid'
 import { motion } from 'framer-motion'
 import toast from 'react-hot-toast'
-import { api } from '@magickml/portal-api-client'
+import { api } from '@magickml/portal-server-provider'
 import clsx from 'clsx'
 import { Dialog, Menu, Transition } from '@headlessui/react'
 

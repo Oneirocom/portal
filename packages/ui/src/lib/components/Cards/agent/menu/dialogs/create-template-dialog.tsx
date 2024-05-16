@@ -1,7 +1,9 @@
+'use client'
+
 import { useState } from 'react'
-import { api, RouterInputs } from '@magickml/portal-api-client'
+import { api, RouterInputs } from '@magickml/portal-server-provider'
 import toast from 'react-hot-toast'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 import {
   PortalDialog,
   InputWithLabel,

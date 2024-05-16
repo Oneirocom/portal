@@ -1,3 +1,5 @@
+'use client'
+
 import { useRef, useState } from 'react'
 import { PortalCard } from './portal-card'
 import { AgentCardMenu } from './menu/agent-card-menu'
