@@ -15,6 +15,7 @@ export default authMiddleware({
     '/api/billing/sync',
     '/subscribe',
     'templates/(.*)',
+    '/api/trpc/templates.find',
   ],
   ignoredRoutes: [
     '/api/magick',

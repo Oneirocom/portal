@@ -1,6 +1,7 @@
 import {
   createTRPCRouter,
   protectedProcedure,
+  publicProcedure,
 } from '@magickml/portal-server-core'
 import { prismaPortal, TemplateType } from '@magickml/portal-db'
 import { clerkClient } from '@clerk/nextjs'
@@ -16,7 +17,7 @@ import { z } from 'zod'
 import { publicPresigner } from 'server-storage'
 
 export const templatesRouter = createTRPCRouter({
-  find: protectedProcedure
+  find: publicProcedure
     .input(findTemplatesSchema)
     .query(async ({ input, ctx }) => {
       const { type, self } = input
