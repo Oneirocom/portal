@@ -16,6 +16,8 @@ export default authMiddleware({
     '/subscribe',
     'templates/(.*)',
     '/api/trpc/templates.find',
+    '/templates/(.*)',
+    `/templates`,
   ],
   ignoredRoutes: [
     '/api/magick',
@@ -23,8 +25,6 @@ export default authMiddleware({
     '/api/magick/budget/get_budget',
     '/api/magick/user',
     '/api/magick/user(.*)',
-    '/templates/(.*)',
-    `/templates`,
   ],
 })
 
