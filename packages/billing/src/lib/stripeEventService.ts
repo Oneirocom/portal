@@ -131,9 +131,6 @@ class StripeEventHandler {
               period_budget: parsedAmount,
               budget_duration: 'monthly',
               period_start: new Date().toISOString(),
-              period_end: new Date(
-                new Date().setDate(new Date().getDate() + 30)
-              ).toISOString(),
             }
           )
 
