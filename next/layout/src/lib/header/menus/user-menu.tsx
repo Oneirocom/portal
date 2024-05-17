@@ -47,7 +47,7 @@ export const UserMenu = () => {
     signOut().then(() => {
       Cookies.remove('workspace')
       utils.invalidate()
-      router.push('/')
+      router.push('/templates')
       toast.success('See you soon!')
     })
   }
