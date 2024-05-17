@@ -1,8 +1,8 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
 
 const isPublicRoute = createRouteMatcher([
-  '/auth/sign-in',
-  '/auth/sign-up',
+  '/sign-in(.*)',
+  '/sign-up(.*)',
   '/auth/verify',
   '/terms',
   '/privacy',
@@ -16,6 +16,7 @@ const isPublicRoute = createRouteMatcher([
   '/api/trpc/templates.find',
   '/templates/(.*)',
   '/templates',
+  '/',
 ])
 
 const isIgnoredRoute = createRouteMatcher([
@@ -41,14 +42,14 @@ export default clerkMiddleware(
 )
 
 export const config = {
-  matcher: ['/(.*)'], // temp match all
-  // '/((?!.+\\.[\\w]+$|_next).*)',
-  // '/',
-  // '/(api|trpc)(.*)',
-  // '/agents(.*)',
-  // '/projects(.*)',
-  // '/account(.*)',
-  // '/billing(.*)',
-  // '/templates(.*)', // Ensure /templates and its subroutes are matched
-  // ],
+  matcher: [
+    '/((?!.*\\..*|_next).*)',
+    '/',
+    '/(api|trpc)(.*)',
+    '/agents(.*)',
+    '/projects(.*)',
+    '/account(.*)',
+    '/billing(.*)',
+    '/templates(.*)',
+  ],
 }
