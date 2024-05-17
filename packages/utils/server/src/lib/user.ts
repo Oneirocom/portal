@@ -1,4 +1,4 @@
-import { clerkClient } from '@clerk/nextjs'
+import { clerkClient } from '@clerk/clerk-sdk-node'
 import KeywordsService from './keywords'
 
 export const getFullUser = async (userId: string) => {
@@ -8,7 +8,7 @@ export const getFullUser = async (userId: string) => {
     if (!user) throw new Error('User not found')
 
     let { mpUser, walletUser } = await keywordsService.fetchProxyWallets(userId)
-    if (!mpUser || !walletUser) {
+    if (!mpUser?.customer_identifier || !walletUser?.customer_identifier) {
       const userData = await keywordsService.createWalletUsers(userId)
       mpUser = userData.mpUser
       walletUser = userData.walletUser
