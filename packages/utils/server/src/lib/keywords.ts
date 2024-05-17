@@ -1,4 +1,4 @@
-import { clerkClient } from '@clerk/nextjs'
+import { clerkClient } from '@clerk/clerk-sdk-node'
 import { groupModelsByProvider } from 'servicesShared'
 
 export type ProxyUser = {
@@ -86,6 +86,10 @@ class KeywordsService {
         ) as Promise<ProxyUser>,
       ])
 
+      if (!mpUser.period_end || !walletUser.period_end) {
+        await this.ensurePeriodBudget({ mpUser, walletUser })
+      }
+
       if (mpUser.customer_identifier && walletUser.customer_identifier) {
         return { mpUser, walletUser }
       }
@@ -156,29 +160,29 @@ class KeywordsService {
     walletUser: ProxyUser
   }) {
     try {
-      if (!mpUser.period_budget || !walletUser.period_budget) {
-        await Promise.all([
-          fetch(
-            `${this.apiUrl}/api/user/update/${mpUser.customer_identifier}`,
-            {
-              method: 'PATCH',
-              headers: this.getHeaders(),
-              body: JSON.stringify({
-                period_budget: mpUser?.period_budget || 0,
-              }),
-            }
-          ),
-          fetch(
-            `${this.apiUrl}/api/user/update/${walletUser.customer_identifier}`,
-            {
-              method: 'PATCH',
-              headers: this.getHeaders(),
-              body: JSON.stringify({
-                period_budget: walletUser?.period_budget || 0,
-              }),
-            }
-          ),
-        ])
+      if (!mpUser.period_budget) {
+        await fetch(
+          `${this.apiUrl}/api/user/update/${mpUser.customer_identifier}`,
+          {
+            method: 'PATCH',
+            headers: this.getHeaders(),
+            body: JSON.stringify({
+              period_budget: mpUser?.period_budget || 0,
+            }),
+          }
+        )
+      }
+      if (!walletUser.period_budget) {
+        await fetch(
+          `${this.apiUrl}/api/user/update/${walletUser.customer_identifier}`,
+          {
+            method: 'PATCH',
+            headers: this.getHeaders(),
+            body: JSON.stringify({
+              period_budget: walletUser?.period_budget || 0,
+            }),
+          }
+        )
       }
     } catch (error) {
       console.error('Error ensuring period budget:', error)
