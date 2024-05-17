@@ -51,6 +51,11 @@ export const TemplateCard: React.FC<TemplateCardProps> = props => {
   }
 
   const handleFooterSubmit = () => {
+    if (!isSignedIn) {
+      router.push('/sign-in')
+      return
+    }
+
     footerState[1](false)
     createState[1](true)
   }
