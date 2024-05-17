@@ -4,6 +4,7 @@ import { auth, currentUser } from '@clerk/nextjs/server'
 import { notFound } from 'next/navigation'
 
 import { MagickIDE } from 'client/editor'
+import KeywordsService from 'portal/cloud/packages/utils/server/src/lib/keywords'
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL
 
@@ -63,6 +64,9 @@ export default async function EditorPage({
     },
   })
 
+  const keywordsService = new KeywordsService()
+  const providerData = await keywordsService.fetchModels()
+
   return (
     <MagickIDE
       config={{
@@ -71,7 +75,10 @@ export default async function EditorPage({
         userId: user.userId,
         email: userdata?.emailAddresses[0].emailAddress,
         apiUrl,
+        providerData,
       }}
+      loading={[] as any}
+      loadingStatus={[] as any}
     />
   )
 }

@@ -5,12 +5,9 @@ import {
 import { stripeService } from '@magickml/portal-billing'
 import { z } from 'zod'
 import { prismaPortal, type Transaction } from '@magickml/portal-db'
-import {
-  ProxyUser,
-  getFullUser,
-  paginateItems,
-} from '@magickml/portal-utils-server'
+import { getFullUser, paginateItems } from '@magickml/portal-utils-server'
 import type Stripe from 'stripe'
+import KeywordsService from 'portal/cloud/packages/utils/server/src/lib/keywords'
 
 export const billingRouter = createTRPCRouter({
   createCheckout: protectedProcedure
@@ -60,31 +57,14 @@ export const billingRouter = createTRPCRouter({
     }),
 
   getBudget: protectedProcedure.query(async ({ ctx }) => {
-    const walletUser = (await fetch(
-      `${process.env['KEYWORDS_API_URL']}/api/user/detail/WALLET_${ctx.auth.userId}`,
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${process.env['KEYWORDS_API_KEY']}`,
-        },
-      }
-    ).then(res => res.json())) as ProxyUser
-
-    const mpUser = (await fetch(
-      `${process.env['KEYWORDS_API_URL']}/api/user/detail/MP_${ctx.auth.userId}`,
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${process.env['KEYWORDS_API_KEY']}`,
-        },
-      }
-    ).then(res => res.json())) as ProxyUser
+    const keywordsService = new KeywordsService()
+    const { walletUser, mpUser } = await keywordsService.fetchProxyWallets(
+      ctx.auth.userId
+    )
 
     const data = {
-      balance: walletUser.period_budget || 0,
-      promotional_balance: mpUser.period_budget || 0,
+      balance: walletUser?.period_budget || 0,
+      promotional_balance: mpUser?.period_budget || 0,
     }
 
     return data

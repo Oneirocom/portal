@@ -5,7 +5,7 @@ import { PriceKeys } from '@magickml/portal-utils-shared'
 import { clerkClient } from '@clerk/nextjs/server'
 import { StripeEventHandler } from './stripeEventService'
 import { NextApiRequest } from 'next'
-import { ProxyUser } from '@magickml/portal-utils-server'
+import KeywordsService from 'portal/cloud/packages/utils/server/src/lib/keywords'
 
 export interface CreateCheckoutInput {
   price: keyof typeof PriceKeys
@@ -18,6 +18,7 @@ export interface CreateCheckoutInput {
 export class StripeService {
   private stripe: Stripe
   private eventHandler: StripeEventHandler
+  private KeywordsService: KeywordsService
 
   constructor() {
     const stripeSigningSecret = this.getSecret()
@@ -31,6 +32,7 @@ export class StripeService {
     })
 
     this.eventHandler = new StripeEventHandler(this.stripe)
+    this.KeywordsService = new KeywordsService()
   }
 
   private getEnv(env: string): string {
@@ -50,7 +52,7 @@ export class StripeService {
     return this.getEnv('APP_URL')
   }
 
-  private getSecret = () => process.env.STRIPE_SIGNING_SECRET!
+  private getSecret = () => process.env['STRIPE_SIGNING_SECRET']!
 
   private getPriceKeyValue(input: keyof typeof PriceKeys): string | undefined {
     return PriceKeys[input]
@@ -270,61 +272,17 @@ export class StripeService {
 
   async createDefaultProxyUsers(userId: string) {
     try {
-      const promo = await makeTrialPromotion(userId)
-      const mpUser: ProxyUser = await fetch(
-        `${process.env.KEYWORDS_API_URL}/api/users/create/`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${process.env.KEYWORDS_API_KEY}`,
-          },
-          body: JSON.stringify({
-            period_budget: promo.amount.toNumber(),
-            customer_identifier: `MP_${userId}`,
-            budget_duration: 'monthly',
-          }),
-        }
-      )
-        .then(res => res.json())
-        .catch(error => {
-          console.error('Error creating default wallet:', error)
-          throw error
-        })
-
-      if (mpUser.customer_identifier) {
-        await prismaPortal.promotion.update({
-          where: { id: promo.id },
-          data: { isUsed: true },
-        })
-      }
-
-      const walletUser: ProxyUser = await fetch(
-        `${process.env.KEYWORDS_API_URL}/api/users/create/`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${process.env.KEYWORDS_API_KEY}`,
-          },
-          body: JSON.stringify({
-            period_budget: 0,
-            customer_identifier: `WALLET_${userId}`,
-          }),
-        }
-      )
-        .then(res => res.json())
-        .catch(error => {
-          console.error('Error creating default wallet:', error)
-          throw error
-        })
+      const { mpUser, walletUser } =
+        await this.KeywordsService.createWalletUsers(userId)
 
       if (!mpUser?.customer_identifier || !walletUser?.customer_identifier) {
         throw new Error('Error creating proxy users')
       }
+      const { mpUser: updatedMpUser } = await makeTrialPromotion(userId)
+
       await clerkClient.users.updateUserMetadata(userId, {
         privateMetadata: {
-          mpUser: mpUser,
+          mpUser: updatedMpUser,
           walletUser: walletUser,
         },
       })
@@ -334,29 +292,12 @@ export class StripeService {
     }
   }
 
-  async checkBudgetExists(userId: string): Promise<boolean> {
-    try {
-      const walletUser = await fetch(
-        `${process.env.KEYWORDS_API_URL}/api/user/detail/WALLET_${userId}`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${process.env['KEYWORDS_API_KEY']}`,
-          },
-        }
-      ).then(res => res.json())
-
-      return Boolean(walletUser?.customer_id)
-    } catch (error) {
-      console.error('Error checking if wallet exists:', error)
-      throw error
-    }
-  }
-
   async handleNewCustomer(userId: string): Promise<string> {
     if (!userId) throw new Error('userId is required')
-    if (!(await this.checkBudgetExists(userId))) {
+    const { mpUser, walletUser } = await this.KeywordsService.fetchProxyWallets(
+      userId
+    )
+    if (!mpUser?.customer_identifier || !walletUser?.customer_identifier) {
       this.createDefaultProxyUsers(userId)
     }
 
@@ -392,7 +333,7 @@ export class StripeService {
     const products = await this.stripe.products.list({ limit: 100 })
 
     return products.data.filter(
-      product => product.metadata.subscription === 'APPRENTICE' || 'WIZARD'
+      product => product.metadata['subscription'] === 'APPRENTICE' || 'WIZARD'
     )
   }
 

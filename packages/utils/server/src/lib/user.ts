@@ -1,193 +1,40 @@
-import { clerkClient } from '@clerk/nextjs/server'
-import { Decimal } from 'packages/server/db/src/lib/prisma/client-core/runtime/library'
-
-export type ProxyUser = {
-  id: string
-  name: string
-  customer_identifier: string
-  created_at: string
-  last_active: string
-  top_models: {}
-  email: string
-  period_start: string
-  period_end: string
-  budget_duration: string
-  period_budget: number
-  total_budget: number
-  total_usage: number
-  total_period_usage: number
-  organization: number
-}
-
-const fetchUserData = async (userId: string, walletUser: string) => {
-  try {
-    const response = (await fetch(
-      `${process.env.KEYWORDS_API_URL}/api/user/detail/${walletUser}_${userId}`,
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${process.env.KEYWORDS_API_KEY}`,
-        },
-      }
-    ).then(res => res.json())) as ProxyUser
-    return response
-  } catch (error) {
-    console.error('Error fetching user data:', error)
-    throw error
-  }
-}
-
-const updateUserData = async (
-  userId: string,
-  walletUser: string,
-  data: any
-) => {
-  try {
-    const response = (await fetch(
-      `${process.env.KEYWORDS_API_URL}/api/user/update/${walletUser}_${userId}`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${process.env.KEYWORDS_API_KEY}`,
-        },
-        body: JSON.stringify(data),
-      }
-    ).then(res => res.json())) as ProxyUser
-    return response
-  } catch (error) {
-    console.error('Error updating user data:', error)
-    throw error
-  }
-}
-
-const updateUserMetadata = async (
-  userId: string,
-  metadata: {
-    mpUser: ProxyUser
-    walletUser: ProxyUser
-    useWallet: boolean
-  }
-) => {
-  return clerkClient.users.updateUserMetadata(userId, {
-    privateMetadata: {
-      mpUser: metadata.mpUser,
-      walletUser: metadata.walletUser,
-      useWallet: metadata.useWallet,
-    },
-  })
-}
+import { clerkClient } from '@clerk/nextjs'
+import KeywordsService from './keywords'
 
 export const getFullUser = async (userId: string) => {
-  const user = await clerkClient.users.getUser(userId)
+  const keywordsService = new KeywordsService()
   try {
-    if (!user) {
-      throw new Error('User not found')
+    const user = await clerkClient.users.getUser(userId)
+    if (!user) throw new Error('User not found')
+
+    let { mpUser, walletUser } = await keywordsService.fetchProxyWallets(userId)
+    if (!mpUser || !walletUser) {
+      const userData = await keywordsService.createWalletUsers(userId)
+      mpUser = userData.mpUser
+      walletUser = userData.walletUser
     }
 
-    let [mpUser, walletUser] = await Promise.all([
-      fetchUserData(userId, 'MP'),
-      fetchUserData(userId, 'WALLET'),
-    ])
-
-    try {
-      if (mpUser?.customer_identifier && walletUser?.customer_identifier) {
-        const useWallet = mpUser.period_budget - mpUser.total_period_usage <= 0
-
-        if (!mpUser.period_budget || !walletUser.period_budget) {
-          await Promise.all([
-            updateUserData(userId, 'MP', {
-              period_budget: 0,
-            }),
-            updateUserData(userId, 'WALLET', {
-              period_budget: 0,
-            }),
-          ])
-        }
-
-        await updateUserMetadata(userId, {
-          mpUser,
-          walletUser,
-          useWallet,
-        })
-      } else {
-        try {
-          mpUser = await fetch(
-            `${process.env.KEYWORDS_API_URL}/api/users/create/`,
-            {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${process.env.KEYWORDS_API_KEY}`,
-              },
-              body: JSON.stringify({
-                customer_identifier: `MP_${userId}`,
-                budget_duration: 'monthly',
-                period_budget: new Decimal(2),
-              }),
-            }
-          )
-            .then(res => res.json())
-            .catch(error => {
-              console.error('Error creating default wallet:', error)
-              throw error
-            })
-
-          walletUser = await fetch(
-            `${process.env.KEYWORDS_API_URL}/api/users/create/`,
-            {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${process.env.KEYWORDS_API_KEY}`,
-              },
-              body: JSON.stringify({
-                customer_identifier: `WALLET_${userId}`,
-                budget_duration: 'monthly',
-                period_budget: 0,
-              }),
-            }
-          )
-            .then(res => res.json())
-            .catch(error => {
-              console.error('Error creating default wallet:', error)
-              throw error
-            })
-
-          if (
-            !mpUser?.customer_identifier ||
-            !walletUser?.customer_identifier
-          ) {
-            throw new Error('Error creating proxy users')
-          }
-          await clerkClient.users.updateUserMetadata(userId, {
-            privateMetadata: {
-              mpUser: mpUser,
-              walletUser: walletUser,
-              useWallet: false,
-            },
-          })
-        } catch (error) {
-          console.error('Error creating default wallet:', error)
-          throw error
-        }
-      }
-
-      const customer = user?.privateMetadata?.stripeId as string
-      if (!customer) {
-        throw new Error('Stripe customer not found')
-      }
-      const useWallet = mpUser.period_budget - mpUser.total_period_usage <= 0
-
-      return { user, customer, mpUser, walletUser, useWallet }
-    } catch (error) {
-      console.error('Error getting user data:', error)
+    if (!mpUser.period_budget || !walletUser.period_budget) {
+      await keywordsService.ensurePeriodBudget({ mpUser, walletUser })
     }
 
-    return { user, customer: null, mpUser, walletUser, useWallet: false }
+    const useWallet = mpUser.period_budget - mpUser.total_period_usage <= 0
+    await clerkClient.users.updateUserMetadata(userId, {
+      privateMetadata: {
+        mpUser,
+        walletUser,
+        useWallet,
+      },
+    })
+
+    const customer = user.privateMetadata?.['stripeId']
+    if (!customer) {
+      throw new Error('Stripe customer not found')
+    }
+
+    return { user, customer, mpUser, walletUser, useWallet }
   } catch (error) {
-    console.error('Error getting user:', error)
+    console.error('Error in getFullUser:', error)
     throw error
   }
 }

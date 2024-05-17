@@ -5,7 +5,7 @@ import KeywordsService from 'portal/cloud/packages/utils/server/src/lib/keywords
 
 const keywordsService = new KeywordsService()
 
-export const makeTrialPromotion = async (userId: string) => {
+export const makeTrialPromotion = async userId => {
   const promo = await prismaPortal.promotion.create({
     data: {
       name: 'Trial',
@@ -21,18 +21,8 @@ export const makeTrialPromotion = async (userId: string) => {
     },
   })
 
-  let mpUser = await keywordsService.fetchProxyWallet(`MP_${userId}`)
-
-  if (!mpUser) {
-    mpUser = await keywordsService.createWalletUser(`MP_${userId}`, {
-      period_budget: 2,
-      customer_identifier: `MP_${userId}`,
-      budget_duration: 'monthly',
-    })
-  }
-
-  mpUser = await keywordsService.updateProxyWallet(`MP_${userId}`, {
-    period_budget: 2 + mpUser?.period_budget || 0,
+  const mpUser = await keywordsService.updateProxyWallet(`MP_${userId}`, {
+    period_budget: 2,
     budget_duration: 'monthly',
     period_start: new Date().toISOString(),
     period_end: new Date(
@@ -52,8 +42,11 @@ export const makeTrialPromotion = async (userId: string) => {
   clerkClient.users.updateUserMetadata(userId, {
     privateMetadata: {
       mpUser,
+      useWallet: false,
     },
   })
+
+  return { mpUser }
 }
 
 export const makeApprenticePromotion = async (userId: string) => {
@@ -75,7 +68,7 @@ export const makeApprenticePromotion = async (userId: string) => {
   })
 }
 
-export const makeWizardPromotion = async (userId: string) => {
+export const makeWizardPromotion = async userId => {
   try {
     const promo = await prismaPortal.promotion.create({
       data: {
@@ -92,13 +85,10 @@ export const makeWizardPromotion = async (userId: string) => {
       },
     })
 
-    const mpUser = await keywordsService.fetchProxyWallet(`MP_${userId}`)
-
     const updatedMpUser = await keywordsService.updateProxyWallet(
       `MP_${userId}`,
-
       {
-        period_budget: 10 + mpUser?.period_budget || 0,
+        period_budget: 10,
         budget_duration: 'monthly',
         period_start: new Date().toISOString(),
       }

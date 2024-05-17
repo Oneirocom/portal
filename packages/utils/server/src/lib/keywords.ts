@@ -1,4 +1,5 @@
 import { clerkClient } from '@clerk/nextjs'
+import { groupModelsByProvider } from 'servicesShared'
 
 export type ProxyUser = {
   id: string
@@ -183,6 +184,14 @@ class KeywordsService {
       console.error('Error ensuring period budget:', error)
       throw error
     }
+  }
+
+  async fetchModels() {
+    const response = await fetch(`${this.apiUrl}/api/models/public`)
+    const data = await response.json()
+    const { models } = data
+
+    return groupModelsByProvider(models)
   }
 }
 

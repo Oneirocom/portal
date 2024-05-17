@@ -5,9 +5,11 @@ import { PortalSubscriptions } from '@magickml/portal-utils-shared'
 import { buffer } from 'micro'
 import { NextApiRequest } from 'next'
 import { PortalBot } from 'server/event-tracker'
+import KeywordsService from 'portal/cloud/packages/utils/server/src/lib/keywords'
 
 class StripeEventHandler {
   private stripe: Stripe
+  private keywordsService: KeywordsService
 
   private bot: PortalBot = new PortalBot(
     process.env.CLERK_WEBHOOK_LOGGING === 'true',
@@ -16,6 +18,7 @@ class StripeEventHandler {
 
   constructor(stripe: Stripe) {
     this.stripe = stripe
+    this.keywordsService = new KeywordsService()
   }
 
   private async errorLog(event: string, content: string) {
@@ -98,56 +101,41 @@ class StripeEventHandler {
         const privateMetadata = user.privateMetadata
 
         if (privateMetadata?.walletUser) {
-          const userWallet = await fetch(
-            `${process.env.KEYWORDS_API_URL}/api/user/detail/WALLET_${userId}`,
-            {
-              method: 'GET',
-              headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${process.env.KEYWORDS_API_KEY}`,
-              },
-            }
-          ).then(res => res.json())
+          const userWallet = await this.keywordsService.fetchProxyWallet(
+            `WALLET_${userId}`
+          )
 
-          if (!userWallet) {
+          if (!userWallet.customer_identifier) {
             throw new Error('User proxy data not found')
           }
 
-          const walletUser = await fetch(
-            `${process.env.KEYWORDS_API_URL}/api/user/update/WALLET_${userId}`,
+          const walletUser = await this.keywordsService.updateProxyWallet(
+            `WALLET_${userId}`,
             {
-              method: 'PATCH',
-              headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${process.env.KEYWORDS_API_KEY}`,
-              },
-              body: JSON.stringify({
-                budget_duration: 'monthly',
-                period_budget: parsedAmount + userWallet.period_budget,
-              }),
+              budget_duration: 'monthly',
+              period_budget: parsedAmount + userWallet.period_budget,
+              period_start: new Date().toISOString(),
+              period_end: new Date(
+                new Date().setDate(new Date().getDate() + 30)
+              ).toISOString(),
             }
-          ).then(res => res.json())
+          )
 
           if (!walletUser) {
             throw new Error('Failed to update wallet user')
           }
         } else {
-          const walletUser = await fetch(
-            `${process.env.KEYWORDS_API_URL}/api/user/create/`,
+          const walletUser = await this.keywordsService.createWalletUser(
+            `WALLET_${userId}`,
             {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${process.env.KEYWORDS_API_KEY}`,
-              },
-              body: JSON.stringify({
-                budget_duration: 'monthly',
-                period_budget: parsedAmount,
-                customer_identifier: `WALLET_${userId}`,
-                period_start: new Date().toISOString(),
-              }),
+              period_budget: parsedAmount,
+              budget_duration: 'monthly',
+              period_start: new Date().toISOString(),
+              period_end: new Date(
+                new Date().setDate(new Date().getDate() + 30)
+              ).toISOString(),
             }
-          ).then(res => res.json())
+          )
 
           if (!walletUser) {
             throw new Error('Failed to create wallet user')
