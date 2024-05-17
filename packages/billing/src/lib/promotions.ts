@@ -1,7 +1,7 @@
 import { clerkClient } from '@clerk/nextjs/server'
 import { prismaPortal, PromotionType } from '@magickml/portal-db'
 import { Decimal } from '@prisma/client/runtime/library'
-import KeywordsService from 'portal/cloud/packages/utils/server/src/lib/keywords'
+import { KeywordsService } from '@magickml/keywords'
 
 const keywordsService = new KeywordsService()
 

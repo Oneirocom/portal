@@ -5,7 +5,7 @@ import { PriceKeys } from '@magickml/portal-utils-shared'
 import { clerkClient } from '@clerk/nextjs/server'
 import { StripeEventHandler } from './stripeEventService'
 import { NextApiRequest } from 'next'
-import KeywordsService from 'portal/cloud/packages/utils/server/src/lib/keywords'
+import { KeywordsService } from '@magickml/keywords'
 
 export interface CreateCheckoutInput {
   price: keyof typeof PriceKeys
