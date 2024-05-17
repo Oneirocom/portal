@@ -27,7 +27,7 @@ export const getFullUser = async (userId: string) => {
       },
     })
 
-    const customer = user.privateMetadata?.['stripeId']
+    const customer = user.privateMetadata?.['stripeId'] as string | undefined
     if (!customer) {
       throw new Error('Stripe customer not found')
     }
