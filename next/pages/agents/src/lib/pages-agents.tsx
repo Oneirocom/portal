@@ -44,7 +44,7 @@ export const AgentsPage = () => {
 
   return (
     <>
-      <PageHeader {...header} loading={isLoading} />
+      <PageHeader {...header} loading={isSignedIn && isLoading} />
 
       <PageSection title="Your Agents">
         {!isLoading &&
