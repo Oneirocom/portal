@@ -1,4 +1,3 @@
-import { clerkClient } from '@clerk/clerk-sdk-node'
 import { groupModelsByProvider } from 'servicesShared'
 
 export type ProxyUser = {
@@ -96,17 +95,6 @@ class KeywordsService {
       return { mpUser: null, walletUser: null }
     } catch (error) {
       console.error('Error fetching proxy wallets:', error)
-      throw error
-    }
-  }
-
-  private async updateUserMetadata(userId: string, metadata: any) {
-    try {
-      return await clerkClient.users.updateUserMetadata(userId, {
-        privateMetadata: metadata,
-      })
-    } catch (error) {
-      console.error('Error updating user metadata:', error)
       throw error
     }
   }
