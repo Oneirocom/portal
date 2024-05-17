@@ -7,7 +7,7 @@ import { z } from 'zod'
 import { prismaPortal, type Transaction } from '@magickml/portal-db'
 import { getFullUser, paginateItems } from '@magickml/portal-utils-server'
 import type Stripe from 'stripe'
-import KeywordsService from 'portal/cloud/packages/utils/server/src/lib/keywords'
+import { KeywordsService } from '@magickml/keywords'
 
 export const billingRouter = createTRPCRouter({
   createCheckout: protectedProcedure

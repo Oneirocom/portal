@@ -131,11 +131,11 @@ export async function generateMetadata(
             take: 1,
             select: {
               id: true,
+              metadata: true,
               version: true,
               spells: true,
               createdAt: true,
               updatedAt: true,
-              metadata: true,
             },
           },
     },
@@ -148,16 +148,23 @@ export async function generateMetadata(
   })
 
   return {
-    title: `${template?.name || 'Agent Template'} - ${siteConfig.name}`,
+    title: `${template?.name || 'Create with Magick'}`,
     metadataBase: new URL(siteConfig.url),
     description: template?.description || siteConfig.description,
     keywords: [
       // TODO: add template metadata
+      'MagickML',
+      'Magick',
       'AI',
       'Artificial Intelligence',
       'AI Agents',
+      'Low Code',
       'No Code AI',
       'Machine Learning',
+      'Deep Learning',
+      'Neural Networks',
+      'AI Models',
+      'Oneirocom',
     ],
     // authors: [ // maybe we can use this for user created content?
     //   {
@@ -170,15 +177,15 @@ export async function generateMetadata(
       type: 'website',
       locale: 'en_US',
       url: siteConfig.url,
-      title: siteConfig.name,
-      description: siteConfig.description,
+      title: `${template?.name || 'Create with Magick'}`,
+      description: template?.description || siteConfig.description,
       siteName: siteConfig.name,
       images: [
         {
           url: img,
           width: 630,
           height: 630,
-          alt: template?.name || 'Agent Template',
+          alt: template?.name || 'Create with Magick',
         },
       ],
     },

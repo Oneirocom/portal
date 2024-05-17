@@ -4,7 +4,7 @@ import { auth, currentUser } from '@clerk/nextjs/server'
 import { notFound } from 'next/navigation'
 
 import { MagickIDE } from 'client/editor'
-import KeywordsService from 'portal/cloud/packages/utils/server/src/lib/keywords'
+import { KeywordsService } from '@magickml/keywords'
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL
 
