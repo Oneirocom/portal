@@ -29,7 +29,9 @@ const isIgnoredRoute = createRouteMatcher([
 ])
 
 const isBotRequest = userAgent =>
-  /Twitterbot|facebookexternalhit|LinkedInBot|Slackbot/.test(userAgent)
+  /Twitterbot|facebookexternalhit|LinkedInBot|Slackbot|Discordbot/.test(
+    userAgent
+  )
 
 export default clerkMiddleware(
   (auth, req) => {
