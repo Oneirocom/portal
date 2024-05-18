@@ -1,6 +1,6 @@
-import { PrismaClient } from '@prisma/client/portal'
+import { PrismaClient } from './prisma/client-portal'
 
-export * from '@prisma/client/portal'
+export * from './prisma/client-portal'
 
 const globalForPrismaPortal = globalThis as { prismaPortal?: PrismaClient }
 
