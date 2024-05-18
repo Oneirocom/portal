@@ -1,4 +1,5 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
+import { NextResponse } from 'next/server'
 
 const isPublicRoute = createRouteMatcher([
   '/sign-in(.*)',
@@ -27,8 +28,26 @@ const isIgnoredRoute = createRouteMatcher([
   '/api/magick/user(.*)',
 ])
 
+const isBotRequest = userAgent =>
+  /Twitterbot|facebookexternalhit|LinkedInBot|Slackbot/.test(userAgent)
+
 export default clerkMiddleware(
   (auth, req) => {
+    const userAgent = req.headers.get('user-agent') || ''
+
+    if (isBotRequest(userAgent)) {
+      console.log('Bot request detected.')
+      const parsedUrl = new URL(req.url)
+      const pathParts = parsedUrl.pathname.split('/')
+      const templateIdIndex = pathParts.indexOf('templates') + 1
+      const templateId = pathParts[templateIdIndex]
+      if (templateId) {
+        const url = req.nextUrl.clone()
+        url.pathname = `/api/meta/${templateId}`
+        return NextResponse.rewrite(url)
+      }
+    }
+
     if (isIgnoredRoute(req)) {
       // Skip auth check for ignored routes
       return

@@ -55,8 +55,8 @@ const Template = async ({
             take: 1,
             select: {
               id: true,
-              version: true,
               spells: true,
+              version: true,
               createdAt: true,
               updatedAt: true,
               metadata: true,
