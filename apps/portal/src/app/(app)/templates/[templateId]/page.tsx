@@ -196,7 +196,7 @@ export async function generateMetadata(
         siteConfig.name
       }`,
       images: [img],
-      creator: '@magickml',
+      site: '@MagickML',
     },
     icons: {
       icon: '/favicon.ico',
