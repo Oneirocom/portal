@@ -1,5 +1,4 @@
 import type { StorybookConfig } from '@storybook/nextjs'
-import { withThemeByClassName } from '@storybook/addon-themes'
 
 const config: StorybookConfig = {
   stories: ['../src/**/*.stories.@(js|jsx|ts|tsx|mdx)'],
@@ -13,8 +12,6 @@ const config: StorybookConfig = {
     options: {},
   },
 }
-
-
 
 export default config
 
