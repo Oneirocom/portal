@@ -1,3 +1,5 @@
+'use client'
+
 import { EditorState } from 'prosemirror-state'
 import { schema } from 'prosemirror-schema-basic'
 import { ProseMirror } from '@nytimes/react-prosemirror'
