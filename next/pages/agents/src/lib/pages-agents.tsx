@@ -62,7 +62,7 @@ export const AgentsPage = () => {
 
         <Card
           onClick={() => router.push('/templates')}
-          className="text-center font-medium font-montserrat bg-ds-card border-ds-primary-m border-dashed
+          className="text-center font-medium font-sans bg-ds-card border-ds-primary-m border-dashed
         w-44 h-60 lg:w-56 lg:h-80 flex flex-col hover:scale-105 transition-all duration-150 ease-in-out hover:overflow-visible cursor-pointer justify-center items-center"
         >
           <span className="text-6xl dark:text-ds-primary-m text-ds-primary-p ">

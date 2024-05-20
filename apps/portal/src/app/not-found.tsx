@@ -17,7 +17,7 @@ export default function NotFound() {
         <div className="inline-flex flex-col-reverse md:flex-col justify-between h-full w-full py-4">
           <span
             className={cn(
-              'text-zinc-500 text-sm md:text-2xl font-semibold leading-10 font-montserrat'
+              'text-zinc-500 text-sm md:text-2xl font-semibold leading-10 font-sans'
             )}
           >
             {`You'll have to return from whence you came.`}

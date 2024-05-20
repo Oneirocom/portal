@@ -76,7 +76,7 @@ export const MagickTextInput: React.FC<MagickTextInputProps> = ({
           onChange={e => setValue(e.target.value)}
           onBlur={handleBlur}
           onKeyDown={handleKeyDown}
-          className={` font-montserrat ${className}`}
+          className={` font-sans ${className}`}
           maxLength={maxLength}
         />
       ) : (
@@ -86,7 +86,7 @@ export const MagickTextInput: React.FC<MagickTextInputProps> = ({
           onChange={e => setValue(e.target.value)}
           onBlur={handleBlur}
           onKeyDown={handleKeyDown}
-          className={`font-montserrat ${className}`}
+          className={`font-sans ${className}`}
           maxLength={maxLength}
           rows={rows}
         />
@@ -96,7 +96,7 @@ export const MagickTextInput: React.FC<MagickTextInputProps> = ({
       )}
     </div>
   ) : (
-    <div className="gap-x-1 font-montserrat" onClick={() => setIsEditing(true)}>
+    <div className="gap-x-1 font-sans" onClick={() => setIsEditing(true)}>
       {children || defaultValue}
     </div>
   )

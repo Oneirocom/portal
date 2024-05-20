@@ -137,7 +137,7 @@
     @apply bg-background text-ds-black dark:text-ds-white;
   }
   p {
-    @apply transition-colors duration-300 ease-in-out font-montserrat;
+    @apply transition-colors duration-300 ease-in-out font-sans;
   }
 }
 
@@ -228,7 +228,7 @@ h6 {
   @apply transition-colors duration-300 ease-in-out;
 }
 .magick-input {
-  @apply bg-transparent border rounded-md outline-none appearance-none font-montserrat text-light-grey focus:border-2 placeholder:text-light-grey focus:border-light-grey border-light-grey without-ring;
+  @apply bg-transparent border rounded-md outline-none appearance-none font-sans text-light-grey focus:border-2 placeholder:text-light-grey focus:border-light-grey border-light-grey without-ring;
 }
 
 .bg-image {
@@ -626,19 +626,19 @@ h6 {
 /* Clerk overrides that are hard to do in the theme config */
 .cl-selectOption div,
 .cl-selectOption p {
-  @apply text-ds-black dark:text-ds-white font-montserrat;
+  @apply text-ds-black dark:text-ds-white font-sans;
 }
 .cl-selectOptionsContainer div div input {
-  @apply bg-ds-card font-montserrat text-ds-black focus:ring-0 dark:text-ds-white placeholder:text-ds-black dark:placeholder:text-ds-white;
+  @apply bg-ds-card font-sans text-ds-black focus:ring-0 dark:text-ds-white placeholder:text-ds-black dark:placeholder:text-ds-white;
 }
 
 /* 
 .cl-profileSectionContent p {
-  @apply text-ds-black dark:text-ds-white font-montserrat;
+  @apply text-ds-black dark:text-ds-white font-sans;
 }
 
 .cl-profileSectionPrimaryButton div span , .cl-accordionTriggerButton div span, .cl-accordionTriggerButton div span div {
-  @apply  font-montserrat font-medium text-ds-black dark:text-ds-white;
+  @apply  font-sans font-medium text-ds-black dark:text-ds-white;
 }
  */
 
@@ -652,11 +652,11 @@ h6 {
 
 .cl-signIn-havingTrouble
   [data-localization-key='signIn.alternativeMethods.getHelp.blockButton__emailSupport'] {
-  @apply text-ds-black dark:text-ds-white font-montserrat;
+  @apply text-ds-black dark:text-ds-white font-sans;
 }
 .cl-signIn-havingTrouble
   [data-localization-key='signIn.alternativeMethods.getHelp.content'] {
-  @apply text-ds-black dark:text-ds-white font-montserrat;
+  @apply text-ds-black dark:text-ds-white font-sans;
 }
 
 .cl-signIn-havingTrouble svg {
@@ -664,7 +664,7 @@ h6 {
 }
 
 .cl-signIn-havingTrouble button {
-  @apply text-ds-black dark:text-ds-white font-montserrat  border-ds-neutral border;
+  @apply text-ds-black dark:text-ds-white font-sans  border-ds-neutral border;
 }
 .cl-headerBackIcon {
   @apply text-ds-primary;

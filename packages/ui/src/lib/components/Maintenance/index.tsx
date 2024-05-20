@@ -13,7 +13,7 @@ export const Maintenance = ({ mode = 'cloud' }: { mode: 'cloud' | 'editor' }) =>
               {`(this site is down for maintenance)`}
             </span>
           </div>
-          <div className="hidden  lg:block leading-10 text-2xl font-montserrat pt-2 lg:pt-8 text-[#c4d0d9] font-semibold">
+          <div className="hidden  lg:block leading-10 text-2xl font-sans pt-2 lg:pt-8 text-[#c4d0d9] font-semibold">
             We are improving our website. <br />
             We will be back soon with cool features! <br />
             Thanks for your patience.
@@ -25,7 +25,7 @@ export const Maintenance = ({ mode = 'cloud' }: { mode: 'cloud' | 'editor' }) =>
             alt="fixing reality"
             className="self-center lg:self-end h-64 w-64 lg:h-[640px] lg:w-[640px]"
           />
-          <div className="lg:hidden block leading-7 text-sm font-montserrat pt-2 lg:pt-8 text-[#c4d0d9] font-semibold">
+          <div className="lg:hidden block leading-7 text-sm font-sans pt-2 lg:pt-8 text-[#c4d0d9] font-semibold">
             {`You'll have to return from whence you came.`}
           </div>
           <Link

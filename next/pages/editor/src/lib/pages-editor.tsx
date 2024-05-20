@@ -65,7 +65,7 @@ export const Editor = (props: AppConfig): React.ReactElement | null => {
           type="error"
           noClose
         >
-          <div className="text-black dark:text-ds-white font-montserrat font-medium text-base flex flex-col gap-y-2">
+          <div className="text-black dark:text-ds-white font-sans font-medium text-base flex flex-col gap-y-2">
             <p>
               Magick's Development Environment is not supported as a mobile
               experience
@@ -82,7 +82,7 @@ export const Editor = (props: AppConfig): React.ReactElement | null => {
             aria-label="loading..."
             className="w-72 h-72"
           />
-          <span className="text-sm font-montserrat font-medium tracking-tight">
+          <span className="text-sm font-sans font-medium tracking-tight">
             {status[0]}
           </span>
         </div>

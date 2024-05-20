@@ -74,7 +74,7 @@ export const AgentChatHeader = ({
             <p className="font-bold leading-none line-clamp-1 line text-secondary-highlight font-montAlt dark:text-white">
               {agent?.data.name}
             </p>
-            <span className="text-[10px] lg:text-[15px] leading-none font-montserrat text-black dark:text-[#a0b3c1] mb-2">
+            <span className="text-[10px] lg:text-[15px] leading-none font-sans text-black dark:text-[#a0b3c1] mb-2">
               created by @{agent?.data.creatorName}
             </span>
           </div>

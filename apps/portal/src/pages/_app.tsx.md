@@ -47,7 +47,7 @@ const montserrat = Montserrat({
 
 const monteserratAlternates = Montserrat_Alternates({
   subsets: ['latin'],
-  variable: '--font-montserrat-alternates',
+  variable: '--font-sans-alternates',
   weight: ['400', '500', '600', '700'],
 })
 

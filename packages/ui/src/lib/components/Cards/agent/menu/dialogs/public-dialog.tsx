@@ -132,7 +132,7 @@ const PublicDialogContent: React.FC<PublicDialogContentProps> = ({
 }) => (
   <div className="grid w-full gap-2.5">
     <div className="w-full grid gap-1.5">
-      <Label htmlFor="description" className="form-control font-montserrat">
+      <Label htmlFor="description" className="form-control font-sans">
         Agent Description
       </Label>
       <Textarea
@@ -141,7 +141,7 @@ const PublicDialogContent: React.FC<PublicDialogContentProps> = ({
         onChange={e => setDescription(e.target.value)}
         rows={4}
         required
-        className="focus:border-secondary-highlight placeholder:font-montserrat placeholder:text-black/70 dark:placeholder:text-white/70 w-full p-2 bg-transparent border-2 border-[#808f9a] rounded-[8px] dark:text-white"
+        className="focus:border-secondary-highlight placeholder:font-sans placeholder:text-black/70 dark:placeholder:text-white/70 w-full p-2 bg-transparent border-2 border-[#808f9a] rounded-[8px] dark:text-white"
         placeholder="Type a description here."
       />
     </div>
@@ -155,11 +155,11 @@ const PublicDialogContent: React.FC<PublicDialogContentProps> = ({
       <div className="grid gap-1.5 leading-none">
         <label
           htmlFor="remixable"
-          className="text-sm leading-none font-montserrat peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          className="text-sm leading-none font-sans peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
         >
           Enable Remixing
         </label>
-        <p className="text-xs text-black dark:text-white font-montserrat">
+        <p className="text-xs text-black dark:text-white font-sans">
           Allow others to remix your agent. They will receive a copy of your
           Agent without your secrets and copy of your root spell.
         </p>

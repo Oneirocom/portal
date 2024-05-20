@@ -32,7 +32,7 @@ export const ProjectCard: FunctionComponent<ProjectCardProps> = ({
       key={id}
       layout
       className="border border-transparent hover:border-secondary-highlight relative rounded-[10px] card-shadow text-[#18181d] color-transition dark:text-white  bg-[#f0f5f6] dark:bg-[#262730] w-[200px] h-[220px] flex flex-col px-2.5 pt-1 pb-2.5
-     box-border items-start justify-between text-center text-sm font-montserrat"
+     box-border items-start justify-between text-center text-sm font-sans"
     >
       <div className="self-stretch flex flex-col items-start justify-start gap-1 text-left font-berkley-mono text-[10px]">
         <div className="self-stretch flex flex-row items-center justify-center gap-2.5">

@@ -150,7 +150,7 @@ export function CarouselHero() {
                   <h3 className="text-ds-white text-base lg:text-[34px] max-w-2xs lg:max-w-lg lg:leading-8 font-bold font-montAlt">
                     {slide.title}
                   </h3>
-                  <div className="text-ds-white text-xs lg:text-2xl font-medium max-w-2xs lg:max-w-lg font-montserrat lg:leading-8">
+                  <div className="text-ds-white text-xs lg:text-2xl font-medium max-w-2xs lg:max-w-lg font-sans lg:leading-8">
                     {slide.description}
                   </div>
                 </div>

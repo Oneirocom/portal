@@ -40,7 +40,7 @@ export const PortalCard: React.FC<PortalCardProps> = ({
         />
       </div>
       <CardHeader className="p-0 pt-2.5 h-[35%] text-center text-pretty grow">
-        <CardTitle className="font-montserrat text-sm lg:text-base font-medium inline-flex items-center justify-center">
+        <CardTitle className="font-sans text-sm lg:text-base font-medium inline-flex items-center justify-center">
           {name}
         </CardTitle>
         {description && (

@@ -69,7 +69,7 @@ const AgentChatRemixButton: FunctionComponent<AgentChatRemixButtonProps> = () =>
               autoComplete="off"
               value={name}
               onChange={e => setName(e.target.value)}
-              className="focus:border-secondary-highlight placeholder:font-montserrat placeholder:text-black/70 dark:placeholder:text-white/70 w-full p-2 bg-transparent border-2 border-[#808f9a] rounded-[8px] dark:text-white"
+              className="focus:border-secondary-highlight placeholder:font-sans placeholder:text-black/70 dark:placeholder:text-white/70 w-full p-2 bg-transparent border-2 border-[#808f9a] rounded-[8px] dark:text-white"
               placeholder="Type your new Agent's name here"
             />
           </MagickDialog>

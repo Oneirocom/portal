@@ -53,7 +53,7 @@ const AgentChatReportButton = ({
             />
             <label
               htmlFor="offends"
-              className="text-sm leading-none font-montserrat peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              className="text-sm leading-none font-sans peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
               This agent offends me
             </label>
@@ -65,7 +65,7 @@ const AgentChatReportButton = ({
             />
             <label
               htmlFor="broken"
-              className="text-sm leading-none font-montserrat peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              className="text-sm leading-none font-sans peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
               This agent is broken
             </label>
@@ -77,7 +77,7 @@ const AgentChatReportButton = ({
             />
             <label
               htmlFor="sucks"
-              className="text-sm leading-none font-montserrat peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              className="text-sm leading-none font-sans peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
               This agent sucks
             </label>
@@ -85,7 +85,7 @@ const AgentChatReportButton = ({
         </div>
         <div className="flex flex-col text-black gap-y-4 dark:text-white">
           <Textarea
-            className="focus:border-secondary-highlight placeholder:font-montserrat placeholder:text-black/70 dark:placeholder:text-white/70 w-full h-32 p-2 bg-transparent border-2 border-[#808f9a] rounded-[8px] dark:text-white"
+            className="focus:border-secondary-highlight placeholder:font-sans placeholder:text-black/70 dark:placeholder:text-white/70 w-full h-32 p-2 bg-transparent border-2 border-[#808f9a] rounded-[8px] dark:text-white"
             placeholder="additional comments..."
             value={report}
             onChange={e => setReport(e.target.value)}

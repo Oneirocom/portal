@@ -238,7 +238,7 @@ const Config = ({ agent }: { agent: AgentData }) => {
   }
 
   return (
-    <div className="grid grid-cols-2 p-2 overflow-auto gap-x-4 gap-y-8 font-montserrat">
+    <div className="grid grid-cols-2 p-2 overflow-auto gap-x-4 gap-y-8 font-sans">
       {/* Agent Avatar */}
       <div className="flex flex-col col-span-full lg:col-span-1">
         <Label className="mb-4 text-base font-semibold">Agent Image</Label>
@@ -281,7 +281,7 @@ const Config = ({ agent }: { agent: AgentData }) => {
               className={buttonVariants({
                 variant: 'agent',
                 size: 'sm',
-                className: 'justify-start m-0 py-0 px-2 w-28 font-montserrat',
+                className: 'justify-start m-0 py-0 px-2 w-28 font-sans',
               })}
               htmlFor="avatar"
             >
@@ -302,7 +302,7 @@ const Config = ({ agent }: { agent: AgentData }) => {
               onClick={handleImageUpdate}
               variant="agent"
               size="sm"
-              className="justify-center px-2 py-0 m-0 w-28 font-montserrat"
+              className="justify-center px-2 py-0 m-0 w-28 font-sans"
             >
               Update
               {updateIsLoading && (
@@ -424,7 +424,7 @@ const Config = ({ agent }: { agent: AgentData }) => {
       >
         <Input
           type="text"
-          className="focus:border-secondary-highlight placeholder:font-montserrat placeholder:text-black/70 dark:placeholder:text-white/70 w-full p-2 bg-transparent border-2 border-[#808f9a] rounded-[8px] dark:text-white"
+          className="focus:border-secondary-highlight placeholder:font-sans placeholder:text-black/70 dark:placeholder:text-white/70 w-full p-2 bg-transparent border-2 border-[#808f9a] rounded-[8px] dark:text-white"
           value={discordToken}
           placeholder="Paste your discord token here."
           onKeyDown={updatePubVariables}
@@ -450,7 +450,7 @@ const Config = ({ agent }: { agent: AgentData }) => {
             return (
               <div key={index}>
                 <Label className="flex flex-col text-base font-semibold gap-y-1">
-                  <span className="text-sm font-montserrat">
+                  <span className="text-sm font-sans">
                     {variable?.name && variable.name.length > 0
                       ? variable.name
                       : 'Unnamed Variable'}
@@ -465,7 +465,7 @@ const Config = ({ agent }: { agent: AgentData }) => {
                     variable.type.includes('Text Variable') ? (
                     <Textarea
                       rows={5}
-                      className="focus:border-secondary-highlight placeholder:font-montserrat placeholder:text-black/70 dark:placeholder:text-white/70 w-full p-2 bg-transparent border-2 border-[#808f9a] rounded-[8px] dark:text-white"
+                      className="focus:border-secondary-highlight placeholder:font-sans placeholder:text-black/70 dark:placeholder:text-white/70 w-full p-2 bg-transparent border-2 border-[#808f9a] rounded-[8px] dark:text-white"
                       value={variable.stringValue || variable.value}
                       onKeyDown={updatePubVariables}
                       onChange={e => handleInputChange(variable, e)}
@@ -473,7 +473,7 @@ const Config = ({ agent }: { agent: AgentData }) => {
                   ) : (
                     <Input
                       type="text"
-                      className="focus:border-secondary-highlight placeholder:font-montserrat placeholder:text-black/70 dark:placeholder:text-white/70 w-full p-2 bg-transparent border-2 border-[#808f9a] rounded-[8px] dark:text-white"
+                      className="focus:border-secondary-highlight placeholder:font-sans placeholder:text-black/70 dark:placeholder:text-white/70 w-full p-2 bg-transparent border-2 border-[#808f9a] rounded-[8px] dark:text-white"
                       value={variable.stringValue || variable.value}
                       onKeyDown={updatePubVariables}
                       onChange={e => handleInputChange(variable, e)}

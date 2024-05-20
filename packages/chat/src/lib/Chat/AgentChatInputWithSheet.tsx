@@ -40,7 +40,7 @@ const AgentChatInput = ({
     <div
       className={clsx(
         !isPublic ? 'bottom-11' : 'bottom-0',
-        'w-full inline-flex lg:bottom-0 placeholder:text-[#a0b3c1] font-montserrat dark:placeholder:text-white/50 placeholder:black/50 rounded-[8px] rounded-b-none lg:rounded-b-[8px] relative pb-0 lg:pb-0 lg:mb-4'
+        'w-full inline-flex lg:bottom-0 placeholder:text-[#a0b3c1] font-sans dark:placeholder:text-white/50 placeholder:black/50 rounded-[8px] rounded-b-none lg:rounded-b-[8px] relative pb-0 lg:pb-0 lg:mb-4'
       )}
     >
       <ChatInput

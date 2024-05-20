@@ -86,7 +86,7 @@ export const PortalHeader = () => {
           </svg>
         </div>
         <div className="flex flex-col items-start justify-around h-full">
-          <span className="text-[10px] font-montserrat leading-none  text-ds-primary-p dark:text-ds-primary-m">
+          <span className="text-[10px] font-sans leading-none  text-ds-primary-p dark:text-ds-primary-m">
             V2.0
           </span>
           <span className="text-sm font-bold leading-none !font-montAlt text-ds-primary">
@@ -104,7 +104,7 @@ export const PortalHeader = () => {
               href={item.href}
               key={item.href}
               className={clsx(
-                'inline-flex items-center group justify-start pb-0.5 border-b-[3px] color-transition font-montserrat uppercase',
+                'inline-flex items-center group justify-start pb-0.5 border-b-[3px] color-transition font-sans uppercase',
                 isRoute(item.href)
                   ? 'dark:text-[#72dbf3] text-secondary-highlight dark:border-b-[#72dbf3] border-b-secondary-highlight'
                   : 'text-black dark:text-white border-b-transparent'

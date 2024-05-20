@@ -13,7 +13,7 @@ const ToggleCard = ({ title, value, handleValueChanged }: ToggleCardProps) => {
       <div className="flex items-start flex-grow gap-8">
         <div className="flex flex-col items-start gap-4">
           <div className="flex items-center gap-2">
-            <Label className="text-sm font-normal md:text-base text-light-blue font-montserrat">
+            <Label className="text-sm font-normal md:text-base text-light-blue font-sans">
               {title}
             </Label>
             <InfoIcon className="text-light-blue" />
@@ -21,7 +21,7 @@ const ToggleCard = ({ title, value, handleValueChanged }: ToggleCardProps) => {
           <div className="flex items-center gap-4">
             <Label
               className={cn(
-                'text-base font-normal  text-[#A0B3C1] font-montserrat',
+                'text-base font-normal  text-[#A0B3C1] font-sans',
                 value ? 'text-[#303132]' : ''
               )}
             >
@@ -38,7 +38,7 @@ const ToggleCard = ({ title, value, handleValueChanged }: ToggleCardProps) => {
             />
             <Label
               className={cn(
-                'text-base font-normal  text-[#A0B3C1] font-montserrat',
+                'text-base font-normal  text-[#A0B3C1] font-sans',
                 value ? '' : 'text-[#303132]'
               )}
             >

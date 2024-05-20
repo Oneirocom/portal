@@ -77,7 +77,7 @@ export const AgentCardFooter: React.FC<AgentCardFooterProps> = ({
         <h2 className="text-2xl font-bold !font-montAlt capitalize inline-flex items-center justify-start">
           {name}
           {version && (
-            <span className="ml-2 mt-1 text-[10px] font-montserrat leading-none  text-ds-primary-p dark:text-ds-primary-m">
+            <span className="ml-2 mt-1 text-[10px] font-sans leading-none  text-ds-primary-p dark:text-ds-primary-m">
               {version}
             </span>
           )}

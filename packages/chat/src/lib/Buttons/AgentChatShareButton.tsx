@@ -76,7 +76,7 @@ const AgentChatShareButton: React.FC<Props> = ({
         submitButton={false}
         logo={false}
       >
-        <p className="text-sm font-montserrat">Share this link via</p>
+        <p className="text-sm font-sans">Share this link via</p>
         <div className="flex justify-between w-full cursor-pointer">
           {socialMediaPlatform.map(media => (
             <div
@@ -88,7 +88,7 @@ const AgentChatShareButton: React.FC<Props> = ({
             </div>
           ))}
         </div>
-        <p className="text-sm font-montserrat">Or copy link</p>
+        <p className="text-sm font-sans">Or copy link</p>
         <div className="flex justify-between w-full">
           <Input
             type="text"

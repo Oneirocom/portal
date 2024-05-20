@@ -25,7 +25,7 @@ const AgentChatInput = ({
     <div
       className={clsx(
         isPublic ? 'pb-0' : 'pb-12 md:pb-24',
-        'bg-[#dbe2e8] dark:bg-[#171b1c] w-full inline-flex lg:bottom-0 placeholder:text-[#a0b3c1] font-montserrat dark:placeholder:text-white/50 placeholder:black/50 rounded-lg md:rounded-b-none relative pb-0 lg:pb-0 lg:mb-4'
+        'bg-[#dbe2e8] dark:bg-[#171b1c] w-full inline-flex lg:bottom-0 placeholder:text-[#a0b3c1] font-sans dark:placeholder:text-white/50 placeholder:black/50 rounded-lg md:rounded-b-none relative pb-0 lg:pb-0 lg:mb-4'
       )}
     >
       <ExpandingTextInput

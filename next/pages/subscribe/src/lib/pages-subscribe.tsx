@@ -164,7 +164,7 @@ export const SubscribePage = (props: SubscribePageProps) => {
   }
 
   return (
-    <div className="mx-4 lg:mx-20 font-montserrat text-ds-dark-3 dark:text-ds-light-1">
+    <div className="mx-4 lg:mx-20 font-sans text-ds-dark-3 dark:text-ds-light-1">
       {/* Header */}
       <div className="text-left lg:text-center mx-auto max-w-7xl pb-4 lg:pb-10 pt-0 sm:pt-10 lg:px-8">
         <div className="mx-auto max-w-2xl hidden lg:block">
@@ -198,7 +198,7 @@ export const SubscribePage = (props: SubscribePageProps) => {
             {isBestOrActive(option) && (
               <Badge
                 className="w-28 h-9 inline-flex justify-center absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 
-                text-center bg-ds-primary-m text-black text-sm font-normal font-montserrat"
+                text-center bg-ds-primary-m text-black text-sm font-normal font-sans"
               >
                 {isBestOrActive(option)}
               </Badge>
