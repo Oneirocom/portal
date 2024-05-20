@@ -9,40 +9,15 @@
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "outputPath": "dist/portal/cloud/apps/portal"
+        "outputPath": "dist/portal/cloud/apps/portal",
+        "generateLockfile": true,
+        "includeDevDependenciesInPackageJson": true
       },
       "configurations": {
         "development": {
           "outputPath": "portal/cloud/apps/portal"
         },
         "production": {}
-      }
-    },
-    "serve": {
-      "executor": "@nx/next:server",
-      "defaultConfiguration": "development",
-      "options": {
-        "buildTarget": "portal:build",
-        "dev": true,
-        "port": 4000
-      },
-      "configurations": {
-        "development": {
-          "buildTarget": "portal:build:development",
-          "dev": true,
-          "port": 4000
-        },
-        "production": {
-          "buildTarget": "portal:build:production",
-          "dev": false,
-          "port": 4000
-        }
-      }
-    },
-    "export": {
-      "executor": "@nx/next:export",
-      "options": {
-        "buildTarget": "portal:build:production"
       }
     },
     "test": {
@@ -85,6 +60,26 @@
       "executor": "nx:run-commands",
       "options": {
         "command": "test-storybook -c portal/cloud/apps/portal/.storybook --url=http://localhost:4400"
+      }
+    },
+    "container": {
+      "executor": "@nx-tools/nx-container:build",
+      "dependsOn": ["build"],
+      "defaultConfiguration": "local",
+      "options": {
+        "engine": "docker",
+        "context": "dist/portal/cloud/apps/portal",
+        "file": "portal/cloud/apps/portal/Dockerfile"
+      },
+      "configurations": {
+        "local": {
+          "tags": ["portal:latest"],
+          "push": false
+        },
+        "production": {
+          "tags": ["gcr.io/magick-387817/portal:latest"],
+          "push": true
+        }
       }
     }
   },
