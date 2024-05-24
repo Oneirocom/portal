@@ -75,6 +75,28 @@ class StripeEventHandler {
         case 'checkout.session.completed':
           await this.handleCheckoutSessionCompleted(event)
           break
+        case 'customer.subscription.deleted':
+          const subName = event.data.object.metadata?.subscriptionName
+          const id = event.data.object.metadata?.userId
+          await this.keywordsService.handleSubscriptionCancellation({
+            userId: id,
+            subscriptionName: subName,
+          })
+          break
+        case 'invoice.payment_succeeded':
+          const sub = event.data.object.subscription
+          const isRenewal =
+            event.data.object.billing_reason === 'subscription_cycle'
+          const subscriptionName = event.data.object.metadata?.subscriptionName
+          const userId = event.data.object.metadata?.userId
+
+          if (isRenewal && sub && subscriptionName && userId) {
+            await this.keywordsService.handleSubscriptionRenewal({
+              userId,
+              subscriptionName,
+            })
+          }
+          break
         default:
           console.log('Unhandled stripe event:', event.type)
           break
