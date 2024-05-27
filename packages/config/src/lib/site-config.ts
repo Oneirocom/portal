@@ -1,6 +1,6 @@
 export const siteConfig = {
   name: 'MagickML',
-  url: 'https://beta.magickml.com',
+  url: process.env.NEXT_PUBLIC_SITE_URL || 'https://beta.magickml.com',
   ogImage: 'https://beta.magickml.com/og.jpg',
   description: '',
   links: {
