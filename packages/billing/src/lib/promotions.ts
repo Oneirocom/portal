@@ -23,7 +23,6 @@ export const makeTrialPromotion = async userId => {
 
   const mpUser = await keywordsService.updateProxyWallet(`MP_${userId}`, {
     period_budget: 2,
-    budget_duration: 'monthly',
     period_start: new Date().toISOString(),
     period_end: new Date(
       new Date().setDate(new Date().getDate() + 30)
@@ -89,7 +88,6 @@ export const makeWizardPromotion = async userId => {
       `MP_${userId}`,
       {
         period_budget: 10,
-        budget_duration: 'monthly',
         period_start: new Date().toISOString(),
       }
     )
