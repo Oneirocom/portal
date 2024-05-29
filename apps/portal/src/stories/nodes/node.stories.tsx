@@ -61,9 +61,9 @@ const meta = {
   tags: ['autodocs'],
   argTypes: {
     node: {
-      options: nodeNames,
+      options: nodeNames.sort(),
       control: { type: 'select' },
-      defaultValue: nodeNames[0],
+      defaultValue: nodeNames.sort()[0],
     },
   },
 
