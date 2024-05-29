@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation'
 
 import { MagickIDE } from 'client/editor'
 import { KeywordsService } from '@magickml/keywords'
+import { generateToken } from '@magickml/embedder/auth/token'
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL
 
@@ -64,12 +65,17 @@ export default async function EditorPage({
     },
   })
 
-  const keywordsService = new KeywordsService()
-  const providerData = await keywordsService.fetchModels()
+  const providerData = await new KeywordsService().fetchModels()
+
+  const embedderToken = generateToken({
+    owner: projectId,
+    entity: projectId,
+  })
 
   return (
     <MagickIDE
       config={{
+        embedderToken,
         token,
         projectId,
         userId: user.userId,
