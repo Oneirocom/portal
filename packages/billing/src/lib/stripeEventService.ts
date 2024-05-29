@@ -134,7 +134,6 @@ class StripeEventHandler {
           const walletUser = await this.keywordsService.updateProxyWallet(
             `WALLET_${userId}`,
             {
-              budget_duration: 'monthly',
               period_budget: parsedAmount + userWallet.period_budget,
               period_start: new Date().toISOString(),
               period_end: new Date(
