@@ -42,6 +42,12 @@ export const CreateAgentDialog: React.FC<CreateAgentDialogProps> = ({
     await create({ templateId, name })
   }
 
+  const handleEnterPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleCreate(e as any)
+    }
+  }
+
   return (
     <PortalDialog
       base={{
@@ -72,6 +78,7 @@ export const CreateAgentDialog: React.FC<CreateAgentDialogProps> = ({
           value={name}
           onChange={e => setName(e.target.value)}
           autoComplete="off"
+          onKeyDown={handleEnterPress}
         />
       </div>
     </PortalDialog>
