@@ -260,8 +260,8 @@ export const SubscribePage = (props: SubscribePageProps) => {
               variant="portal-primary"
               onClick={() =>
                 handleCheckout({
-                  price: props[option.key].price,
-                  name: props[option.key].name,
+                  price: props[option.key as keyof SubscribePageProps].price,
+                  name: props[option.key as keyof SubscribePageProps].name,
                 })
               }
             >

@@ -5,7 +5,7 @@ import { KeywordsService } from '@magickml/keywords'
 
 const keywordsService = new KeywordsService()
 
-export const makeTrialPromotion = async userId => {
+export const makeTrialPromotion = async (userId: string) => {
   const promo = await prismaPortal.promotion.create({
     data: {
       name: 'Trial',
@@ -67,7 +67,7 @@ export const makeApprenticePromotion = async (userId: string) => {
   })
 }
 
-export const makeWizardPromotion = async userId => {
+export const makeWizardPromotion = async (userId: string) => {
   try {
     const promo = await prismaPortal.promotion.create({
       data: {

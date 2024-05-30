@@ -103,6 +103,10 @@ if (typeof window !== 'undefined') {
   })
 }
 
-export function PortalPosthogProvider({ children }) {
+export function PortalPosthogProvider({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   return <PostHogProvider client={posthog}>{children}</PostHogProvider>
 }
