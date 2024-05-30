@@ -1,3 +1,5 @@
+"@ts-nocheck"
+
 import { PrismaClient } from '../../../db/src/lib/prisma/client-portal'
 import * as templates from './templates'
 
