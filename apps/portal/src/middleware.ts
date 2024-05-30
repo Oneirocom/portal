@@ -28,7 +28,7 @@ const isIgnoredRoute = createRouteMatcher([
   '/api/magick/user(.*)',
 ])
 
-const isBotRequest = userAgent =>
+const isBotRequest = (userAgent: string) =>
   /Twitterbot|facebookexternalhit|LinkedInBot|Slackbot|Discordbot/.test(
     userAgent
   )
