@@ -1,6 +1,6 @@
 '@ts-nocheck'
 
-import { PrismaClient } from '../../../db/src/lib/prisma/client-portal'
+import { PrismaClient, Prisma } from '../../../db/src/lib/prisma/client-portal'
 import * as templates from './templates'
 
 export const baseTemplates = Object.values(templates)
