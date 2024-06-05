@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react'
 import { ChatSettingsProps } from '../types'
 import { Button, SelectWithLabel } from '@magickml/client-ui'
-import { codeToHtml } from 'shiki'
+// import { codeToHtml } from 'shiki'
 import { useTheme } from 'next-themes'
 
 export const ChatSettings: React.FC<ChatSettingsProps> = ({
@@ -23,21 +23,21 @@ export const ChatSettings: React.FC<ChatSettingsProps> = ({
   )
 
   const highlight = async (code: string) => {
-    return await codeToHtml(code, {
-      lang: 'json',
-      theme: theme === 'dark' ? 'github-dark' : 'github-light',
-    })
+    // return await codeToHtml(code, {
+    //   lang: 'json',
+    //   theme: theme === 'dark' ? 'github-dark' : 'github-light',
+    // })
   }
 
   useEffect(() => {
     if (info) {
-      highlight(JSON.stringify(info, null, 2)).then(setHighlightedInfo)
+      // highlight(JSON.stringify(info, null, 2)).then(setHighlightedInfo)
     }
   }, [info])
 
   useEffect(() => {
     if (messages) {
-      highlight(JSON.stringify(messages, null, 2)).then(setHighlightedMessages)
+      // highlight(JSON.stringify(messages, null, 2)).then(setHighlightedMessages)
     }
   }, [messages])
 
