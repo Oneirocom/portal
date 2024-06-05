@@ -145,7 +145,7 @@ export const PortalHeader = () => {
           }}
           className="hidden lg:flex"
         >
-          {isSignedIn ? 'Create Agent' : 'Sign in'}
+          {isSignedIn ? 'Subscribe' : 'Sign in'}
         </Button>
 
         <InfoMenu />
