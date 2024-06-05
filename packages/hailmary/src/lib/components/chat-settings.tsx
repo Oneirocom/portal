@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react'
 import { ChatSettingsProps } from '../types'
 import { Button, SelectWithLabel } from '@magickml/client-ui'
 // import { codeToHtml } from 'shiki'
-import { useTheme } from 'next-themes'
 
 export const ChatSettings: React.FC<ChatSettingsProps> = ({
   agents,
@@ -15,19 +14,16 @@ export const ChatSettings: React.FC<ChatSettingsProps> = ({
   info,
   messages,
 }) => {
-  const { resolvedTheme: theme } = useTheme()
   const [agentIdValue, setAgentIdValue] = agentId
-  const [highlightedInfo, setHighlightedInfo] = useState<string | null>(null)
-  const [highlightedMessages, setHighlightedMessages] = useState<string | null>(
-    null
-  )
+  const [highlightedInfo] = useState<string | null>(null)
+  const [highlightedMessages] = useState<string | null>(null)
 
-  const highlight = async (code: string) => {
-    // return await codeToHtml(code, {
-    //   lang: 'json',
-    //   theme: theme === 'dark' ? 'github-dark' : 'github-light',
-    // })
-  }
+  // const highlight = async (code: string) => {
+  //   // return await codeToHtml(code, {
+  //   //   lang: 'json',
+  //   //   theme: theme === 'dark' ? 'github-dark' : 'github-light',
+  //   // })
+  // }
 
   useEffect(() => {
     if (info) {
