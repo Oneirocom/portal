@@ -62,18 +62,13 @@ export const billingRouter = createTRPCRouter({
       ctx.auth.userId
     )
 
-    if (!walletUser) {
-      throw new Error('Wallet user not found')
-    }
+    const balance = walletUser
+      ? walletUser?.period_budget - walletUser?.total_period_usage || 0
+      : 0
 
-    if (!mpUser) {
-      throw new Error('MP user not found')
-    }
-
-    const balance =
-      walletUser.period_budget - walletUser.total_period_usage || 0
-
-    const promoBalance = mpUser?.period_budget - mpUser?.total_period_usage || 0
+    const promoBalance = mpUser
+      ? mpUser?.period_budget - mpUser?.total_period_usage || 0
+      : 0
 
     const data = {
       balance: balance < 0 ? 0 : balance,
