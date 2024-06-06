@@ -17,9 +17,15 @@ export const getFullUser = async (userId: string) => {
     if (!mpUser.period_budget || !walletUser.period_budget) {
       await keywordsService.ensurePeriodBudget({ mpUser, walletUser })
     }
+    const isWizard = user.publicMetadata?.subscription === 'WIZARD'
 
     const useWallet = mpUser.period_budget - mpUser.total_period_usage <= 0
     await clerkClient.users.updateUserMetadata(userId, {
+      ...(isWizard && {
+        publicMetadata: {
+          mpRenewsAt: mpUser.period_end,
+        },
+      }),
       privateMetadata: {
         mpUser,
         walletUser,
