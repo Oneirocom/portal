@@ -89,11 +89,23 @@ class StripeEventHandler {
             event.data.object.billing_reason === 'subscription_cycle'
           const subscriptionName = event.data.object.metadata?.subscriptionName
           const userId = event.data.object.metadata?.userId
+          const periodEnd = event.data.object.period_end
+          const renewalDate = new Date(periodEnd * 1000)
 
-          if (isRenewal && sub && subscriptionName && userId) {
-            await this.keywordsService.handleSubscriptionRenewal({
-              userId,
-              subscriptionName,
+          const isWizard = subscriptionName === 'WIZARD'
+
+          if (sub && subscriptionName && userId) {
+            if (isRenewal) {
+              await this.keywordsService.handleSubscriptionRenewal({
+                userId,
+                subscriptionName,
+              })
+            }
+            await clerkClient.users.updateUserMetadata(userId, {
+              publicMetadata: {
+                subscription: subscriptionName,
+                ...(isWizard && { mpRenewsAt: renewalDate }),
+              },
             })
           }
           break
