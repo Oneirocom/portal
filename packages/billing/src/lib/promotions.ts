@@ -104,6 +104,7 @@ export const makeWizardPromotion = async (userId: string) => {
     clerkClient.users.updateUserMetadata(userId, {
       publicMetadata: {
         subscription: 'WIZARD',
+        mpRenewsAt: new Date(new Date().setDate(new Date().getDate() + 30)),
       },
       privateMetadata: {
         mpUser: updatedMpUser,
