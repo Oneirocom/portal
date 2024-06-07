@@ -21,15 +21,15 @@ export const getFullUser = async (userId: string) => {
 
     const useWallet = mpUser.period_budget - mpUser.total_period_usage <= 0
     await clerkClient.users.updateUserMetadata(userId, {
-      ...(isWizard && {
-        publicMetadata: {
+      publicMetadata: {
+        ...(isWizard && {
           mpRenewsAt: mpUser.period_end,
-        },
-      }),
+        }),
+        useWallet,
+      },
       privateMetadata: {
         mpUser,
         walletUser,
-        useWallet,
       },
     })
 
