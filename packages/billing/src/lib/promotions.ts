@@ -39,9 +39,11 @@ export const makeTrialPromotion = async (userId: string) => {
   })
 
   clerkClient.users.updateUserMetadata(userId, {
+    publicMetadata: {
+      useWallet: false,
+    },
     privateMetadata: {
       mpUser,
-      useWallet: false,
     },
   })
 
@@ -105,10 +107,10 @@ export const makeWizardPromotion = async (userId: string) => {
       publicMetadata: {
         subscription: 'WIZARD',
         mpRenewsAt: new Date(new Date().setDate(new Date().getDate() + 30)),
+        useWallet: false,
       },
       privateMetadata: {
         mpUser: updatedMpUser,
-        useWallet: false,
       },
     })
   } catch (error) {
