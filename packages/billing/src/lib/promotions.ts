@@ -38,11 +38,14 @@ export const makeTrialPromotion = async (userId: string) => {
     data: { isUsed: true },
   })
 
+  const user = await clerkClient.users.getUser(userId)
   clerkClient.users.updateUserMetadata(userId, {
     publicMetadata: {
+      ...user.publicMetadata,
       useWallet: false,
     },
     privateMetadata: {
+      ...user.privateMetadata,
       mpUser,
     },
   })
@@ -102,14 +105,16 @@ export const makeWizardPromotion = async (userId: string) => {
       where: { id: promo.id },
       data: { isUsed: true },
     })
-
+    const user = await clerkClient.users.getUser(userId)
     clerkClient.users.updateUserMetadata(userId, {
       publicMetadata: {
+        ...user.publicMetadata,
         subscription: 'WIZARD',
         mpRenewsAt: new Date(new Date().setDate(new Date().getDate() + 30)),
         useWallet: false,
       },
       privateMetadata: {
+        ...user.privateMetadata,
         mpUser: updatedMpUser,
       },
     })
