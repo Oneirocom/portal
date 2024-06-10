@@ -101,8 +101,10 @@ class StripeEventHandler {
                 subscriptionName,
               })
             }
+            const user = await clerkClient.users.getUser(userId)
             await clerkClient.users.updateUserMetadata(userId, {
               publicMetadata: {
+                ...user.publicMetadata,
                 subscription: subscriptionName,
                 ...(isWizard && { mpRenewsAt: renewalDate }),
               },
