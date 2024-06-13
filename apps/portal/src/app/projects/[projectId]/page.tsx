@@ -6,6 +6,15 @@ import { notFound } from 'next/navigation'
 import { MagickIDE } from 'client/editor'
 import { KeywordsService } from '@magickml/keywords'
 import { generateToken } from '@magickml/embedder/auth/token'
+import {
+  FeedbackButton,
+  HomeButton,
+  InfoMenu,
+  SubscribeButton,
+  UserMenu,
+  AgentMenu,
+} from 'portal/cloud/next/layout/src/lib/header'
+import { clerkClient } from '@clerk/clerk-sdk-node'
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL
 
@@ -28,7 +37,10 @@ export default async function EditorPage({
     notFound()
   }
 
-  const userdata = await currentUser()
+  const userData = await currentUser()
+
+  const clerkUser = await clerkClient.users.getUser(user.userId)
+  const isNeophyte = clerkUser.publicMetadata.subscription === 'NEOPHYTE'
 
   // check if project exists
   const project = await prismaPortal.project.findUnique({
@@ -49,7 +61,7 @@ export default async function EditorPage({
   const token = await prepareToken({
     user: {
       userId: user.userId,
-      user: userdata,
+      user: userData,
       orgId: '',
     },
     projectId: projectId,
@@ -79,12 +91,19 @@ export default async function EditorPage({
         token,
         projectId,
         userId: user.userId,
-        email: userdata?.emailAddresses[0].emailAddress,
+        email: userData?.emailAddresses[0].emailAddress,
         apiUrl,
         providerData,
       }}
       loading={[] as any}
       loadingStatus={[] as any}
+      leftTopBarItems={[<HomeButton key={1} />, <AgentMenu key={2} />]}
+      rightTopBarItems={[
+        <SubscribeButton hasSubscription={!isNeophyte} key={1} />,
+        <FeedbackButton key={2} />,
+        <InfoMenu key={3} />,
+        <UserMenu key={4} />,
+      ]}
     />
   )
 }
