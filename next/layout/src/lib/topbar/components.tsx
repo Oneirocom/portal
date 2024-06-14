@@ -83,8 +83,6 @@ export const AgentMenu = () => {
     setOpenMenu(!openMenu)
   }
 
-  console.log('hello', data)
-
   return (
     <DropdownMenu open={!!openMenu} onOpenChange={toggleMenu}>
       <DropdownMenuTrigger
