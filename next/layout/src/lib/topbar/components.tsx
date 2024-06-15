@@ -91,7 +91,9 @@ export const AgentMenu = () => {
         }}
       >
         <SmartToyOutlined
-          className={`h-4 w-4 m-1 ${openMenu ? 'text-[#06c9f0]' : ''}`}
+          className={`h-4 w-4 m-1 ${
+            openMenu ? 'text-[#06c9f0]' : ''
+          } hover:text-[#06c9f0] transition duration-300`}
         />
       </DropdownMenuTrigger>
       <DropdownMenuContent
