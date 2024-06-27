@@ -1,5 +1,11 @@
 {
-    "name": "@magickml/portal-types",
-    "version": "0.0.1"
+  "name": "@magickml/portal-types",
+  "version": "0.0.1",
+  "dependencies": {
+    "@magickml/portal-db": "0.0.1",
+    "config": "3.3.11",
+    "next-auth": "^4.19.2",
+    "superjson": "^2.2.1",
+    "tslib": "^2.3.0"
   }
-  
+}
