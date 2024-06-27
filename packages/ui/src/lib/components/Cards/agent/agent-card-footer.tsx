@@ -8,9 +8,9 @@ import {
   AvatarImage,
   AvatarFallback,
 } from '@magickml/client-ui'
-import { getImage, ImageType } from 'shared/utils'
+import { getImage, ImageType } from '@magickml/utils'
 import type { PortalCardBaseProps } from './types'
-import { getPluginCredentials } from 'shared/nodeSpec'
+import { getPluginCredentials } from '@magickml/node-spec'
 
 interface SpellMetadata {
   models: string[]

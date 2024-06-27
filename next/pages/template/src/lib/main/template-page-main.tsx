@@ -1,5 +1,5 @@
 'use client'
-import { SpellInterfaceWithGraph } from 'server/schemas'
+import { SpellInterfaceWithGraph } from '@magickml/agent-server-schemas'
 import { TemplateGetStaticProps } from '../template-page-isr'
 import { TemplatePageHeader } from './template-page-header'
 import { TemplatePageSubHeader } from './template-page-subheader'

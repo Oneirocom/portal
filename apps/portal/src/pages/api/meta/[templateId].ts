@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { prismaPortal } from '@magickml/portal-db'
 import { parseParams } from '@magickml/pages-template/server'
 import { siteConfig } from '@magickml/portal-config'
-import { getImage, ImageType } from 'shared/utils'
+import { getImage, ImageType } from '@magickml/utils'
 
 export default async function handler(
   req: NextApiRequest,

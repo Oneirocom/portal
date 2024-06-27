@@ -1,4 +1,4 @@
-import { ImageUploader, UploadImageType } from 'server-storage'
+import { ImageUploader, UploadImageType } from '@magickml/storage'
 
 export const uploadImage = async (
   id: string,

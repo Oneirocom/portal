@@ -5,7 +5,7 @@ import { notFound } from 'next/navigation'
 
 import { MagickIDE } from 'client/editor'
 import { KeywordsService } from '@magickml/keywords'
-import { generateToken } from '@magickml/embedder/auth/token'
+import { generateToken } from '@magickml/embedder-auth-token'
 import {
   FeedbackButton,
   HomeButton,

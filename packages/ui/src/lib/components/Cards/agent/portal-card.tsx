@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@magickml/client-ui'
-import { getImage, ImageType } from 'shared/utils'
+import { getImage, ImageType } from '@magickml/utils'
 import { PortalCardProps } from './types'
 
 export const PortalCard: React.FC<PortalCardProps> = ({

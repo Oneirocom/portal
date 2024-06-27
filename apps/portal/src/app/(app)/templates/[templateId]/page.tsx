@@ -7,7 +7,7 @@ import { siteConfig } from '@magickml/portal-config'
 import { prismaPortal } from '@magickml/portal-db'
 import { Metadata, ResolvingMetadata } from 'next'
 import { notFound } from 'next/navigation'
-import { getImage, ImageType } from 'shared/utils'
+import { getImage, ImageType } from '@magickml/utils'
 
 const Template = async ({
   params,

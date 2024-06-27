@@ -7,7 +7,7 @@ import { prismaPortal } from '@magickml/portal-db'
 import { hasAccess, prepareToken } from '../utils/shared'
 import { uploadImage } from '../utils/upload'
 import { v4 } from 'uuid'
-import { UploadImageType } from 'server-storage'
+import { UploadImageType } from '@magickml/storage'
 
 export const projectsRouter = createTRPCRouter({
   // Create a project

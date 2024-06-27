@@ -14,7 +14,7 @@ import {
 } from '../schemas'
 import { removeTemplate, createFromAgent } from '../services'
 import { z } from 'zod'
-import { publicPresigner } from 'server-storage'
+import { publicPresigner } from '@magickml/storage'
 
 export const templatesRouter = createTRPCRouter({
   find: publicProcedure

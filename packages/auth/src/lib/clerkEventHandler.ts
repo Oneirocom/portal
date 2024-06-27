@@ -17,7 +17,7 @@ import { PortalSubscriptions } from '@magickml/portal-utils-shared'
 import { prismaPortal } from '@magickml/portal-db'
 import { prismaCore } from '@magickml/server-db'
 import { makeClient } from 'ideClient'
-import { PortalBot } from 'server/event-tracker'
+import { PortalBot } from '@magickml/server-event-tracker'
 
 const ideServerUrl = process.env.IDE_SERVER_URL || 'http://localhost:3030'
 

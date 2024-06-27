@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { TemplateType } from '@magickml/portal-db'
-import { PublicPresignType } from 'server-storage'
+import { PublicPresignType } from '@magickml/storage'
 
 export const findTemplatesSchema = z.object({
   type: z.nativeEnum(TemplateType).optional().default(TemplateType.OFFICIAL),

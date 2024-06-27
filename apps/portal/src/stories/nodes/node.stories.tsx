@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react'
 
 import { ReadOnlyFlow } from '@magickml/flow-core'
-import { getRawNodeSpec } from 'shared/nodeSpec'
+import { getRawNodeSpec } from '@magickml/node-spec'
 import { useRef } from 'react'
-import { SpellInterfaceWithGraph } from 'server/schemas'
+import { SpellInterfaceWithGraph } from '@magickml/agent-server-schemas'
 /**
  * A vertically stacked set of interactive headings that each reveal a section
  * of content.

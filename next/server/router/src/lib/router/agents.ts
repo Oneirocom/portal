@@ -19,7 +19,7 @@ import {
 } from '@magickml/portal-utils-shared'
 import { makeClient } from 'ideClient'
 import { createFromTemplate } from '@magickml/portal-templates'
-import { publicPresigner, PublicPresignType } from 'server-storage'
+import { publicPresigner, PublicPresignType } from '@magickml/storage'
 
 const ideServerUrl = process.env?.['IDE_SERVER_URL'] || 'http://localhost:3030'
 
