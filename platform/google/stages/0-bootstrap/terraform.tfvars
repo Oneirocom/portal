@@ -22,4 +22,11 @@ organization = {
 outputs_location = "~/gcp/configs/greentea.coffee"
 
 # use something unique and no longer than 9 characters
-prefix = "gtc-gcp"
+prefix = "gtc-fc"
+
+workload_identity_providers = {
+  github-provider = {
+    attribute_condition = "attribute.repository_owner==\"gtc-fc\""
+    issuer              = "github"
+  }
+}
