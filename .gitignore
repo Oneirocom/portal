@@ -133,3 +133,4 @@ dist
 
 platform/google/projects/portal/old
 platform/google/projects/portal/init.sh
+.out
