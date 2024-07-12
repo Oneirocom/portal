@@ -14,3 +14,9 @@ variable "factories_config" {
   })
   nullable = false
 }
+
+variable "enforce_security_policy" {
+  description = "Enforce security policy."
+  type        = bool
+  default     = true
+}
