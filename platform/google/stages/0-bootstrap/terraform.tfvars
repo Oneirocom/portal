@@ -57,10 +57,10 @@ cicd_repositories = {
     name              = "gtc-fc/gcp-networking"
     type              = "github"
   }
-  projects = {
-    branch            = "main"
-    identity_provider = "github-provider"
-    name              = "gtc-fc/gcp-projects"
-    type              = "github"
-  }
+  # projects = {
+  #   branch            = "main"
+  #   identity_provider = "github-provider"
+  #   name              = "gtc-fc/gcp-projects"
+  #   type              = "github"
+  # }
 }
