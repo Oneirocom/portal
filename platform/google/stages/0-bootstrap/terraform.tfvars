@@ -60,7 +60,7 @@ cicd_repositories = {
   projects = {
     branch            = "main"
     identity_provider = "github-provider"
-    name              = "gtc-fc/gco-projects"
+    name              = "gtc-fc/gcp-projects"
     type              = "github"
   }
 }
