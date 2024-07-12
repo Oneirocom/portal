@@ -1,18 +1,4 @@
-/**
- * Copyright 2024 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+
 
 # tfdoc:file:description Networking stage resources.
 
@@ -40,7 +26,7 @@ locals {
 }
 
 module "branch-network-folder" {
-  source = "../../../modules/folder"
+  source = "../../../../remotes/cloud-foundation-fabric/modules/folder"
   parent = local.root_node
   name   = "Networking"
   iam_by_principals = {
@@ -59,7 +45,7 @@ module "branch-network-folder" {
 }
 
 module "branch-network-prod-folder" {
-  source = "../../../modules/folder"
+  source = "../../../../remotes/cloud-foundation-fabric/modules/folder"
   parent = module.branch-network-folder.id
   name   = "Production"
   iam = {
@@ -90,7 +76,7 @@ module "branch-network-prod-folder" {
 }
 
 module "branch-network-dev-folder" {
-  source = "../../../modules/folder"
+  source = "../../../../remotes/cloud-foundation-fabric/modules/folder"
   parent = module.branch-network-folder.id
   name   = "Development"
   iam = {
@@ -123,7 +109,7 @@ module "branch-network-dev-folder" {
 # automation service account
 
 module "branch-network-sa" {
-  source                 = "../../../modules/iam-service-account"
+  source                 = "../../../../remotes/cloud-foundation-fabric/modules/iam-service-account"
   project_id             = var.automation.project_id
   name                   = "prod-resman-net-0"
   display_name           = "Terraform resman networking service account."
@@ -145,7 +131,7 @@ module "branch-network-sa" {
 # automation read-only service account
 
 module "branch-network-r-sa" {
-  source       = "../../../modules/iam-service-account"
+  source       = "../../../../remotes/cloud-foundation-fabric/modules/iam-service-account"
   project_id   = var.automation.project_id
   name         = "prod-resman-net-0r"
   display_name = "Terraform resman networking service account (read-only)."
@@ -166,7 +152,7 @@ module "branch-network-r-sa" {
 # automation bucket
 
 module "branch-network-gcs" {
-  source        = "../../../modules/gcs"
+  source        = "../../../../remotes/cloud-foundation-fabric/modules/gcs"
   project_id    = var.automation.project_id
   name          = "prod-resman-net-0"
   prefix        = var.prefix

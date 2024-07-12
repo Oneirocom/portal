@@ -1,21 +1,7 @@
-/**
- * Copyright 2024 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+
 
 module "root-folder" {
-  source        = "../../../modules/folder"
+  source        = "../../../../remotes/cloud-foundation-fabric/modules/folder"
   count         = var.root_node != null ? 1 : 0
   id            = var.root_node
   folder_create = false
@@ -32,7 +18,7 @@ module "root-folder" {
 }
 
 module "automation-project" {
-  source         = "../../../modules/project"
+  source         = "../../../../remotes/cloud-foundation-fabric/modules/project"
   count          = var.root_node != null ? 1 : 0
   name           = var.automation.project_id
   project_create = false

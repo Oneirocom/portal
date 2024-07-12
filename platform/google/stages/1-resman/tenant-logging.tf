@@ -1,18 +1,4 @@
-/**
- * Copyright 2024 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+
 
 # tfdoc:file:description Audit log project and sink for tenant root folder.
 
@@ -69,7 +55,7 @@ locals {
 # one log export per type, with conditionals to skip those not needed
 
 module "log-export-dataset" {
-  source = "../../../modules/bigquery-dataset"
+  source = "../../../../remotes/cloud-foundation-fabric/modules/bigquery-dataset"
   count = (
     var.root_node != null && contains(local.log_types, "bigquery") ? 1 : 0
   )
@@ -80,7 +66,7 @@ module "log-export-dataset" {
 }
 
 module "log-export-gcs" {
-  source = "../../../modules/gcs"
+  source = "../../../../remotes/cloud-foundation-fabric/modules/gcs"
   count = (
     var.root_node != null && contains(local.log_types, "storage") ? 1 : 0
   )
@@ -92,7 +78,7 @@ module "log-export-gcs" {
 }
 
 module "log-export-logbucket" {
-  source = "../../../modules/logging-bucket"
+  source = "../../../../remotes/cloud-foundation-fabric/modules/logging-bucket"
   for_each = toset(var.root_node == null ? [] : [
     for k, v in local.log_sinks : k if v.type == "logging"
   ])
@@ -104,7 +90,7 @@ module "log-export-logbucket" {
 }
 
 module "log-export-pubsub" {
-  source = "../../../modules/pubsub"
+  source = "../../../../remotes/cloud-foundation-fabric/modules/pubsub"
   for_each = toset(var.root_node == null ? [] : [
     for k, v in local.log_sinks : k if v.type == "pubsub"
   ])

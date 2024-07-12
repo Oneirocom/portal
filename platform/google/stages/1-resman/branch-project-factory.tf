@@ -1,25 +1,11 @@
-/**
- * Copyright 2024 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+
 
 # tfdoc:file:description Project factory stage resources.
 
 # automation service accounts
 
 module "branch-pf-sa" {
-  source       = "../../../modules/iam-service-account"
+  source       = "../../../../remotes/cloud-foundation-fabric/modules/iam-service-account"
   count        = var.fast_features.project_factory ? 1 : 0
   project_id   = var.automation.project_id
   name         = "resman-pf-0"
@@ -39,7 +25,7 @@ module "branch-pf-sa" {
 }
 
 module "branch-pf-dev-sa" {
-  source       = "../../../modules/iam-service-account"
+  source       = "../../../../remotes/cloud-foundation-fabric/modules/iam-service-account"
   count        = var.fast_features.project_factory ? 1 : 0
   project_id   = var.automation.project_id
   name         = "dev-resman-pf-0"
@@ -59,7 +45,7 @@ module "branch-pf-dev-sa" {
 }
 
 module "branch-pf-prod-sa" {
-  source       = "../../../modules/iam-service-account"
+  source       = "../../../../remotes/cloud-foundation-fabric/modules/iam-service-account"
   count        = var.fast_features.project_factory ? 1 : 0
   project_id   = var.automation.project_id
   name         = "prod-resman-pf-0"
@@ -81,7 +67,7 @@ module "branch-pf-prod-sa" {
 # automation read-only service accounts
 
 module "branch-pf-r-sa" {
-  source       = "../../../modules/iam-service-account"
+  source       = "../../../../remotes/cloud-foundation-fabric/modules/iam-service-account"
   count        = var.fast_features.project_factory ? 1 : 0
   project_id   = var.automation.project_id
   name         = "resman-pf-0r"
@@ -101,7 +87,7 @@ module "branch-pf-r-sa" {
 }
 
 module "branch-pf-dev-r-sa" {
-  source       = "../../../modules/iam-service-account"
+  source       = "../../../../remotes/cloud-foundation-fabric/modules/iam-service-account"
   count        = var.fast_features.project_factory ? 1 : 0
   project_id   = var.automation.project_id
   name         = "dev-resman-pf-0r"
@@ -121,7 +107,7 @@ module "branch-pf-dev-r-sa" {
 }
 
 module "branch-pf-prod-r-sa" {
-  source       = "../../../modules/iam-service-account"
+  source       = "../../../../remotes/cloud-foundation-fabric/modules/iam-service-account"
   count        = var.fast_features.project_factory ? 1 : 0
   project_id   = var.automation.project_id
   name         = "prod-resman-pf-0r"
@@ -143,7 +129,7 @@ module "branch-pf-prod-r-sa" {
 # automation buckets
 
 module "branch-pf-gcs" {
-  source        = "../../../modules/gcs"
+  source        = "../../../../remotes/cloud-foundation-fabric/modules/gcs"
   count         = var.fast_features.project_factory ? 1 : 0
   project_id    = var.automation.project_id
   name          = "resman-pf-0"
@@ -158,7 +144,7 @@ module "branch-pf-gcs" {
 }
 
 module "branch-pf-dev-gcs" {
-  source        = "../../../modules/gcs"
+  source        = "../../../../remotes/cloud-foundation-fabric/modules/gcs"
   count         = var.fast_features.project_factory ? 1 : 0
   project_id    = var.automation.project_id
   name          = "dev-resman-pf-0"
@@ -173,7 +159,7 @@ module "branch-pf-dev-gcs" {
 }
 
 module "branch-pf-prod-gcs" {
-  source        = "../../../modules/gcs"
+  source        = "../../../../remotes/cloud-foundation-fabric/modules/gcs"
   count         = var.fast_features.project_factory ? 1 : 0
   project_id    = var.automation.project_id
   name          = "prod-resman-pf-0"

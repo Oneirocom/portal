@@ -1,23 +1,9 @@
-/**
- * Copyright 2024 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+
 
 # tfdoc:file:description GCVE stage resources.
 
 module "branch-gcve-folder" {
-  source = "../../../modules/folder"
+  source = "../../../../remotes/cloud-foundation-fabric/modules/folder"
   count  = var.fast_features.gcve ? 1 : 0
   parent = local.root_node
   name   = "GCVE"
@@ -30,7 +16,7 @@ module "branch-gcve-folder" {
 }
 
 module "branch-gcve-dev-folder" {
-  source = "../../../modules/folder"
+  source = "../../../../remotes/cloud-foundation-fabric/modules/folder"
   count  = var.fast_features.gcve ? 1 : 0
   parent = module.branch-gcve-folder[0].id
   name   = "Development"
@@ -54,7 +40,7 @@ module "branch-gcve-dev-folder" {
 }
 
 module "branch-gcve-prod-folder" {
-  source = "../../../modules/folder"
+  source = "../../../../remotes/cloud-foundation-fabric/modules/folder"
   count  = var.fast_features.gcve ? 1 : 0
   parent = module.branch-gcve-folder[0].id
   name   = "Production"
@@ -80,7 +66,7 @@ module "branch-gcve-prod-folder" {
 # automation service accounts
 
 module "branch-gcve-dev-sa" {
-  source       = "../../../modules/iam-service-account"
+  source       = "../../../../remotes/cloud-foundation-fabric/modules/iam-service-account"
   count        = var.fast_features.gcve ? 1 : 0
   project_id   = var.automation.project_id
   name         = "dev-resman-gcve-0"
@@ -103,7 +89,7 @@ module "branch-gcve-dev-sa" {
 }
 
 module "branch-gcve-prod-sa" {
-  source       = "../../../modules/iam-service-account"
+  source       = "../../../../remotes/cloud-foundation-fabric/modules/iam-service-account"
   count        = var.fast_features.gcve ? 1 : 0
   project_id   = var.automation.project_id
   name         = "prod-resman-gcve-0"
@@ -128,7 +114,7 @@ module "branch-gcve-prod-sa" {
 # automation read-only service accounts
 
 module "branch-gcve-dev-r-sa" {
-  source       = "../../../modules/iam-service-account"
+  source       = "../../../../remotes/cloud-foundation-fabric/modules/iam-service-account"
   count        = var.fast_features.gcve ? 1 : 0
   project_id   = var.automation.project_id
   name         = "dev-resman-gcve-0r"
@@ -148,7 +134,7 @@ module "branch-gcve-dev-r-sa" {
 }
 
 module "branch-gcve-prod-r-sa" {
-  source       = "../../../modules/iam-service-account"
+  source       = "../../../../remotes/cloud-foundation-fabric/modules/iam-service-account"
   count        = var.fast_features.gcve ? 1 : 0
   project_id   = var.automation.project_id
   name         = "prod-resman-gcve-0r"
@@ -170,7 +156,7 @@ module "branch-gcve-prod-r-sa" {
 # automation buckets
 
 module "branch-gcve-dev-gcs" {
-  source        = "../../../modules/gcs"
+  source        = "../../../../remotes/cloud-foundation-fabric/modules/gcs"
   count         = var.fast_features.gcve ? 1 : 0
   project_id    = var.automation.project_id
   name          = "dev-resman-gcve-0"
@@ -185,7 +171,7 @@ module "branch-gcve-dev-gcs" {
 }
 
 module "branch-gcve-prod-gcs" {
-  source        = "../../../modules/gcs"
+  source        = "../../../../remotes/cloud-foundation-fabric/modules/gcs"
   count         = var.fast_features.gcve ? 1 : 0
   project_id    = var.automation.project_id
   name          = "prod-resman-gcve-0"

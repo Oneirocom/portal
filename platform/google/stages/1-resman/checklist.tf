@@ -1,18 +1,4 @@
-/**
- * Copyright 2024 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+
 
 locals {
   # parse raw data from JSON files if they exist
@@ -72,7 +58,7 @@ check "checklist" {
 }
 
 module "checklist-folder-1" {
-  source = "../../../modules/folder"
+  source = "../../../../remotes/cloud-foundation-fabric/modules/folder"
   for_each = {
     for k, v in local.checklist.hierarchy : k => v if v.level == 1
   }
@@ -85,7 +71,7 @@ module "checklist-folder-1" {
 }
 
 module "checklist-folder-2" {
-  source = "../../../modules/folder"
+  source = "../../../../remotes/cloud-foundation-fabric/modules/folder"
   for_each = {
     for k, v in local.checklist.hierarchy : k => v if v.level == 2
   }
@@ -98,7 +84,7 @@ module "checklist-folder-2" {
 }
 
 module "checklist-folder-3" {
-  source = "../../../modules/folder"
+  source = "../../../../remotes/cloud-foundation-fabric/modules/folder"
   for_each = {
     for k, v in local.checklist.hierarchy : k => v if v.level == 3
   }
