@@ -134,3 +134,7 @@ dist
 platform/google/projects/portal/old
 platform/google/projects/portal/init.sh
 .out
+
+
+platform/google/stages/**/*.tfstate
+platform/google/stages/**/*.tfstate.backup
