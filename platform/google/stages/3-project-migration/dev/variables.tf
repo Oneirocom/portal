@@ -20,3 +20,27 @@ variable "enforce_security_policy" {
   type        = bool
   default     = true
 }
+
+variable "docker_image_agent_embedder" {
+  description = "Docker image for agent-embedder"
+  type        = string
+  default     = "gcr.io/google-samples/hello-app:1.0"
+}
+
+variable "docker_image_agent_worker" {
+  description = "Docker image for agent-worker"
+  type        = string
+  default     = "gcr.io/google-samples/hello-app:1.0"
+}
+
+variable "docker_image_agent_manager" {
+  description = "Docker image for agent-manager"
+  type        = string
+  default     = "gcr.io/google-samples/hello-app:1.0"
+}
+
+variable "docker_image_agent_server" {
+  description = "Docker image for agent-server"
+  type        = string
+  default     = "gcr.io/google-samples/hello-app:1.0"
+}
