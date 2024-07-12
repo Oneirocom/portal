@@ -21,7 +21,7 @@ locals {
 }
 
 module "log-export-project" {
-  source = "../../../modules/project"
+  source = "../../../../remotes/cloud-foundation-fabric/modules/project"
   name   = "audit-logs-0"
   parent = coalesce(
     var.project_parent_ids.logging, "organizations/${var.organization.id}"
@@ -50,7 +50,7 @@ module "log-export-project" {
 # one log export per type, with conditionals to skip those not needed
 
 module "log-export-dataset" {
-  source        = "../../../modules/bigquery-dataset"
+  source        = "../../../../remotes/cloud-foundation-fabric/modules/bigquery-dataset"
   count         = contains(local.log_types, "bigquery") ? 1 : 0
   project_id    = module.log-export-project.project_id
   id            = "logs"
@@ -59,7 +59,7 @@ module "log-export-dataset" {
 }
 
 module "log-export-gcs" {
-  source        = "../../../modules/gcs"
+  source        = "../../../../remotes/cloud-foundation-fabric/modules/gcs"
   count         = contains(local.log_types, "storage") ? 1 : 0
   project_id    = module.log-export-project.project_id
   name          = "logs"
@@ -69,7 +69,7 @@ module "log-export-gcs" {
 }
 
 module "log-export-logbucket" {
-  source        = "../../../modules/logging-bucket"
+  source        = "../../../../remotes/cloud-foundation-fabric/modules/logging-bucket"
   for_each      = toset([for k, v in var.log_sinks : k if v.type == "logging"])
   parent_type   = "project"
   parent        = module.log-export-project.project_id
@@ -82,7 +82,7 @@ module "log-export-logbucket" {
 }
 
 module "log-export-pubsub" {
-  source     = "../../../modules/pubsub"
+  source     = "../../../../remotes/cloud-foundation-fabric/modules/pubsub"
   for_each   = toset([for k, v in var.log_sinks : k if v.type == "pubsub"])
   project_id = module.log-export-project.project_id
   name       = each.key

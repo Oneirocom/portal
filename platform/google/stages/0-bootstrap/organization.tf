@@ -109,7 +109,7 @@ module "organization-logging" {
   # specified by `var.locations.logging`. This separate
   # organization-block prevents circular dependencies with later
   # project creation.
-  source          = "../../../modules/organization"
+  source          = "../../../../remotes/cloud-foundation-fabric/modules/organization"
   organization_id = "organizations/${var.organization.id}"
   logging_settings = {
     storage_location = var.locations.logging
@@ -117,7 +117,7 @@ module "organization-logging" {
 }
 
 module "organization" {
-  source          = "../../../modules/organization"
+  source          = "../../../../remotes/cloud-foundation-fabric/modules/organization"
   organization_id = module.organization-logging.id
   # human (groups) IAM bindings
   iam_by_principals = {

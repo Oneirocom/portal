@@ -54,7 +54,7 @@ locals {
 # SAs used by CI/CD workflows to impersonate automation SAs
 
 module "automation-tf-cicd-sa" {
-  source       = "../../../modules/iam-service-account"
+  source       = "../../../../remotes/cloud-foundation-fabric/modules/iam-service-account"
   for_each     = local.cicd_repositories
   project_id   = module.automation-project.project_id
   name         = "${each.key}-1"
@@ -85,7 +85,7 @@ module "automation-tf-cicd-sa" {
 }
 
 module "automation-tf-cicd-r-sa" {
-  source       = "../../../modules/iam-service-account"
+  source       = "../../../../remotes/cloud-foundation-fabric/modules/iam-service-account"
   for_each     = local.cicd_repositories
   project_id   = module.automation-project.project_id
   name         = "${each.key}-1r"
