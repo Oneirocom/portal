@@ -30,3 +30,37 @@ workload_identity_providers = {
     issuer              = "github"
   }
 }
+
+
+cicd_repositories = {
+  bootstrap = {
+    branch            = "main"
+    identity_provider = "github-provider"
+    name              = "gtc-fc/gcp-bootstrap"
+    type              = "github"
+  }
+  resman = {
+    branch            = "main"
+    identity_provider = "github-provider"
+    name              = "gtc-fc/gcp-resman"
+    type              = "github"
+  }
+  security = {
+    branch            = "main"
+    identity_provider = "github-provider"
+    name              = "gtc-fc/gcp-security"
+    type              = "github"
+  }
+  networking = {
+    branch            = "main"
+    identity_provider = "github-provider"
+    name              = "gtc-fc/gcp-networking"
+    type              = "github"
+  }
+  projects = {
+    branch            = "main"
+    identity_provider = "github-provider"
+    name              = "gtc-fc/gco-projects"
+    type              = "github"
+  }
+}
