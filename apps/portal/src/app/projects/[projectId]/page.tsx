@@ -4,7 +4,7 @@ import { auth, currentUser } from '@clerk/nextjs/server'
 import { notFound } from 'next/navigation'
 
 import { MagickIDE } from 'client/editor'
-import { KeywordsService } from '@magickml/keywords'
+import { KeywordsService } from '@magickml/keywords-service'
 import { generateToken } from '@magickml/embedder-auth-token'
 import {
   FeedbackButton,

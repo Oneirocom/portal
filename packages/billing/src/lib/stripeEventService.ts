@@ -5,7 +5,7 @@ import { PortalSubscriptions } from '@magickml/portal-utils-shared'
 import { buffer } from 'micro'
 import { NextApiRequest } from 'next'
 import { PortalBot } from '@magickml/server-event-tracker'
-import { KeywordsService } from '@magickml/keywords'
+import { KeywordsService } from '@magickml/keywords-service'
 
 class StripeEventHandler {
   private stripe: Stripe

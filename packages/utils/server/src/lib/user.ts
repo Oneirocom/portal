@@ -1,5 +1,5 @@
 import { clerkClient } from '@clerk/clerk-sdk-node'
-import { KeywordsService } from '@magickml/keywords'
+import { KeywordsService } from '@magickml/keywords-service'
 
 export const getFullUser = async (userId: string) => {
   const keywordsService = new KeywordsService()
