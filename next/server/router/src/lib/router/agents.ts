@@ -512,7 +512,7 @@ interface DeleteAgentParams {
 const deleteAgent = async (params: DeleteAgentParams): Promise<any> => {
   try {
     const response = await fetch(
-      `${process.env?.['NEXT_PUBLIC_API_URL']}/agents/${params.agentId}?projectId=${params.projectId}`,
+      `${process.env['NEXT_PUBLIC_API_URL']}/agents/${params.agentId}?projectId=${params.projectId}`,
       {
         method: 'DELETE',
         headers: {
