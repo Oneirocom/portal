@@ -31,7 +31,7 @@ export const DropDownInfoMenu = () => {
     },
     {
       id: 'Academy',
-      href: '/academy',
+      href: 'https://www.youtube.com/@magickml',
       enabled: true,
       type: 'link',
       separator: true,
