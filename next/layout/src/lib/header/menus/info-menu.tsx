@@ -103,7 +103,7 @@ export const InfoMenu = () => {
           key={index + item.id}
           className={`py-2 ${
             index === array.length - 1 ? 'border-b-0' : 'border-b'
-          } border-b-black cursor-pointer dark:border-b-[#e9edf1] inline-flex justify-start w-full items-start`}
+          } border-b-black cursor-pointer dark:border-b-[#e9edf1] hover:bg-[#c1c2c3] inline-flex justify-start w-full items-start dark:hover:bg-[#171b1c]`}
           onClick={() => {
             // close()
             item.navigate &&
