@@ -23,7 +23,7 @@ export const InfoMenu = () => {
 
   const dropDownMenuItems: dropDownMenuItemsType[] = [
     {
-      href: 'http://site.magickml.com/',
+      href: 'http://magickml.com/',
       id: 'Magick',
       enabled: true,
       newTab: true,
