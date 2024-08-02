@@ -11,8 +11,13 @@ import { usePortalNavigation } from '../hooks/use-portal-navigation'
 export const PortalHeader = () => {
   const router = useRouter()
   const pathname = usePathname()
-  const { isSignedIn } = useUser()
+  const { isSignedIn, user } = useUser()
   const navigation = usePortalNavigation()
+
+  const subscription = user?.publicMetadata?.subscription
+  const isAspirant = subscription === 'NEOPHYTE'
+
+  console.log('subscription', subscription)
 
   const isRoute = (href: string) => {
     if (href === '/') {
@@ -141,11 +146,17 @@ export const PortalHeader = () => {
           variant="portal-primary"
           size="sm"
           onClick={() => {
-            router.push(isSignedIn ? '/subscribe' : '/sign-in')
+            router.push(
+              isSignedIn
+                ? !isAspirant
+                  ? '/billing'
+                  : '/subscribe'
+                : '/sign-in'
+            )
           }}
           className="hidden lg:flex"
         >
-          {isSignedIn ? 'Subscribe' : 'Sign in'}
+          {isSignedIn ? (!isAspirant ? 'View Plan' : 'Subscribe') : 'Sign in'}
         </Button>
 
         <InfoMenu />
