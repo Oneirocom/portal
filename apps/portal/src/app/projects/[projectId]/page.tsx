@@ -79,10 +79,12 @@ export default async function EditorPage({
 
   const providerData = await new KeywordsService().fetchModels()
 
-  const embedderToken = generateToken({
-    owner: projectId,
-    entity: projectId,
-  })
+  const embedderToken =
+    process.env.AGENT_EMBEDDER_API_KEY ??
+    generateToken({
+      owner: projectId,
+      entity: projectId,
+    })
 
   return (
     <MagickIDE
