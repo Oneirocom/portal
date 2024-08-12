@@ -18,7 +18,6 @@ export const getAgentDataSSR = async (
     },
     select: {
       id: true,
-      secrets: true,
       name: true,
       enabled: true,
       updatedAt: true,
@@ -30,6 +29,7 @@ export const getAgentDataSSR = async (
       embeddingProvider: true,
       embeddingModel: true,
       // TODO: Deprecated
+      secrets: false, // Deprecated
       rootSpellId: false, // Deprecated
       embedModel: false, // Deprecated
       publicVariables: false, // Deprecated
@@ -131,7 +131,6 @@ export const getAgentData = async (params: GetAgentDataParams) => {
     select: {
       // Selections adapted from the original view
       id: true,
-      secrets: true,
       name: true,
       enabled: true,
       updatedAt: true,
@@ -143,6 +142,7 @@ export const getAgentData = async (params: GetAgentDataParams) => {
       version: true,
       embeddingProvider: true,
       embeddingModel: true,
+      secrets: false, // Deprecated
       runState: false, // Deprecated
       default: false, // Deprecated
       rootSpellId: false, // Deprecated
@@ -334,10 +334,11 @@ export const createAgent = async (
         pingedAt: new Date().toISOString(),
         enabled: true,
         name: input.name,
+        // TODO: Deprecated
         // rootSpellId: input.rootSpellId,
         // data: JSON.stringify(input.data),
         // publicVariables: JSON.stringify(input.publicVariables),
-        secrets: JSON.stringify({}),
+        // secrets: JSON.stringify({}),
       }),
     }
   )

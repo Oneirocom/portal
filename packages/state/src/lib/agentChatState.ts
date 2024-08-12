@@ -6,20 +6,20 @@ import { type Agent, type AgentMessages } from '@magickml/portal-types'
 export const agentDataAtom = atomWithReset<Agent>({
   id: '',
   workspace_id: '',
-  rootSpell: null,
-  // TODO: Deprecated
-  // publicVariables: null,
-  secrets: null,
   name: null,
   image: null,
   enabled: null,
   updatedAt: null,
-  // pingedAt: null, // Deprecated
   projectId: null,
   spells: null,
-  // data: null, // Deprecated
   creatorName: null,
   description: null,
+  // rootSpell: null, // Deprecated
+  // TODO: Deprecated
+  // publicVariables: null, // Deprecated
+  // secrets: null, // Deprecated
+  // pingedAt: null, // Deprecated
+  // data: null, // Deprecated
 })
 
 export const agentMessagesAtom = atomWithReset<AgentMessages[]>([])
