@@ -23,9 +23,7 @@ export const getAgentDataSSR = async (
       enabled: true,
       updatedAt: true,
       projectId: true,
-      runState: true,
       image: true,
-      default: true,
       createdAt: true,
       currentSpellReleaseId: true,
       version: true,
@@ -37,6 +35,8 @@ export const getAgentDataSSR = async (
       publicVariables: false, // Deprecated
       pingedAt: false, // Deprecated
       data: false, // Deprecated
+      runState: false, // Deprecated
+      default: false, // Deprecated
     },
   })
 
@@ -137,13 +137,13 @@ export const getAgentData = async (params: GetAgentDataParams) => {
       updatedAt: true,
       projectId: true,
       data: true,
-      runState: true,
       image: true,
       createdAt: true,
       currentSpellReleaseId: true,
       version: true,
       embeddingProvider: true,
       embeddingModel: true,
+      runState: false, // Deprecated
       default: false, // Deprecated
       rootSpellId: false, // Deprecated
       publicVariables: false, // Deprecated
