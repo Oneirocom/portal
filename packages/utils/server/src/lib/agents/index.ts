@@ -1,7 +1,10 @@
 import { prismaPortal } from '@magickml/portal-db'
 import { prismaCore } from '@magickml/server-db'
 import { Session } from 'next-auth'
-import { PublicVariable, AgentDataOld } from '@magickml/portal-types'
+import {
+  // PublicVariable,
+  AgentDataOld,
+} from '@magickml/portal-types'
 import {} from '@clerk/clerk-sdk-node'
 import { getAuth } from '@clerk/nextjs/dist/types/server'
 
@@ -16,24 +19,24 @@ export const getAgentDataSSR = async (
     select: {
       id: true,
       rootSpellId: true,
-      // TODO: Deprecated
-      publicVariables: false,
       secrets: true,
       name: true,
       enabled: true,
       updatedAt: true,
-      pingedAt: true,
       projectId: true,
-      data: true,
       runState: true,
       image: true,
       default: true,
       createdAt: true,
       currentSpellReleaseId: true,
-      embedModel: false,
       version: true,
       embeddingProvider: true,
       embeddingModel: true,
+      // TODO: Deprecated
+      embedModel: false, // Deprecated
+      publicVariables: false,
+      pingedAt: false, // Deprecated
+      data: false, // Deprecated
     },
   })
 
@@ -135,7 +138,6 @@ export const getAgentData = async (params: GetAgentDataParams) => {
       name: true,
       enabled: true,
       updatedAt: true,
-      pingedAt: true,
       projectId: true,
       data: true,
       runState: true,
@@ -143,10 +145,11 @@ export const getAgentData = async (params: GetAgentDataParams) => {
       default: true,
       createdAt: true,
       currentSpellReleaseId: true,
-      embedModel: true,
       version: true,
       embeddingProvider: true,
       embeddingModel: true,
+      embedModel: false, // Deprecated
+      pingedAt: false, // Deprecated
     },
   })
 

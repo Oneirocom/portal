@@ -18,10 +18,10 @@ export type AgentData = {
   image: string | null
   enabled: boolean | null
   updatedAt: string | null
-  pingedAt: string | null
+  // pingedAt: string | null // Deprecated
   projectId: string | null
   spells?: any
-  data: any
+  // data: any // Deprecated
 }
 
 export interface PublicVariable {
@@ -39,11 +39,11 @@ export type Agent = {
   image: string | null
   enabled: boolean | null
   updatedAt: string | null
-  pingedAt: string | null
+  // pingedAt: string | null // Deprecated
   projectId: string | null
   spells?: any
   isTemplate?: boolean
-  data: AgentData | null
+  // data: AgentData | null // Deprecated
   likesCount?: string
   commentsCount?: string
   creatorName?: string | null

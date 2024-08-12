@@ -14,10 +14,10 @@ export const agentDataAtom = atomWithReset<Agent>({
   image: null,
   enabled: null,
   updatedAt: null,
-  pingedAt: null,
+  // pingedAt: null, // Deprecated
   projectId: null,
   spells: null,
-  data: null,
+  // data: null, // Deprecated
   creatorName: null,
   description: null,
 })
