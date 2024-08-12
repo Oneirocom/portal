@@ -109,7 +109,8 @@ const AgentDocuments = ({ projectId, agent }: AgentDocumentsProps) => {
 
   useEffect(() => {
     if (!agent) return
-    const nodes = agent.rootSpell.graph.nodes
+    // Note: rootSpell is deprecated
+    const nodes = agent.graph.nodes
 
     const types = getDocumentTypes(nodes)
 

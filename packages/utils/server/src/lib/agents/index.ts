@@ -1,10 +1,10 @@
 import { prismaPortal } from '@magickml/portal-db'
 import { prismaCore } from '@magickml/server-db'
 import { Session } from 'next-auth'
-import {
-  // PublicVariable,
-  AgentDataOld,
-} from '@magickml/portal-types'
+// import {
+// PublicVariable,
+// AgentDataOld,
+// } from '@magickml/portal-types'
 import {} from '@clerk/clerk-sdk-node'
 import { getAuth } from '@clerk/nextjs/dist/types/server'
 
@@ -18,7 +18,6 @@ export const getAgentDataSSR = async (
     },
     select: {
       id: true,
-      rootSpellId: true,
       secrets: true,
       name: true,
       enabled: true,
@@ -33,14 +32,15 @@ export const getAgentDataSSR = async (
       embeddingProvider: true,
       embeddingModel: true,
       // TODO: Deprecated
+      rootSpellId: false, // Deprecated
       embedModel: false, // Deprecated
-      publicVariables: false,
+      publicVariables: false, // Deprecated
       pingedAt: false, // Deprecated
       data: false, // Deprecated
     },
   })
 
-  if (!agent || !agent.rootSpellId || !agent?.projectId) return null
+  if (!agent || !agent?.projectId) return null
 
   const publicAgent = await prismaPortal.publicAgent.findUnique({
     where: {
@@ -131,9 +131,6 @@ export const getAgentData = async (params: GetAgentDataParams) => {
     select: {
       // Selections adapted from the original view
       id: true,
-      rootSpellId: true,
-      // TODO: Deprecated
-      publicVariables: false,
       secrets: true,
       name: true,
       enabled: true,
@@ -142,12 +139,14 @@ export const getAgentData = async (params: GetAgentDataParams) => {
       data: true,
       runState: true,
       image: true,
-      default: true,
       createdAt: true,
       currentSpellReleaseId: true,
       version: true,
       embeddingProvider: true,
       embeddingModel: true,
+      default: false, // Deprecated
+      rootSpellId: false, // Deprecated
+      publicVariables: false, // Deprecated
       embedModel: false, // Deprecated
       pingedAt: false, // Deprecated
     },
@@ -316,9 +315,9 @@ export const createAgent = async (
   input: {
     projectId: string
     name: string
-    rootSpellId: string
+    // rootSpellId: string
     // publicVariables: PublicVariable[]
-    data: AgentDataOld
+    // data: AgentDataOld
   }
 ) => {
   const agent = await fetch(
@@ -331,12 +330,12 @@ export const createAgent = async (
       },
       body: JSON.stringify({
         projectId: input.projectId,
-        rootSpellId: input.rootSpellId,
         updatedAt: new Date().toISOString(),
         pingedAt: new Date().toISOString(),
         enabled: true,
         name: input.name,
-        data: JSON.stringify(input.data),
+        // rootSpellId: input.rootSpellId,
+        // data: JSON.stringify(input.data),
         // publicVariables: JSON.stringify(input.publicVariables),
         secrets: JSON.stringify({}),
       }),
