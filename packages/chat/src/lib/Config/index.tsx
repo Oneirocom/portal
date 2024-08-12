@@ -1,13 +1,19 @@
 import { MagickTextInput } from '@magickml/portal-ui'
 import { api } from '@magickml/portal-server-provider'
 import Image from 'next/legacy/image'
-import { useEffect, useState } from 'react'
+import {
+  // useEffect,
+  useState,
+} from 'react'
 import toast from 'react-hot-toast'
 import { useAtom, useAtomValue } from 'jotai'
-import { publicVariablesAtom, agentDataAtom } from '@magickml/portal-state'
-import { NodeDataWithType } from '@magickml/portal-types'
-import AgentCreatorInputContainer from '../Inputs/AgentCreatorInputContainer'
-import AgentCreatorToggle from '../Inputs/AgentCreatorToggle'
+import {
+  // publicVariablesAtom,
+  agentDataAtom,
+} from '@magickml/portal-state'
+// import { NodeDataWithType } from '@magickml/portal-types'
+// import AgentCreatorInputContainer from '../Inputs/AgentCreatorInputContainer'
+// import AgentCreatorToggle from '../Inputs/AgentCreatorToggle'
 import ConfigOwnerContainer from './ConfigOwnerContainer'
 import AgentTitle from './AgentTitle'
 import ToggleComponent, { TogglableControls } from './ToggleComponent'
@@ -17,7 +23,7 @@ const Config = () => {
   const utils = api.useContext()
   const [imageFile, setImageFile] = useState<File | null>(null)
   const [agent] = useAtom(agentDataAtom)
-  const [publicVariables, setPublicVariables] = useAtom(publicVariablesAtom)
+  // const [publicVariables, setPublicVariables] = useAtom(publicVariablesAtom)
   const workspace = useAtomValue(workspaceAtom)
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -27,10 +33,10 @@ const Config = () => {
   const { mutateAsync: updateAgent, isLoading: updateIsLoading } =
     api.agents.updateAgent.useMutation()
 
-  useEffect(() => {
-    if (agent?.publicVariables)
-      setPublicVariables(JSON.parse(agent.publicVariables.toString()))
-  }, [setPublicVariables, agent.publicVariables])
+  // useEffect(() => {
+  //   if (agent?.publicVariables)
+  //     setPublicVariables(JSON.parse(agent.publicVariables.toString()))
+  // }, [setPublicVariables, agent.publicVariables])
 
   const convertFileToBase64 = (file: File) => {
     return new Promise<string>((resolve, reject) => {
@@ -111,6 +117,7 @@ const Config = () => {
       })
   }
 
+  // TODO: Deprecated
   // const handleDescriptionUpdate = async (description: string) => {
   //   await updateAgent({ description, agentId: agent.id })
   //     .then(async (data) => {
@@ -122,57 +129,57 @@ const Config = () => {
   //     });
   // };
 
-  const save = async (publicVariables: string) => {
-    await updateAgent({ publicVariables, agentId: agent.id })
-      .then(async data => {
-        toast.success('Public variable updated.')
-        await utils.agents.invalidate()
-      })
-      .catch(() => {
-        toast.error('Something went wrong.')
-      })
-  }
+  // const save = async (publicVariables: string) => {
+  //   await updateAgent({ publicVariables, agentId: agent.id })
+  //     .then(async data => {
+  //       toast.success('Public variable updated.')
+  //       await utils.agents.invalidate()
+  //     })
+  //     .catch(() => {
+  //       toast.error('Something went wrong.')
+  //     })
+  // }
 
-  const updatePubVariables = async (
-    event:
-      | React.KeyboardEvent<HTMLTextAreaElement>
-      | React.KeyboardEvent<HTMLInputElement>
-  ) => {
-    if (event.key === 'Enter' && !event.shiftKey) {
-      event.preventDefault()
-      await save(JSON.stringify(publicVariables))
-    }
-  }
+  // const updatePubVariables = async (
+  //   event:
+  //     | React.KeyboardEvent<HTMLTextAreaElement>
+  //     | React.KeyboardEvent<HTMLInputElement>
+  // ) => {
+  //   if (event.key === 'Enter' && !event.shiftKey) {
+  //     event.preventDefault()
+  //     await save(JSON.stringify(publicVariables))
+  //   }
+  // }
 
-  const handleInputChange = (
-    variable: NodeDataWithType,
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setPublicVariables({
-      ...publicVariables,
-      [variable.id]: {
-        ...variable,
-        stringValue: event.target.value,
-        value: event.target.value,
-      },
-    })
-  }
+  // const handleInputChange = (
+  //   variable: NodeDataWithType,
+  //   event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  // ) => {
+  //   setPublicVariables({
+  //     ...publicVariables,
+  //     [variable.id]: {
+  //       ...variable,
+  //       stringValue: event.target.value,
+  //       value: event.target.value,
+  //     },
+  //   })
+  // }
 
-  const handleSwitchChange = async (
-    variable: NodeDataWithType,
-    value: boolean
-  ) => {
-    const updatedPublicVars = {
-      ...publicVariables,
-      [variable.id]: {
-        ...variable,
-        boolValue: value,
-        value,
-      },
-    }
-    setPublicVariables(updatedPublicVars)
-    await save(JSON.stringify(updatedPublicVars))
-  }
+  // const handleSwitchChange = async (
+  //   variable: NodeDataWithType,
+  //   value: boolean
+  // ) => {
+  //   const updatedPublicVars = {
+  //     ...publicVariables,
+  //     [variable.id]: {
+  //       ...variable,
+  //       boolValue: value,
+  //       value,
+  //     },
+  //   }
+  //   setPublicVariables(updatedPublicVars)
+  //   await save(JSON.stringify(updatedPublicVars))
+  // }
 
   const TogglableProperties: TogglableControls[] = [
     {
@@ -305,8 +312,8 @@ const Config = () => {
           </p>
         </MagickTextInput>
       </div>
-      <AgentCreatorInputContainer className="flex flex-col pt-4 col-span-full gap-y-4">
-        {Object.values(publicVariables).map((variable, index) => {
+      {/* <AgentCreatorInputContainer className="flex flex-col pt-4 col-span-full gap-y-4"> */}
+      {/* {Object.values(publicVariables).map((variable, index) => {
           return (
             <div key={index}>
               <label className="flex flex-col text-black dark:text-white gap-y-1">
@@ -337,8 +344,8 @@ const Config = () => {
               </label>
             </div>
           )
-        })}
-      </AgentCreatorInputContainer>
+        })} */}
+      {/* </AgentCreatorInputContainer> */}
     </div>
   )
 }

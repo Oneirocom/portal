@@ -16,7 +16,8 @@ export const getAgentDataSSR = async (
     select: {
       id: true,
       rootSpellId: true,
-      publicVariables: true,
+      // TODO: Deprecated
+      publicVariables: false,
       secrets: true,
       name: true,
       enabled: true,
@@ -128,7 +129,8 @@ export const getAgentData = async (params: GetAgentDataParams) => {
       // Selections adapted from the original view
       id: true,
       rootSpellId: true,
-      publicVariables: true,
+      // TODO: Deprecated
+      publicVariables: false,
       secrets: true,
       name: true,
       enabled: true,
@@ -312,7 +314,7 @@ export const createAgent = async (
     projectId: string
     name: string
     rootSpellId: string
-    publicVariables: PublicVariable[]
+    // publicVariables: PublicVariable[]
     data: AgentDataOld
   }
 ) => {
@@ -332,7 +334,7 @@ export const createAgent = async (
         enabled: true,
         name: input.name,
         data: JSON.stringify(input.data),
-        publicVariables: JSON.stringify(input.publicVariables),
+        // publicVariables: JSON.stringify(input.publicVariables),
         secrets: JSON.stringify({}),
       }),
     }

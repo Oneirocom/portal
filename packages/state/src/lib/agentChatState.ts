@@ -7,7 +7,8 @@ export const agentDataAtom = atomWithReset<Agent>({
   id: '',
   workspace_id: '',
   rootSpell: null,
-  publicVariables: null,
+  // TODO: Deprecated
+  // publicVariables: null,
   secrets: null,
   name: null,
   image: null,

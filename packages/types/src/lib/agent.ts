@@ -1,4 +1,4 @@
-import { JSONValue } from 'superjson/dist/types'
+// import { JSONValue } from 'superjson/dist/types'
 
 export interface AgentDataOld {
   discord_api_key: string
@@ -11,7 +11,8 @@ export interface AgentDataOld {
 export type AgentData = {
   id: string
   rootSpell: any
-  publicVariables: string | null
+  // TODO: Deprecated
+  // publicVariables: string | null
   secrets: string | null
   name: string | null
   image: string | null
@@ -31,7 +32,8 @@ export type Agent = {
   workspace_id: string | null
   id: string
   rootSpell: any
-  publicVariables: JSONValue | null
+  // TODO: Deprecated
+  // publicVariables: JSONValue | null
   secrets: string | null
   name: string | null
   image: string | null

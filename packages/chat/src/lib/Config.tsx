@@ -6,16 +6,16 @@ import { useDebounce } from 'use-debounce'
 import { useAtom } from 'jotai'
 import { agentGreetingAtom } from '@magickml/portal-state'
 import {
-  AllNodesData,
-  NodeDataWithType,
+  // AllNodesData,
+  // NodeDataWithType,
   AgentData,
 } from '@magickml/portal-types'
 import {
-  validateKeys,
+  // validateKeys,
   defaultImage,
   extractAgentData,
 } from '@magickml/portal-utils-shared'
-import AgentCreatorToggle from './Inputs/AgentCreatorToggle'
+// import AgentCreatorToggle from './Inputs/AgentCreatorToggle'
 import {
   Input,
   agentInputStyles,
@@ -108,45 +108,46 @@ const Config = ({ agent }: { agent: AgentData }) => {
       })
   }
 
+  // TODO: Deprecated
   // PUBLIC VARIABLES UPDATE
-  const [publicVariables, setPublicVariables] = useState<AllNodesData | null>()
-  const [updatedVariables] = useDebounce(publicVariables, 2000)
+  // const [publicVariables, setPublicVariables] = useState<AllNodesData | null>()
+  // const [updatedVariables] = useDebounce(publicVariables, 2000)
 
   // set public variables intially.
-  useEffect(() => {
-    if (publicVariables) return
-    setPublicVariables(JSON.parse(agent?.data.publicVariables || '{}'))
-  }, [publicVariables, agent?.data.publicVariables])
+  // useEffect(() => {
+  //   if (publicVariables) return
+  //   setPublicVariables(JSON.parse(agent?.data.publicVariables || '{}'))
+  // }, [publicVariables, agent?.data.publicVariables])
 
   // save public variables when updated.  But ensure the keys match the agent's public variables.
-  useEffect(() => {
-    if (!updatedVariables || !agent?.data.publicVariables) return
-    if (Object.keys(updatedVariables).length === 0) return
-    if (
-      !validateKeys(JSON.parse(agent?.data.publicVariables), updatedVariables)
-    )
-      return
+  // useEffect(() => {
+  //   if (!updatedVariables || !agent?.data.publicVariables) return
+  //   if (Object.keys(updatedVariables).length === 0) return
+  //   if (
+  //     !validateKeys(JSON.parse(agent?.data.publicVariables), updatedVariables)
+  //   )
+  //     return
 
-    // check to ensure the values have changed
-    if (
-      JSON.stringify(updatedVariables) === agent?.data.publicVariables ||
-      JSON.stringify(updatedVariables) === '{}'
-    )
-      return
+  //   // check to ensure the values have changed
+  //   if (
+  //     JSON.stringify(updatedVariables) === agent?.data.publicVariables ||
+  //     JSON.stringify(updatedVariables) === '{}'
+  //   )
+  //     return
 
-    updatePublicVariables(JSON.stringify(updatedVariables))
-  }, [updatedVariables])
+  //   updatePublicVariables(JSON.stringify(updatedVariables))
+  // }, [updatedVariables])
 
-  const updatePublicVariables = async (publicVariables: string) => {
-    await updateAgent({ publicVariables, agentId: agent?.data.id ?? '' })
-      .then(async data => {
-        toast.success('Public variable updated.')
-        await utils.agents.invalidate()
-      })
-      .catch(() => {
-        toast.error('Something went wrong.')
-      })
-  }
+  // const updatePublicVariables = async (publicVariables: string) => {
+  //   await updateAgent({ publicVariables, agentId: agent?.data.id ?? '' })
+  //     .then(async data => {
+  //       toast.success('Public variable updated.')
+  //       await utils.agents.invalidate()
+  //     })
+  //     .catch(() => {
+  //       toast.error('Something went wrong.')
+  //     })
+  // }
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setImageFile(e.target.files ? e.target.files[0] : null)
@@ -190,46 +191,46 @@ const Config = ({ agent }: { agent: AgentData }) => {
       })
   }
 
-  const updatePubVariables = async (
-    event:
-      | React.KeyboardEvent<HTMLTextAreaElement>
-      | React.KeyboardEvent<HTMLInputElement>
-  ) => {
-    if (event.key === 'Enter' && !event.shiftKey) {
-      event.preventDefault()
-      await updatePublicVariables(JSON.stringify(publicVariables))
-    }
-  }
+  // const updatePubVariables = async (
+  //   event:
+  //     | React.KeyboardEvent<HTMLTextAreaElement>
+  //     | React.KeyboardEvent<HTMLInputElement>
+  // ) => {
+  //   if (event.key === 'Enter' && !event.shiftKey) {
+  //     event.preventDefault()
+  //     await updatePublicVariables(JSON.stringify(publicVariables))
+  //   }
+  // }
 
-  const handleInputChange = (
-    variable: NodeDataWithType,
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setPublicVariables({
-      ...publicVariables,
-      [variable.id]: {
-        ...variable,
-        stringValue: event.target.value,
-        value: event.target.value,
-      },
-    })
-  }
+  // const handleInputChange = (
+  //   variable: NodeDataWithType,
+  //   event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  // ) => {
+  //   setPublicVariables({
+  //     ...publicVariables,
+  //     [variable.id]: {
+  //       ...variable,
+  //       stringValue: event.target.value,
+  //       value: event.target.value,
+  //     },
+  //   })
+  // }
 
-  const handleSwitchChange = async (
-    variable: NodeDataWithType,
-    value: boolean
-  ) => {
-    const updatedPublicVars = {
-      ...publicVariables,
-      [variable.id]: {
-        ...variable,
-        boolValue: value,
-        value,
-      },
-    }
-    setPublicVariables(updatedPublicVars)
-    await updatePublicVariables(JSON.stringify(updatedPublicVars))
-  }
+  // const handleSwitchChange = async (
+  //   variable: NodeDataWithType,
+  //   value: boolean
+  // ) => {
+  //   const updatedPublicVars = {
+  //     ...publicVariables,
+  //     [variable.id]: {
+  //       ...variable,
+  //       boolValue: value,
+  //       value,
+  //     },
+  //   }
+  //   setPublicVariables(updatedPublicVars)
+  //   await updatePublicVariables(JSON.stringify(updatedPublicVars))
+  // }
 
   const onCancel = () => {
     setDiscordToken('')
@@ -427,13 +428,13 @@ const Config = ({ agent }: { agent: AgentData }) => {
           className="focus:border-secondary-highlight placeholder:font-sans placeholder:text-black/70 dark:placeholder:text-white/70 w-full p-2 bg-transparent border-2 border-[#808f9a] rounded-[8px] dark:text-white"
           value={discordToken}
           placeholder="Paste your discord token here."
-          onKeyDown={updatePubVariables}
+          // onKeyDown={updatePubVariables}
           onChange={e => setDiscordToken(e.target.value)}
         />
       </MagickDialog>
 
       {/* Agent Greeting */}
-      {publicVariables && (
+      {/* {publicVariables && (
         <div className="flex flex-col col-span-full gap-y-4">
           {Object.values(publicVariables).length > 0 && (
             <>
@@ -484,7 +485,7 @@ const Config = ({ agent }: { agent: AgentData }) => {
             )
           })}
         </div>
-      )}
+      )} */}
     </div>
   )
 }

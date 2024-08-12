@@ -1,5 +1,5 @@
 import { atomWithReset } from 'jotai/utils'
-import { AllNodesData } from '@magickml/portal-types'
+// import { AllNodesData } from '@magickml/portal-types'
 
 export type InputMethodType = 'upload' | 'preset'
 type AgentProject = {
@@ -21,7 +21,7 @@ export const agentProjectAtom = atomWithReset<AgentProject>({
   id: null,
 })
 
-export const publicVariablesAtom = atomWithReset<AllNodesData>({})
+// export const publicVariablesAtom = atomWithReset<AllNodesData>({})
 
 export const agentGreetingAtom = atomWithReset('')
 
