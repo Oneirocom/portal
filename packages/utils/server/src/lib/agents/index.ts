@@ -29,7 +29,7 @@ export const getAgentDataSSR = async (
       default: true,
       createdAt: true,
       currentSpellReleaseId: true,
-      embedModel: true,
+      embedModel: false,
       version: true,
       embeddingProvider: true,
       embeddingModel: true,
