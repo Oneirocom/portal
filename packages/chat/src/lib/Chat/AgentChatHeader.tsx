@@ -2,7 +2,7 @@ import { useAtom } from 'jotai'
 import { toggleAgentSettingsAtom } from '@magickml/portal-state'
 import Image from 'next/legacy/image'
 import { defaultImage } from '@magickml/portal-utils-shared'
-import AgentChatRemixButton from '../Buttons/AgentChatRemixButton'
+// import AgentChatRemixButton from '../Buttons/AgentChatRemixButton'
 import AgentChatLikeButton from '../Buttons/AgentChatLikeButton'
 import AgentChatShareButton from '../Buttons/AgentChatShareButton'
 import { IoIosArrowBack } from 'react-icons/io'
@@ -45,9 +45,7 @@ export const AgentChatHeader = ({
           className="self-center"
           variant="ghost"
           onClick={() =>
-            isSignedIn
-              ? router.push('/')
-              : router.push('/explore')
+            isSignedIn ? router.push('/') : router.push('/explore')
           }
           size="icon"
         >
@@ -80,7 +78,6 @@ export const AgentChatHeader = ({
           </div>
         </div>
 
-
         {/* Buttons */}
         <div className="flex mr-2 items-center justify-end ml-auto gap-x-0.5 lg:gap-x-3">
           {agent?.data.isPublic && (
@@ -94,12 +91,12 @@ export const AgentChatHeader = ({
             />
           )} */}
           {<AgentChatShareButton agentId={agent?.data.id ?? ''} />}
-          {agent?.data.remixable && (
+          {/* {agent?.data.remixable && (
             <AgentChatRemixButton
               publicAgentId={agent.data.publicAgentId ?? ''}
               agentName={agent.data.name ?? ''}
             />
-          )}
+          )} */}
           {isPrivate && (
             <EditorButton
               projectId={agent?.data.projectId ?? ''}

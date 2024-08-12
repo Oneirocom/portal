@@ -147,7 +147,8 @@ const ConfigSwitches = ({ agent }: { agent: AgentData }) => {
                   id={sw.name}
                   onCheckedChange={sw.action}
                   checked={
-                    (agent?.data[sw.key as keyof typeof agent.data] as any) ??
+                    // TODO: Deprecated
+                    // (agent?.data[sw.key as keyof typeof agent.data] as any) ??
                     false
                   }
                 />

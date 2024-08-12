@@ -81,12 +81,13 @@ const Config = ({ agent }: { agent: AgentData }) => {
   const [greeting, setGreeting] = useAtom(agentGreetingAtom)
   const [updatedGreeting] = useDebounce(greeting, 2000)
 
-  useEffect(() => {
-    if (!agent?.data.description) return
-    setGreeting(agent.data.description)
+  // TODO: Deprecated
+  // useEffect(() => {
+  //   if (!agent?.data.description) return
+  //   setGreeting(agent.data.description)
 
-    return () => setGreeting('')
-  }, [agent])
+  //   return () => setGreeting('')
+  // }, [agent])
 
   useEffect(() => {
     if (!updatedGreeting) return

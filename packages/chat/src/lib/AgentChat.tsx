@@ -85,9 +85,11 @@ const AgentChat = ({
       const agentMessage = {
         sender: agent?.data.name || 'Agent',
         message:
-          agent.data.description && agent.data.description.length > 0
-            ? agent.data.description
-            : 'Hello! Try talking to me about anything!',
+          // TODO: Deprecated
+          // agent.data.description && agent.data.description.length > 0
+          //   ? agent.data.description
+          //   : 'Hello! Try talking to me about anything!',
+          'Hello! Try talking to me about anything!',
         entity: 'agent',
       }
 
