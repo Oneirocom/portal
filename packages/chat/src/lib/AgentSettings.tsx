@@ -59,12 +59,10 @@ const AgentSettingsContent = ({ agent }: { agent: AgentData }) => {
     {
       name: 'knowledge',
       filter: agent => {
-        const nodes = agent.rootSpell.graph.nodes as { [key: string]: any }
+        const nodes = agent.graph.nodes as { [key: string]: any }
         return usesDocuments(nodes)
       },
-      component: (
-        <AgentDocuments projectId={agent?.data.projectId} agent={agent} />
-      ),
+      component: <AgentDocuments projectId={agent.projectId} agent={agent} />,
     },
     // { name: 'logs', component: <LogsComponent logs={logs} /> },
   ]
